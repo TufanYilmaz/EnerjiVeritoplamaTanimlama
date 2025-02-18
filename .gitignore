@@ -362,3 +362,4 @@ MigrationBackup/
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
 /SuperFil.Enerji.OleDbReader/Client.cs
+/SuperFilm.Enerji.OleDbReader/Client.cs
