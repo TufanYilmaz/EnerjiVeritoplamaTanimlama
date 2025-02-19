@@ -1,0 +1,29 @@
+﻿@model List<SuperFilm.Enerji.Entites.IsletmeTanimlari>
+@{
+    ViewData["Title"] = "İşletme Tanımları";
+}
+
+<div class="text-center">
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>İşletme Kodu</th>
+                <th>İşletme Açıklama</th>
+                <th>İşletme Tanımı</th>
+                
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.IsletmeKodu</td>
+                    <td>@item.IsletmeAdi</td>
+                    <td>@item.Aciklama</td>
+                    
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

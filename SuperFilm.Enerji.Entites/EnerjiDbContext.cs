@@ -19,6 +19,7 @@ namespace SuperFilm.Enerji.Entites
         }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
+
         }
     }
 }

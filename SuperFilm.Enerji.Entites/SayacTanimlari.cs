@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace SuperFilm.Enerji.Entites
 {
 
-    [Table("ISLETME_TANIMLARI")]
+    [Table("SAYAC_TANIMLARI")]
     public class SayacTanimlari
     {
         public int Id { get; set; }

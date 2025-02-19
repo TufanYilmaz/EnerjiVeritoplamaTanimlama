@@ -10,7 +10,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\SuperFil.Enerji.OleDbReader\SuperFilm.Enerji.OleDbReader.csproj" />
+    <ProjectReference Include="..\SuperFilm.Enerji.OleDbReader\SuperFilm.Enerji.OleDbReader.csproj" />
   </ItemGroup>
 
 </Project>

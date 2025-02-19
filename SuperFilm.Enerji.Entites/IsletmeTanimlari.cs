@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace SuperFilm.Enerji.Entites
 {
-    [Table("SAYAC_TANIMLARI")]
+    [Table("ISLETME_TANIMLARI")]
     public class IsletmeTanimlari
     {
         [Key]

@@ -5,9 +5,9 @@ VisualStudioVersion = 17.8.34408.163
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SuperFilm.Enerji.WebUI", "SuperFilm.Enerji.WebUI\SuperFilm.Enerji.WebUI.csproj", "{FF1D1D0B-289D-4E85-9CC1-943005F62BE1}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SuperFilm.Enerji.OleDbReader", "SuperFil.Enerji.OleDbReader\SuperFilm.Enerji.OleDbReader.csproj", "{CA993897-4EA5-43AB-A5CC-0DF574CDCE0E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SuperFilm.Enerji.OleDbReader", "SuperFilm.Enerji.OleDbReader\SuperFilm.Enerji.OleDbReader.csproj", "{CA993897-4EA5-43AB-A5CC-0DF574CDCE0E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SuperFilm.Enerji.TestClient", "SuperFil.Enerji.TestClient\SuperFilm.Enerji.TestClient.csproj", "{BB4A6B33-F642-49AB-8758-1C81A26FA16A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SuperFilm.Enerji.TestClient", "SuperFilm.Enerji.TestClient\SuperFilm.Enerji.TestClient.csproj", "{BB4A6B33-F642-49AB-8758-1C81A26FA16A}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SuperFilm.Enerji.Entites", "SuperFilm.Enerji.Entites\SuperFilm.Enerji.Entites.csproj", "{F5D02852-66E1-4555-9295-15EC434AA5EC}"
 EndProject
