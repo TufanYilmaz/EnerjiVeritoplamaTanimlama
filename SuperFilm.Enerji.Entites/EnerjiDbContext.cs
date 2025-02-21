@@ -13,13 +13,15 @@ namespace SuperFilm.Enerji.Entites
         //Server=BSPSQLLST.sankoholding.local;Database=Super_Enerji;User Id=Super_Enerji;Password=pscV0Fj1F5lf;
         DbSet<IsletmeTanimlari> IsletmeTanimlari { get; set; }
         DbSet<SayacTanimlari> SayacTanimlari { get; set; }
+        DbSet<IsletmeSayacDagilimi> IsletmeSayacDagilimi { get; set; }
+
         public EnerjiDbContext(DbContextOptions<EnerjiDbContext> options):base(options)
         {
             
         }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-
+            base.OnConfiguring(optionsBuilder);
         }
     }
 }
