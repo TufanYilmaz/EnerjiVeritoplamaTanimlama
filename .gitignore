@@ -363,3 +363,4 @@ MigrationBackup/
 FodyWeavers.xsd
 /SuperFil.Enerji.OleDbReader/Client.cs
 /SuperFilm.Enerji.OleDbReader/Client.cs
+/SuperFilm.Enerji.TestClient/SuperFilm.Enerji.TestClient.csproj
