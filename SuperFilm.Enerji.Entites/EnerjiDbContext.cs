@@ -11,9 +11,9 @@ namespace SuperFilm.Enerji.Entites
     {
         //Server=myServerAddress;Database=myDataBase;User Id=myUsername;Password=myPassword;
         //Server=BSPSQLLST.sankoholding.local;Database=Super_Enerji;User Id=Super_Enerji;Password=pscV0Fj1F5lf;
-        DbSet<IsletmeTanimlari> IsletmeTanimlari { get; set; }
-        DbSet<SayacTanimlari> SayacTanimlari { get; set; }
-        DbSet<IsletmeSayacDagilimi> IsletmeSayacDagilimi { get; set; }
+        public DbSet<IsletmeTanimlari> IsletmeTanimlari { get; set; }
+        public DbSet<SayacTanimlari> SayacTanimlari { get; set; }
+        public DbSet<IsletmeSayacDagilimi> IsletmeSayacDagilimi { get; set; }
 
         public EnerjiDbContext(DbContextOptions<EnerjiDbContext> options):base(options)
         {

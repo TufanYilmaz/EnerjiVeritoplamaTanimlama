@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using SuperFilm.Enerji.Entites;
 using SuperFilm.Enerji.WebUI.Models;
 using System.Diagnostics;
@@ -29,12 +30,12 @@ namespace SuperFilm.Enerji.WebUI.Controllers
 
 		public IActionResult Index()
 		{
-			return View();
+            return View();
 		}
 
 		public IActionResult Privacy()
 		{
-			return View();
+            return View();
 		}
 
 		[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
