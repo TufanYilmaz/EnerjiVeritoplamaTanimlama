@@ -9,7 +9,7 @@ namespace SuperFilm.Enerji.WebUI.Services.Identity
         public string Description { get; set; }
 
     }
-    public class AppIdentityDbContext : IdentityDbContext
+    public class AppIdentityDbContext : IdentityDbContext<User>
     {
         public AppIdentityDbContext(DbContextOptions options) : base(options)
         {
