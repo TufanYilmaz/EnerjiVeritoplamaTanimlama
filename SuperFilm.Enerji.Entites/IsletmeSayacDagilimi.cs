@@ -12,5 +12,7 @@ namespace SuperFilm.Enerji.Entites
         public IsletmeTanimlari Isletme{ get;set;}
 
         public SayacTanimlari Sayac { get; set; }
+        public char Islem { get; set; }
+        public decimal Carpan { get; set; }
     }
 }

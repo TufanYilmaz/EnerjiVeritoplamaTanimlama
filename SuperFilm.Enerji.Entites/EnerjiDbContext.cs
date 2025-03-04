@@ -14,6 +14,7 @@ namespace SuperFilm.Enerji.Entites
         public DbSet<IsletmeTanimlari> IsletmeTanimlari { get; set; }
         public DbSet<SayacTanimlari> SayacTanimlari { get; set; }
         public DbSet<IsletmeSayacDagilimi> IsletmeSayacDagilimi { get; set; }
+        public DbSet<IsYeri> IsYeri { get; set; }
 
         public EnerjiDbContext(DbContextOptions<EnerjiDbContext> options):base(options)
         {
