@@ -16,6 +16,7 @@ namespace SuperFilm.Enerji.Entites
         public DbSet<IsletmeSayacDagilimi> IsletmeSayacDagilimi { get; set; }
         public DbSet<IsYeri> IsYeri { get; set; }
         public DbSet<SayacVeri> SayacVeri { get; set; }
+        public DbSet<OpcNodes> OpcNode { get; set; }
 
         public EnerjiDbContext(DbContextOptions<EnerjiDbContext> options):base(options)
         {
