@@ -17,7 +17,7 @@ namespace SuperFilm.Enerji.WebUI.Controllers
 
         public HomeController(ILogger<HomeController> logger,
             IRepository repository,
-			IQueryRepository queryRepository,
+			IQueryRepository<EnerjiDbContext> queryRepository,
 			EnerjiDbContext context,
 			IRepository<EnerjiDbContext> enerjiRepository)
 		{

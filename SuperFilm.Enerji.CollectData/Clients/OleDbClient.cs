@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SuperFilm.Enerji.CollectData.Clients
 {
-    internal class OleDbClient
+    internal sealed class OleDbClient()
     {
     }
 }
