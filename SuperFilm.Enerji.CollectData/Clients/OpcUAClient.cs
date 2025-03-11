@@ -1,4 +1,5 @@
-﻿using SuperFilm.Enerji.Entites;
+﻿using Opc.Ua;
+using SuperFilm.Enerji.Entites;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,6 +14,15 @@ namespace SuperFilm.Enerji.CollectData.Clients
         IQueryRepository<EnerjiDbContext> queryRepository
         )
     {
+        List<OpcNodes> nodes = new List<OpcNodes>();
+        public async Task LoadNodes(CancellationToken cancellationToken)
+        {
+            nodes = await enerjiRepository.GetListAsync<OpcNodes>(false, cancellationToken);
+        }
+        public async Task<DataValueCollection> ReadNodes()
+        {
+            return null;
+        }
 
     }
 }
