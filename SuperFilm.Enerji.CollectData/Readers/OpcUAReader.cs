@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace SuperFilm.Enerji.CollectData.Readers
 {
-    public sealed class OpcUAReader
+    public sealed class OpcUAReader : IOpcUAReader
     {
         SessionReconnectHandler? m_reconnectHandler;
         public Session? m_session;
@@ -17,7 +17,8 @@ namespace SuperFilm.Enerji.CollectData.Readers
         ApplicationConfiguration m_configuration;
         ConfiguredEndpoint endpoint;
         ReadValueIdCollection testNodesToRead = new ReadValueIdCollection();
-        public OpcUAReader()
+        private readonly IConfiguration _configuration;
+        public OpcUAReader(IConfiguration configuration)
         {
             application.ApplicationType = ApplicationType.Client;
             application.ConfigSectionName = "Client";
@@ -26,7 +27,8 @@ namespace SuperFilm.Enerji.CollectData.Readers
 
             m_configuration = application.ApplicationConfiguration;
             m_configuration.CertificateValidator.CertificateValidation += CertificateValidator_CertificateValidation;
-            string serverUrl = "";
+            _configuration = configuration;
+            string serverUrl = configuration.GetValue<string>("OpcUrl")!;
 
             EndpointDescription endpointDescription = CoreClientUtils.SelectEndpoint(m_configuration, serverUrl, true, 15000);
             EndpointConfiguration endpointConfiguration = EndpointConfiguration.Create(m_configuration);
