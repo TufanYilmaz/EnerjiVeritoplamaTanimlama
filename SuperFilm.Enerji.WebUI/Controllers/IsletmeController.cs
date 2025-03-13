@@ -9,19 +9,16 @@ namespace SuperFilm.Enerji.WebUI.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly IRepository _repository;
-        private readonly IQueryRepository _queryRepository;
-        private readonly EnerjiDbContext _context;
+        private readonly IQueryRepository<EnerjiDbContext> _queryRepository;
         private readonly IRepository<EnerjiDbContext> _enerjiRepository;
 
         public IsletmeController(ILogger<HomeController> logger,
             IRepository repository,
-            IQueryRepository queryRepository,
-            EnerjiDbContext context,
+            IQueryRepository<EnerjiDbContext> queryRepository,
             IRepository<EnerjiDbContext> enerjiRepository)
         {
             _logger = logger;
             _repository = repository;
-            _context = context;
             _queryRepository = queryRepository;
             _enerjiRepository = enerjiRepository;
         }
