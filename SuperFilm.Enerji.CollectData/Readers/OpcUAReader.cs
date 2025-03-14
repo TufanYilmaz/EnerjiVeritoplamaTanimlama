@@ -82,14 +82,14 @@ namespace SuperFilm.Enerji.CollectData.Readers
             DiagnosticInfoCollection readDiagnosticInfos = null;
 
             //ResponseHeader readHeader = m_session.Read(null, 0, TimestampsToReturn.Neither, nodesToRead, out readResults, out readDiagnosticInfos);
-            var readRes = await m_session.ReadAsync(null, 0, TimestampsToReturn.Neither, nodesToRead, cancellationToken);
+            var readRes = await m_session!.ReadAsync(null, 0, TimestampsToReturn.Neither, nodesToRead, cancellationToken);
            
             var readHeader = await m_session.ReadValuesAsync( nodesToRead.Select(r=>r.NodeId).ToList(), cancellationToken);
-
+            //readRes.Results
             ClientBase.ValidateResponse(readResults, nodesToRead);
             ClientBase.ValidateDiagnosticInfos(readDiagnosticInfos, nodesToRead);
 
-            return readResults;
+            return readHeader.Item1;
         }
     }
 }
