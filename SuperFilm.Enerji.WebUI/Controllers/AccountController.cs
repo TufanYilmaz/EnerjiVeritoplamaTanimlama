@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using SuperFilm.Enerji.WebUI;
+using SuperFilm.Enerji.WebUI.Services.Identity;
 using SuperFilm.Enerji.WebUI.ViewModels.AccountViewModels;
+using TanvirArjel.EFCore.GenericRepository;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace SuperFilm.Enerji.WebUI.Controllers
@@ -10,11 +12,16 @@ namespace SuperFilm.Enerji.WebUI.Controllers
     {
         private readonly SignInManager<Services.Identity.User> _signInManager;
         private readonly UserManager<Services.Identity.User> _userManager;
+        private readonly IQueryRepository _queryRepository;
 
-        public AccountController(SignInManager<Services.Identity.User> signInManager, UserManager<Services.Identity.User> userManager)
+
+        public AccountController(SignInManager<Services.Identity.User> signInManager,
+            UserManager<Services.Identity.User> userManager, 
+            IQueryRepository queryRepository)
         {
             _signInManager = signInManager;
             _userManager = userManager;
+            _queryRepository = queryRepository;
         }
 
         public IActionResult Login()
@@ -134,6 +141,11 @@ namespace SuperFilm.Enerji.WebUI.Controllers
         {
             await _signInManager.SignOutAsync();
             return RedirectToAction("Login", "Account");
+        }
+        public async Task<IActionResult> Users(CancellationToken cancellationToken)
+        {
+            var res = await _queryRepository.GetAsync<User>(specification: null,cancellationToken);
+            return View();
         }
     }
 }
