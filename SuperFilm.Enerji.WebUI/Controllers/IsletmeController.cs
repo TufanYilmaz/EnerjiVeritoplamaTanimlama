@@ -45,5 +45,10 @@ namespace SuperFilm.Enerji.WebUI.Controllers
             }
             return Ok();
         }
+        public async Task<IActionResult> GetIsletme(int id, CancellationToken cancellationToken)
+        {
+            var model = await _enerjiRepository.GetByIdAsync<IsletmeTanimlari>(id,asNoTracking:true,cancellationToken: cancellationToken);
+            return View(model);
+        }
     }
 }
