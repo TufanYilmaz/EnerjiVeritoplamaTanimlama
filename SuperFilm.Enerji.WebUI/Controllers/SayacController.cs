@@ -14,5 +14,28 @@ namespace SuperFilm.Enerji.WebUI.Controllers
         {
             return View();
         }
+        [HttpPost]
+        public async Task<IActionResult> AddSayac(SayacTanimlari model, CancellationToken cancellationToken)
+        {
+            if (ModelState.ValidationState == Microsoft.AspNetCore.Mvc.ModelBinding.ModelValidationState.Invalid)
+            {
+                return NoContent();
+            }
+            try
+            {
+                await _repository.AddAsync(model, cancellationToken);
+                await _repository.SaveChangesAsync(cancellationToken);
+            }
+            catch (Exception ex)
+            {
+                return NotFound(ex.Message);
+            }
+            return Ok();
+        }
+        public async Task<IActionResult> GetSayac(int id, CancellationToken cancellationToken)
+        {
+            var model = await _enerjiRepository.GetByIdAsync<SayacTanimlari>(id, asNoTracking: true, cancellationToken: cancellationToken);
+            return View(model);
+        }
     }
 }
