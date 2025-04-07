@@ -1,0 +1,33 @@
+﻿@model List<SuperFilm.Enerji.Entites.SayacTanimlari>
+@{
+    ViewData["Title"] = "Sayaç Tanımları";
+}
+
+<div class="text-center">
+    <div class="float-end">
+        <a asp-controller="Sayac" asp-action="AddSayac" class="text-decoration-none">
+            Isletme Ekle
+        </a>
+    </div>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Sayaç Kodu</th>
+                <th>Sayaç Açıklama</th>
+                <th>Sayaç Tanımı</th>
+
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.SayacKodu</td>
+                    <td>@item.SayacAciklama</td>
+                    <td>@item.SayacTanimi</td>
+
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
