@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using SuperFilm.Enerji.Entites;
 using TanvirArjel.EFCore.GenericRepository;
 
@@ -10,8 +11,9 @@ namespace SuperFilm.Enerji.WebUI.Controllers
         IQueryRepository<EnerjiDbContext> _queryRepository,
         IRepository<EnerjiDbContext> _enerjiRepository) : Controller
     {
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
+            var model = await _queryRepository.GetQueryable<SayacController>().ToListAsync();
             return View();
         }
         [HttpPost]

@@ -27,6 +27,10 @@ namespace SuperFilm.Enerji.WebUI.Controllers
             var model =await _queryRepository.GetQueryable<IsletmeTanimlari>().ToListAsync();
             return View(model);
         }
+        public IActionResult AddIsletme()
+        {
+            return View();
+        }
         [HttpPost]
         public async Task<IActionResult> AddIsletme(IsletmeTanimlari model,CancellationToken cancellationToken)
         {
