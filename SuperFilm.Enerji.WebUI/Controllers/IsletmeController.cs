@@ -47,7 +47,7 @@ namespace SuperFilm.Enerji.WebUI.Controllers
             {
                 return NotFound(ex.Message);
             }
-            return Ok();
+            return RedirectToAction("Index");
         }
         public async Task<IActionResult> GetIsletme(int id, CancellationToken cancellationToken)
         {
