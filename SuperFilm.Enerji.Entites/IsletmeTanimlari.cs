@@ -23,6 +23,6 @@ namespace SuperFilm.Enerji.Entites
         [Column(TypeName = "varchar(255)")]
         [StringLength(255)]
         public string? Aciklama { get; set; }
-        public IEnumerable<IsYeri> IsYeri { get; set; }
+        public IEnumerable<IsYeri>? IsYeri { get; set; }
     }
 }

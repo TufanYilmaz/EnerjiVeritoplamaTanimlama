@@ -13,7 +13,12 @@ namespace SuperFilm.Enerji.WebUI.Controllers
     {
         public async Task<IActionResult> Index()
         {
-            var model = await _queryRepository.GetQueryable<SayacController>().ToListAsync();
+            var model = await _queryRepository.GetQueryable<SayacTanimlari>().ToListAsync();
+            return View();
+        }
+     
+        public IActionResult AddSayac()
+        {
             return View();
         }
         [HttpPost]

@@ -26,5 +26,6 @@ namespace SuperFilm.Enerji.Entites
         [Column(TypeName = "varchar(255)")]
         [StringLength(255)]
         public string SayacAciklama { get; set; }
+        public IsYeri? IsYeri { get; set; }
     }
 }
