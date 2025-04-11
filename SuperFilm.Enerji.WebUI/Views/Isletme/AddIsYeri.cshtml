@@ -1,0 +1,52 @@
+﻿@using SuperFilm.Enerji.Entites;
+
+@model IsYeriIsletmeViewModel;
+@{
+    ViewData["Title"] = "İş Yeri Ekle";
+}
+<div class="account-container">
+    <div class="account-box">
+        <div class="mb-3">
+            <a asp-controller="Isletme" asp-action="Index" class="text-decoration-none">
+                Geri
+            </a>
+        </div>
+        <h1 class="display-4">İş Yeri Ekle</h1>
+        <form asp-action="AddIsYeri" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="mb-3">
+                <label asp-for="IsYeri.Kod" class="form-label"></label>
+                <input asp-for="IsYeri.Kod" class="form-control" />
+                <span asp-validation-for="IsYeri.Kod" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="IsYeri.Ad" class="form-label"></label>
+                <input asp-for="IsYeri.Ad" class="form-control" />
+                <span asp-validation-for="IsYeri.Ad" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="IsYeri.Aciklama" class="form-label"></label>
+                <input asp-for="IsYeri.Aciklama" type="text" class="form-control" />
+                <span asp-validation-for="IsYeri.Aciklama" class="text-danger"></span>
+            </div>
+
+            <label for="IsletmeID">İşletme</label>
+            <select class="form-control" asp-for="IsYeri.IsletmeTanimlariId">
+                <option value="">Seçiniz</option>
+                @if (Model.IsletmeTanimlari != null && Model.IsletmeTanimlari.Any())
+                {
+                    foreach (var item in Model.IsletmeTanimlari)
+                    {
+                        <option value="@item.Id">@item.Aciklama</option>
+                    }
+                }
+                else
+                {
+                    <option>Mevcut İşletme Yok</option>
+                }
+
+            </select>
+            <input type="submit" value="Ekle" class="btn btn-success w-100 p-2" />
+        </form>
+    </div>
+</div>

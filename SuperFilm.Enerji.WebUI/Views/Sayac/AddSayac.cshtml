@@ -1,5 +1,75 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@using SuperFilm.Enerji.Entites;
+@model SayacViewModel;
 @{
+    ViewData["Title"] = "Sayaç Ekle";
 }
+@section Scripts {
+	<script src="~/js/selectisyeri.js"></script>
+}
+
+<div class="account-container">
+    <div class="account-box">
+        <div class="mb-3">
+            <a asp-controller="Sayac" asp-action="Index" class="text-decoration-none">
+                Geri
+            </a>
+        </div>
+        <h1 class="display-4">Sayaç Ekle</h1>
+        <form asp-action="AddSayac" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="SayacTanimlari.Id" class="form-control" />
+            <div class="mb-3">
+                <label asp-for="SayacTanimlari.SayacKodu" class="form-label"></label>
+                <input asp-for="SayacTanimlari.SayacKodu" class="form-control" />
+                <span asp-validation-for="SayacTanimlari.SayacKodu" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="SayacTanimlari.SayacTanimi" class="form-label"></label>
+                <input asp-for="SayacTanimlari.SayacTanimi" class="form-control" />
+                <span asp-validation-for="SayacTanimlari.SayacTanimi" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="SayacTanimlari.SayacAciklama" class="form-label"></label>
+                <input asp-for="SayacTanimlari.SayacAciklama" type="text" class="form-control" />
+                <span asp-validation-for="SayacTanimlari.SayacAciklama" class="text-danger"></span>
+            </div>
+            
+            <div class="mb-3">
+                <label asp-for="SayacTanimlari.SayacYeri" class="form-label"></label>
+                <input asp-for="SayacTanimlari.SayacYeri" class="form-control" />
+                <span asp-validation-for="SayacTanimlari.SayacYeri" class="text-danger"></span>
+            </div>
+
+            @*İşletmeleri Listeler ve seçenek sunar.*@
+            <label for="IsletmeID">İşletme</label>
+            <select class="form-control mb-3" asp-for="IsletmeTanimi.Id" id="IsletmeID">
+            @* <select class="form-control mb-3" name="IsletmeID" id="IsletmeID"> *@
+                <option value="">Seçiniz</option>
+                @if (Model.IsletmeTanimlari != null && Model.IsletmeTanimlari.Any())
+                {
+                    foreach (var item in Model.IsletmeTanimlari)
+                    {
+                        <option value="@item.Id" data-isletme="@Model.IsletmeTanimi.Id">@item.Aciklama</option>
+                    }
+                }
+                else
+                {
+                    <option>Mevcut İşletme Yok</option>
+                }
+            </select>
+
+            @*İş Yerlerini Listeler ve seçenek sunar.*@
+            <label for="IsYeriId">İş Yeri</label>
+            <select class="form-control mb-3" asp-for="SayacTanimlari.IsYeriId" id="IsYeriId">
+                <option value="">Seçiniz</option>
+                @foreach (var isyeri in Model.IsYeri)
+                {
+                    <option value="@isyeri.Id" data-isletme="@isyeri.IsletmeTanimlariId">@isyeri.Ad</option>
+                }
+            </select>
+            
+            <input type="submit" value="Ekle" class="btn btn-success w-100 p-2" />
+        </form>
+    </div>
+</div>
+

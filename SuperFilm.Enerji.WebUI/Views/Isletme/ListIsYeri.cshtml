@@ -1,0 +1,46 @@
+﻿@model SuperFilm.Enerji.Entites.IsYeriIsletmeListViewModel
+@{
+    ViewData["Title"] = "İş Yerleri";
+}
+
+<div class="text-center">
+    <div class="float-start">
+        <a asp-route-id=0 class="text-decoration-none">
+            Tümü
+        </a>
+        @foreach (var item in Model.IsletmeTanimlari)
+        {
+            <a asp-route-id="@item.Id" class="text-decoration-none">
+                @item.Aciklama
+            </a>
+        }
+    </div>
+    <div class="float-end">
+        <a asp-controller="Isletme" asp-action="AddIsYeri" class="text-decoration-none">
+            Iş Yeri Ekle
+        </a>
+    </div>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>İş Yeri Kodu</th>
+                <th>İş Yeri Adı</th>
+                <th>İş Yeri Açıklaması</th>
+                <th>İşletme Id</th>
+
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.IsYeri)
+            {
+                <tr>
+                    <td>@item.Kod</td>
+                    <td>@item.Ad</td>
+                    <td>@item.Aciklama</td>
+                    <td>@item.IsletmeTanimlariId</td>
+
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

@@ -47,7 +47,62 @@ namespace SuperFilm.Enerji.WebUI.Controllers
             {
                 return NotFound(ex.Message);
             }
-            return RedirectToAction("Index");
+
+            return RedirectToAction("Index", "Isletme");
+        }
+        public async Task<IActionResult> ListIsYeri()
+        {
+            var IsYerleri = await _queryRepository.GetQueryable<IsYeri>().ToListAsync();
+            var Isletmeler = await _queryRepository.GetQueryable<IsletmeTanimlari>().ToListAsync();
+            var model = new IsYeriIsletmeListViewModel
+            {
+                IsYeri = IsYerleri,
+                IsletmeTanimlari = Isletmeler
+            };
+            return View(model);
+        }
+        [HttpPost]
+        public async Task<IActionResult> ListIsYeri(int id)
+        {
+            var IsYerleri = await _queryRepository.GetQueryable<IsYeri>().Where(i=>i.IsletmeTanimlariId==id).ToListAsync();
+            var Isletmeler = await _queryRepository.GetQueryable<IsletmeTanimlari>().ToListAsync();
+            var model = new IsYeriIsletmeListViewModel
+            {
+                IsYeri = IsYerleri,
+                IsletmeTanimlari = Isletmeler
+            };
+            return View(model);
+        }
+        public async Task<IActionResult> AddIsYeri()
+        {
+            var isletmeler = await _queryRepository.GetQueryable<IsletmeTanimlari>().ToListAsync();
+            var model = new IsYeriIsletmeViewModel
+            {
+                IsYeri = new IsYeri(),
+                IsletmeTanimlari = isletmeler
+            };
+            return View(model);
+        }
+        [HttpPost]
+        public async Task<IActionResult> AddIsYeri(IsYeriIsletmeViewModel model, CancellationToken cancellationToken)
+        {
+            ModelState.Remove("IsletmeTanimlari");
+            if (ModelState.ValidationState == Microsoft.AspNetCore.Mvc.ModelBinding.ModelValidationState.Invalid)
+            {
+                return NoContent();
+            }
+            try
+            {
+                var isYeri = model.IsYeri;
+                await _repository.AddAsync(isYeri, cancellationToken);
+                await _repository.SaveChangesAsync(cancellationToken);
+            }
+            catch (Exception ex)
+            {
+                return NotFound(ex.Message);
+            }
+            return RedirectToAction("ListIsYeri", "Isletme");
+
         }
         public async Task<IActionResult> GetIsletme(int id, CancellationToken cancellationToken)
         {
