@@ -137,7 +137,7 @@ namespace SuperFilm.Enerji.WebUI.Controllers
                 return View(model);
             }
         }
-        public async Task<IActionResult> Logut()
+        public async Task<IActionResult> Logout()
         {
             await _signInManager.SignOutAsync();
             return RedirectToAction("Login", "Account");

@@ -8,11 +8,13 @@
         <a asp-route-id=0 class="text-decoration-none">
             Tümü
         </a>
+        <span> | </span>
         @foreach (var item in Model.IsletmeTanimlari)
         {
             <a asp-route-id="@item.Id" class="text-decoration-none">
                 @item.Aciklama
             </a>
+            <span> | </span>
         }
     </div>
     <div class="float-end">

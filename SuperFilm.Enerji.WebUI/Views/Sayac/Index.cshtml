@@ -33,7 +33,7 @@
                     <td>
                         <a asp-controller="Sayac" asp-action="AddSayac" asp-route-id="@item.Id">Güncelle</a>
                         <span> | </span>
-                        <button >Sil</button>
+                        <a class="btn btn-danger" asp-controller="Sayac" asp-action="DeleteSayac" asp-route-id="@item.Id" onclick="return confirm('Bu sayacı silmek istediğinizden emin misiniz?');">Sil</a>
                     </td>
 
                 </tr>
