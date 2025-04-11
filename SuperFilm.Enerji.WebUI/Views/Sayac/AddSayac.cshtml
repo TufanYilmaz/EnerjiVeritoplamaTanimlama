@@ -43,13 +43,12 @@
             @*İşletmeleri Listeler ve seçenek sunar.*@
             <label for="IsletmeID">İşletme</label>
             <select class="form-control mb-3" asp-for="IsletmeTanimi.Id" id="IsletmeID">
-            @* <select class="form-control mb-3" name="IsletmeID" id="IsletmeID"> *@
                 <option value="">Seçiniz</option>
                 @if (Model.IsletmeTanimlari != null && Model.IsletmeTanimlari.Any())
                 {
-                    foreach (var item in Model.IsletmeTanimlari)
+                    foreach (var isletme in Model.IsletmeTanimlari)
                     {
-                        <option value="@item.Id" data-isletme="@Model.IsletmeTanimi.Id">@item.Aciklama</option>
+                        <option value="@isletme.Id">@isletme.Aciklama</option>
                     }
                 }
                 else

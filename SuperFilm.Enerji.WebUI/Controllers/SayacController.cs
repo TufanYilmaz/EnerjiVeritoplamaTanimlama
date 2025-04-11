@@ -26,9 +26,16 @@ namespace SuperFilm.Enerji.WebUI.Controllers
             IsletmeTanimlari isletmeTanimi = new IsletmeTanimlari();
             if (id != null)
             {
-                var sayac = await _queryRepository.GetQueryable<SayacTanimlari>().Include(r => r.Isyeri).FirstOrDefaultAsync(x => x.Id == id);
-                isletmeTanimi = await _queryRepository.GetQueryable<IsletmeTanimlari>().FirstOrDefaultAsync(x => x.Id == sayac.Isyeri.Id);
-                //_queryRepository.GetAsync(r=>r)
+                var sayac = await _queryRepository
+                    .GetQueryable<SayacTanimlari>()
+                    .Include(r => r.Isyeri)
+                    .ThenInclude(r => r.Isletme)
+                    .FirstOrDefaultAsync(x => x.Id == id);
+
+                isletmeTanimi = await _queryRepository
+                    .GetQueryable<IsletmeTanimlari>()
+                    .FirstOrDefaultAsync(x => x.Id == sayac.Isyeri.Isletme.Id);
+
                 if (sayac != null)
                 {
                     sayacModel=sayac;
@@ -37,9 +44,9 @@ namespace SuperFilm.Enerji.WebUI.Controllers
             var model = new SayacViewModel
             {
                 SayacTanimlari = sayacModel,
+                IsletmeTanimi = isletmeTanimi,
                 IsletmeTanimlari = isletmeler,
                 IsYeri = isyerleri,
-                IsletmeTanimi = isletmeTanimi,
 
             };
             return View(model); 
@@ -76,10 +83,5 @@ namespace SuperFilm.Enerji.WebUI.Controllers
             }
             return RedirectToAction("Index", "Sayac");
         }
-        public async Task<IActionResult> GetSayac(int id, CancellationToken cancellationToken)
-        {
-            var model = await _enerjiRepository.GetByIdAsync<SayacTanimlari>(id, asNoTracking: true, cancellationToken: cancellationToken);
-            return View("AddSayac",model);
-        }   
     }
 }

@@ -16,7 +16,7 @@
         }
     </div>
     <div class="float-end">
-        <a asp-controller="Isletme" asp-action="AddIsYeri" class="text-decoration-none">
+        <a asp-controller="IsYeri" asp-action="AddIsYeri" class="text-decoration-none">
             Iş Yeri Ekle
         </a>
     </div>
@@ -26,7 +26,7 @@
                 <th>İş Yeri Kodu</th>
                 <th>İş Yeri Adı</th>
                 <th>İş Yeri Açıklaması</th>
-                <th>İşletme Id</th>
+                <th>İşletme Ad</th>
 
             </tr>
         </thead>
@@ -37,8 +37,7 @@
                     <td>@item.Kod</td>
                     <td>@item.Ad</td>
                     <td>@item.Aciklama</td>
-                    <td>@item.IsletmeTanimlariId</td>
-
+                    <td>@item.Isletme?.Aciklama</td>
                 </tr>
             }
         </tbody>
