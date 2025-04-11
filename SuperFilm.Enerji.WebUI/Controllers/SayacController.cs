@@ -16,6 +16,7 @@ namespace SuperFilm.Enerji.WebUI.Controllers
         {
             var model = await _queryRepository.GetQueryable<SayacTanimlari>().Include(r=>r.Isyeri).ToListAsync();
             return View(model);
+
         }
         public async Task<IActionResult> AddSayac(int? id)
         {

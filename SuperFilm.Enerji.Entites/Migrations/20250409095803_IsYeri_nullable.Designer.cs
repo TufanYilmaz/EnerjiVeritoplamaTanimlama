@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SuperFilm.Enerji.Entites;
 
@@ -11,9 +12,11 @@ using SuperFilm.Enerji.Entites;
 namespace SuperFilm.Enerji.Entites.Migrations
 {
     [DbContext(typeof(EnerjiDbContext))]
-    partial class EnerjiDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250409095803_IsYeri_nullable")]
+    partial class IsYeri_nullable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -40,7 +43,7 @@ namespace SuperFilm.Enerji.Entites.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("varchar(100)");
 
-                    b.Property<int>("IsletmeTanimlariId")
+                    b.Property<int?>("IsletmeTanimlariId")
                         .HasColumnType("int");
 
                     b.Property<string>("Kod")
@@ -153,7 +156,7 @@ namespace SuperFilm.Enerji.Entites.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("IsYeriId")
+                    b.Property<int?>("IsYeriId")
                         .HasColumnType("int");
 
                     b.Property<string>("SayacAciklama")
@@ -227,13 +230,9 @@ namespace SuperFilm.Enerji.Entites.Migrations
 
             modelBuilder.Entity("SuperFilm.Enerji.Entites.IsYeri", b =>
                 {
-                    b.HasOne("SuperFilm.Enerji.Entites.IsletmeTanimlari", "Isletme")
+                    b.HasOne("SuperFilm.Enerji.Entites.IsletmeTanimlari", null)
                         .WithMany("IsYeri")
-                        .HasForeignKey("IsletmeTanimlariId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Isletme");
+                        .HasForeignKey("IsletmeTanimlariId");
                 });
 
             modelBuilder.Entity("SuperFilm.Enerji.Entites.IsletmeSayacDagilimi", b =>
@@ -257,14 +256,9 @@ namespace SuperFilm.Enerji.Entites.Migrations
 
             modelBuilder.Entity("SuperFilm.Enerji.Entites.SayacTanimlari", b =>
                 {
-                    b.HasOne("SuperFilm.Enerji.Entites.IsYeri", "Isyeri")
+                    b.HasOne("SuperFilm.Enerji.Entites.IsYeri", null)
                         .WithMany("SayacTanimlari")
-                        .HasForeignKey("IsYeriId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Isyeri");
-
+                        .HasForeignKey("IsYeriId");
                 });
 
             modelBuilder.Entity("SuperFilm.Enerji.Entites.SayacVeri", b =>

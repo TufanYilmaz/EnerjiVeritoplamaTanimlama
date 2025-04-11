@@ -47,6 +47,7 @@ namespace SuperFilm.Enerji.WebUI.Controllers
             {
                 return NotFound(ex.Message);
             }
+
             return RedirectToAction("Index", "Isletme");
         }
         public async Task<IActionResult> ListIsYeri()
@@ -101,6 +102,7 @@ namespace SuperFilm.Enerji.WebUI.Controllers
                 return NotFound(ex.Message);
             }
             return RedirectToAction("ListIsYeri", "Isletme");
+
         }
         public async Task<IActionResult> GetIsletme(int id, CancellationToken cancellationToken)
         {
