@@ -1,3 +1,4 @@
+using System;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using SuperFilm.Enerji.Entites;
@@ -8,17 +9,13 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
-string? connectionString = builder.Configuration.GetConnectionString("EnerjiDbContext");
-builder.Services.AddDbContext<EnerjiDbContext>(optionsBuilder =>
-{
-	optionsBuilder.UseSqlServer(connectionString);
-});
+
+builder.Services.AddDbContext<EnerjiDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
 builder.Services.AddGenericRepository<EnerjiDbContext>();
 builder.Services.AddQueryRepository<EnerjiDbContext>();
-builder.Services.AddDbContext<AppIdentityDbContext>(optionsBuilder =>
-{
-    optionsBuilder.UseSqlServer(connectionString);
-});
+builder.Services.AddDbContext<AppIdentityDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
 builder.Services.AddIdentity<User, IdentityRole>(options =>
 {
 	options.Password.RequireNonAlphanumeric = false;
