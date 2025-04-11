@@ -8,5 +8,9 @@ namespace SuperFilm.Enerji.WebUI.Controllers
         {
             return View();
         }
+        public IActionResult Add()
+        {
+            return View();
+        }
     }
 }
