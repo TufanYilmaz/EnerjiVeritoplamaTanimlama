@@ -5,6 +5,10 @@
 
 <div class="text-center">
     <div class="float-end">
+@*         <a asp-controller="Sayac" asp-action="Index" class="text-decoration-none">
+            Güncelle
+        </a>
+        <span> | </span> *@
         <a asp-controller="Sayac" asp-action="AddSayac" class="text-decoration-none">
             Sayaç Ekle
         </a>
@@ -17,6 +21,7 @@
                 <th>Sayaç Açıklama</th>
                 <th>Sayaç Yeri</th>
                 <th>İş Yeri Id</th>
+                <th>İşlemler</th>
 
             </tr>
         </thead>
@@ -28,7 +33,12 @@
                     <td>@item.SayacTanimi</td>
                     <td>@item.SayacAciklama</td>
                     <td>@item.SayacYeri</td>
-                    <td>@item.IsYeriId</td>
+                    <td>@item.Isyeri.Kod</td>
+                    <td>
+                        <a asp-controller="Sayac" asp-action="AddSayac" asp-route-id="@item.Id">Güncelle</a>
+                        <span> | </span>
+                        <button >Sil</button>
+                    </td>
 
                 </tr>
             }

@@ -36,5 +36,6 @@ namespace SuperFilm.Enerji.Entites
         public string SayacYeri { get; set; }
         [Required]
         public int IsYeriId { get; set; } // Foreign Key
+        public IsYeri Isyeri { get; set; }
     }
 }

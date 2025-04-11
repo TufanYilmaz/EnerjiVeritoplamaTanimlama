@@ -17,6 +17,7 @@
         <h1 class="display-4">Sayaç Ekle</h1>
         <form asp-action="AddSayac" method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="SayacTanimlari.Id" class="form-control" />
             <div class="mb-3">
                 <label asp-for="SayacTanimlari.SayacKodu" class="form-label"></label>
                 <input asp-for="SayacTanimlari.SayacKodu" class="form-control" />
@@ -41,13 +42,14 @@
 
             @*İşletmeleri Listeler ve seçenek sunar.*@
             <label for="IsletmeID">İşletme</label>
-            <select class="form-control mb-3" name="IsletmeID" id="IsletmeID">
+            <select class="form-control mb-3" asp-for="IsletmeTanimi.Id" id="IsletmeID">
+            @* <select class="form-control mb-3" name="IsletmeID" id="IsletmeID"> *@
                 <option value="">Seçiniz</option>
                 @if (Model.IsletmeTanimlari != null && Model.IsletmeTanimlari.Any())
                 {
                     foreach (var item in Model.IsletmeTanimlari)
                     {
-                        <option value="@item.Id">@item.Aciklama</option>
+                        <option value="@item.Id" data-isletme="@Model.IsletmeTanimi.Id">@item.Aciklama</option>
                     }
                 }
                 else

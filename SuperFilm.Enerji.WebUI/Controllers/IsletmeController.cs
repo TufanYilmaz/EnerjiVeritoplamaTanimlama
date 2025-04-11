@@ -51,8 +51,25 @@ namespace SuperFilm.Enerji.WebUI.Controllers
         }
         public async Task<IActionResult> ListIsYeri()
         {
-            var model = await _queryRepository.GetQueryable<IsYeri>().ToListAsync();
-            
+            var IsYerleri = await _queryRepository.GetQueryable<IsYeri>().ToListAsync();
+            var Isletmeler = await _queryRepository.GetQueryable<IsletmeTanimlari>().ToListAsync();
+            var model = new IsYeriIsletmeListViewModel
+            {
+                IsYeri = IsYerleri,
+                IsletmeTanimlari = Isletmeler
+            };
+            return View(model);
+        }
+        [HttpPost]
+        public async Task<IActionResult> ListIsYeri(int id)
+        {
+            var IsYerleri = await _queryRepository.GetQueryable<IsYeri>().Where(i=>i.IsletmeTanimlariId==id).ToListAsync();
+            var Isletmeler = await _queryRepository.GetQueryable<IsletmeTanimlari>().ToListAsync();
+            var model = new IsYeriIsletmeListViewModel
+            {
+                IsYeri = IsYerleri,
+                IsletmeTanimlari = Isletmeler
+            };
             return View(model);
         }
         public async Task<IActionResult> AddIsYeri()

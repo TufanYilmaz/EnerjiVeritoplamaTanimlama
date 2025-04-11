@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AspNetCoreGeneratedDocument;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SuperFilm.Enerji.Entites;
 using TanvirArjel.EFCore.GenericRepository;
@@ -13,18 +14,32 @@ namespace SuperFilm.Enerji.WebUI.Controllers
     {
         public async Task<IActionResult> Index()
         {
-            var model = await _queryRepository.GetQueryable<SayacTanimlari>().ToListAsync();
+            var model = await _queryRepository.GetQueryable<SayacTanimlari>().Include(r=>r.Isyeri).ToListAsync();
             return View(model);
         }
-        public async Task<IActionResult> AddSayac()
+        public async Task<IActionResult> AddSayac(int? id)
         {
             var isletmeler = await _queryRepository.GetQueryable<IsletmeTanimlari>().ToListAsync();
             var isyerleri = await _queryRepository.GetQueryable<IsYeri>().ToListAsync();
+            SayacTanimlari sayacModel = new SayacTanimlari();
+            IsletmeTanimlari isletmeTanimi = new IsletmeTanimlari();
+            if (id != null)
+            {
+                var sayac = await _queryRepository.GetQueryable<SayacTanimlari>().Include(r => r.Isyeri).FirstOrDefaultAsync(x => x.Id == id);
+                isletmeTanimi = await _queryRepository.GetQueryable<IsletmeTanimlari>().FirstOrDefaultAsync(x => x.Id == sayac.Isyeri.Id);
+                //_queryRepository.GetAsync(r=>r)
+                if (sayac != null)
+                {
+                    sayacModel=sayac;
+                }
+            }
             var model = new SayacViewModel
             {
-                SayacTanimlari = new SayacTanimlari(),
+                SayacTanimlari = sayacModel,
                 IsletmeTanimlari = isletmeler,
-                IsYeri = isyerleri
+                IsYeri = isyerleri,
+                IsletmeTanimi = isletmeTanimi,
+
             };
             return View(model); 
         }
@@ -32,8 +47,10 @@ namespace SuperFilm.Enerji.WebUI.Controllers
         [HttpPost]
         public async Task<IActionResult> AddSayac(SayacViewModel model, CancellationToken cancellationToken)
         {
+            ModelState.Remove("IsletmeTanimi.IsletmeKodu");
             ModelState.Remove("IsletmeTanimlari");
             ModelState.Remove("IsYeri");
+            ModelState.Remove("SayacTanimlari.Isyeri");
             if (ModelState.ValidationState == Microsoft.AspNetCore.Mvc.ModelBinding.ModelValidationState.Invalid)
             {
                 return NoContent();
@@ -41,7 +58,15 @@ namespace SuperFilm.Enerji.WebUI.Controllers
             try
             {
                 var sayac = model.SayacTanimlari;
-                await _repository.AddAsync(sayac, cancellationToken);
+                if (sayac.Id == 0)
+                {
+                    await _repository.AddAsync<SayacTanimlari>(sayac, cancellationToken);
+
+                }
+                else
+                {
+                    await _repository.UpdateAsync<SayacTanimlari>(sayac, cancellationToken);
+                }
                 await _repository.SaveChangesAsync(cancellationToken);
             }
             catch (Exception ex)
@@ -53,7 +78,7 @@ namespace SuperFilm.Enerji.WebUI.Controllers
         public async Task<IActionResult> GetSayac(int id, CancellationToken cancellationToken)
         {
             var model = await _enerjiRepository.GetByIdAsync<SayacTanimlari>(id, asNoTracking: true, cancellationToken: cancellationToken);
-            return View(model);
+            return View("AddSayac",model);
         }   
     }
 }
