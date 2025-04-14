@@ -5,10 +5,6 @@
 
 <div class="text-center">
     <div class="float-end">
-@*         <a asp-controller="Sayac" asp-action="Index" class="text-decoration-none">
-            Güncelle
-        </a>
-        <span> | </span> *@
         <a asp-controller="Sayac" asp-action="AddSayac" class="text-decoration-none">
             Sayaç Ekle
         </a>
@@ -37,7 +33,7 @@
                     <td>
                         <a asp-controller="Sayac" asp-action="AddSayac" asp-route-id="@item.Id">Güncelle</a>
                         <span> | </span>
-                        <button >Sil</button>
+                        <a class="btn btn-danger" asp-controller="Sayac" asp-action="DeleteSayac" asp-route-id="@item.Id" onclick="return confirm('Bu sayacı silmek istediğinizden emin misiniz?');">Sil</a>
                     </td>
 
                 </tr>
