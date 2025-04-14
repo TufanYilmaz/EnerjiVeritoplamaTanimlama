@@ -22,6 +22,10 @@ namespace SuperFilm.Enerji.Entites
         [StringLength(2)]
         [Required]
         public string Ay { get; set; }
+        [Column(TypeName = "varchar(2)")]
+        [StringLength(2)]
+        [Required]
+        public string Gun { get; set; }
         [Column(TypeName = "varchar(6)")]
         [StringLength(6)]
         [Required]
