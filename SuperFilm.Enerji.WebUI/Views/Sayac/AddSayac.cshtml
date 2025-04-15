@@ -40,33 +40,7 @@
                 <span asp-validation-for="SayacTanimlari.SayacYeri" class="text-danger"></span>
             </div>
 
-            @*İşletmeleri Listeler ve seçenek sunar.*@
-            <label for="IsletmeID">İşletme</label>
-            <select class="form-control mb-3" asp-for="IsletmeTanimi.Id" id="IsletmeID">
-                <option value="">Seçiniz</option>
-                @if (Model.IsletmeTanimlari != null && Model.IsletmeTanimlari.Any())
-                {
-                    foreach (var isletme in Model.IsletmeTanimlari)
-                    {
-                        <option value="@isletme.Id">@isletme.Aciklama</option>
-                    }
-                }
-                else
-                {
-                    <option>Mevcut İşletme Yok</option>
-                }
-            </select>
-
-            @*İş Yerlerini Listeler ve seçenek sunar.*@
-            <label for="IsYeriId">İş Yeri</label>
-            <select class="form-control mb-3" asp-for="SayacTanimlari.IsYeriId" id="IsYeriId">
-                <option value="">Seçiniz</option>
-                @foreach (var isyeri in Model.IsYeri)
-                {
-                    <option value="@isyeri.Id" data-isletme="@isyeri.IsletmeTanimlariId">@isyeri.Ad</option>
-                }
-            </select>
-            
+           
             <input type="submit" value="Ekle" class="btn btn-success w-100 p-2" />
         </form>
     </div>

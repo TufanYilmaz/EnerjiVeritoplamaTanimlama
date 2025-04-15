@@ -9,8 +9,8 @@ namespace SuperFilm.Enerji.Entites
     public class SayacViewModel
     {
         public required SayacTanimlari SayacTanimlari { get; set; }
-        public  IsletmeTanimlari? IsletmeTanimi { get; set; }
-        public required List<IsletmeTanimlari> IsletmeTanimlari { get; set; }
-        public required List<IsYeri> IsYeri { get; set; }
+        //public  IsYeri? IsletmeTanimi { get; set; }
+        //public required List<IsYeri> IsletmeTanimlari { get; set; }
+        //public required List<Isletme> IsYeri { get; set; }
     }
 }

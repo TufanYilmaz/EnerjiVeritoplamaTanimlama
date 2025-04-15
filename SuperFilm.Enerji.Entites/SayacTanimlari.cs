@@ -27,17 +27,14 @@ namespace SuperFilm.Enerji.Entites
 
         [Column(TypeName = "varchar(255)")]
         [StringLength(255)]
-        [Required]
-        public string SayacAciklama { get; set; }
+        public string? SayacAciklama { get; set; }
 
         [Column(TypeName = "varchar(255)")]
         [StringLength(255)]
-        [Required]
-        public string SayacYeri { get; set; }
-        [Required]
-        public int IsYeriId { get; set; } // Foreign Key
-        public IsYeri Isyeri { get; set; }
+   
+        public string? SayacYeri { get; set; }
         public int IsDeleted { get; set; } = 0;
+
 
     }
 }
