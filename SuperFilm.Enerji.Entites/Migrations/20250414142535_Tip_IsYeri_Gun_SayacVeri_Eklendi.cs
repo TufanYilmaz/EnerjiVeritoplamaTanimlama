@@ -10,13 +10,7 @@ namespace SuperFilm.Enerji.Entites.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<string>(
-                name: "Gun",
-                table: "SAYAC_VERI",
-                type: "nvarchar(2)",
-                maxLength: 2,
-                nullable: false,
-                defaultValue: "");
+
 
             migrationBuilder.AlterColumn<string>(
                 name: "Aciklama",
@@ -28,24 +22,15 @@ namespace SuperFilm.Enerji.Entites.Migrations
                 oldType: "varchar(255)",
                 oldMaxLength: 255);
 
-            migrationBuilder.AddColumn<string>(
-                name: "Tip",
-                table: "IS_YERI",
-                type: "nvarchar(50)",
-                maxLength: 50,
-                nullable: true);
+
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropColumn(
-                name: "Gun",
-                table: "SAYAC_VERI");
 
-            migrationBuilder.DropColumn(
-                name: "Tip",
-                table: "IS_YERI");
+
+
 
             migrationBuilder.AlterColumn<string>(
                 name: "Aciklama",

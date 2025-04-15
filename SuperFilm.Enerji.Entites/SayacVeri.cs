@@ -33,9 +33,11 @@ namespace SuperFilm.Enerji.Entites
         [Required]
         public DateTime NormalizeDate { get; set; }
         [Required]
+        [Column(TypeName = "decimal(18,2)")]
         public decimal Deger { get; set; }
         public DateTime CreateDate { get; set; } = DateTime.Now;
 
         public SayacTanimlari Sayac { get; set; }
+        
     }
 }
