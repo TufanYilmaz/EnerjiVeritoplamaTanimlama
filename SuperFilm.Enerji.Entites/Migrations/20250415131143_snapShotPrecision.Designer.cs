@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SuperFilm.Enerji.Entites;
 
@@ -11,9 +12,11 @@ using SuperFilm.Enerji.Entites;
 namespace SuperFilm.Enerji.Entites.Migrations
 {
     [DbContext(typeof(EnerjiDbContext))]
-    partial class EnerjiDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250415131143_snapShotPrecision")]
+    partial class snapShotPrecision
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -265,17 +268,6 @@ namespace SuperFilm.Enerji.Entites.Migrations
                 });
 
             modelBuilder.Entity("SuperFilm.Enerji.Entites.OpcNodes", b =>
-                {
-                    b.HasOne("SuperFilm.Enerji.Entites.Isletme", "Isletme")
-                        .WithMany()
-                        .HasForeignKey("IsletmeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Isletme");
-                });
-
-            modelBuilder.Entity("SuperFilm.Enerji.Entites.SayacTanimlari", b =>
                 {
                     b.HasOne("SuperFilm.Enerji.Entites.Isletme", "Isletme")
                         .WithMany()

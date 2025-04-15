@@ -28,5 +28,6 @@ namespace SuperFilm.Enerji.Entites
         public int IsletmeId { get; set; }
         public Isletme? Isletme { get; set; }
 
+
     }
 }

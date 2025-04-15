@@ -33,6 +33,7 @@ namespace SuperFilm.Enerji.WebUI.Controllers
         {
             var isletmeler = await _queryRepository.GetQueryable<Isletme>().ToListAsync();
             var model = new OpcNodesIsletmeViewModel
+
             {
                 OpcNodes = new OpcNodes(),
                 Isletmeler = isletmeler
@@ -42,6 +43,7 @@ namespace SuperFilm.Enerji.WebUI.Controllers
 
         [HttpPost]
         public async Task<IActionResult> AddOpcNodes(OpcNodesIsletmeViewModel model, CancellationToken cancellationToken)
+
         {
             ModelState.Remove("Isletmeler");
             if (ModelState.ValidationState == Microsoft.AspNetCore.Mvc.ModelBinding.ModelValidationState.Invalid)
