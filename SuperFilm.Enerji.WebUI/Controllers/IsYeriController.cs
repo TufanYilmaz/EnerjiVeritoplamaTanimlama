@@ -22,56 +22,34 @@ namespace SuperFilm.Enerji.WebUI.Controllers
             _queryRepository = queryRepository;
             _enerjiRepository = enerjiRepository;
         }
-        public async Task<IActionResult> Index(int id)
+        public async Task<IActionResult> Index()
         {
-            var query = _queryRepository.GetQueryable<IsYeri>().Include(i => i.Isletme);
-            var IsYerleri = new List<IsYeri>();
-            if (id == 0)
-            {
-                IsYerleri = await query.ToListAsync();
-            }
-            else {
-                IsYerleri = await query.Where(i => i.IsletmeTanimlariId == id).ToListAsync();
-            }
-            
-            var Isletmeler = await _queryRepository.GetQueryable<IsletmeTanimlari>().ToListAsync();
-            var model = new IsYeriIsletmeListViewModel
-            {
-                IsYeri = IsYerleri,
-                IsletmeTanimlari = Isletmeler
-            };
+            var model =await _queryRepository.GetQueryable<IsYeri>().ToListAsync();
             return View(model);
         }
-        public async Task<IActionResult> AddIsYeri()
+        public IActionResult AddIsYeri()
         {
-            var isletmeler = await _queryRepository.GetQueryable<IsletmeTanimlari>().ToListAsync();
-            var model = new IsYeriIsletmeViewModel
-            {
-                IsYeri = new IsYeri(),
-                IsletmeTanimlari = isletmeler
-            };
-            return View(model);
+            return View();
         }
         [HttpPost]
-        public async Task<IActionResult> AddIsYeri(IsYeriIsletmeViewModel model, CancellationToken cancellationToken)
+        public async Task<IActionResult> AddIsYeri(IsYeri model,CancellationToken cancellationToken)
         {
-            ModelState.Remove("IsletmeTanimlari");
-            if (ModelState.ValidationState == Microsoft.AspNetCore.Mvc.ModelBinding.ModelValidationState.Invalid)
+            if(ModelState.ValidationState == Microsoft.AspNetCore.Mvc.ModelBinding.ModelValidationState.Invalid)
             {
                 return NoContent();
             }
             try
             {
-                var isYeri = model.IsYeri;
-                await _repository.AddAsync(isYeri, cancellationToken);
+                await _repository.AddAsync(model, cancellationToken);
                 await _repository.SaveChangesAsync(cancellationToken);
             }
             catch (Exception ex)
             {
                 return NotFound(ex.Message);
             }
-            return RedirectToAction("Index", "IsYeri");
 
+            return RedirectToAction("Index", "IsYeri");
         }
+        
     }
 }

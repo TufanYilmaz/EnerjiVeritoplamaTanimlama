@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SuperFilm.Enerji.Entites;
 
@@ -11,9 +12,11 @@ using SuperFilm.Enerji.Entites;
 namespace SuperFilm.Enerji.Entites.Migrations
 {
     [DbContext(typeof(EnerjiDbContext))]
-    partial class EnerjiDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250415061838_Isletmne_Isyeri_TableNames_Edit")]
+    partial class Isletmne_Isyeri_TableNames_Edit
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -34,11 +37,11 @@ namespace SuperFilm.Enerji.Entites.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("varchar(255)");
 
-                    b.Property<string>("Adi")
+                    b.Property<string>("IsletmeAdi")
                         .HasMaxLength(255)
                         .HasColumnType("varchar(255)");
 
-                    b.Property<string>("Kodu")
+                    b.Property<string>("IsletmeKodu")
                         .IsRequired()
                         .HasMaxLength(20)
                         .HasColumnType("varchar(20)");
@@ -65,7 +68,7 @@ namespace SuperFilm.Enerji.Entites.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("varchar(100)");
 
-                    b.Property<int>("IsyeriId")
+                    b.Property<int?>("IsletmeTanimlariId")
                         .HasColumnType("int");
 
                     b.Property<string>("Kod")
@@ -79,7 +82,7 @@ namespace SuperFilm.Enerji.Entites.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("IsyeriId");
+                    b.HasIndex("IsletmeTanimlariId");
 
                     b.ToTable("ISLETME");
                 });
@@ -238,9 +241,7 @@ namespace SuperFilm.Enerji.Entites.Migrations
                 {
                     b.HasOne("SuperFilm.Enerji.Entites.IsYeri", "Isyeri")
                         .WithMany("Isletmeler")
-                        .HasForeignKey("IsyeriId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("IsletmeTanimlariId");
 
                     b.Navigation("Isyeri");
                 });

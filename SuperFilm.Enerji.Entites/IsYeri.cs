@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace SuperFilm.Enerji.Entites
 {
-    [Table("IS_YERI")]
+    [Table("ISYERI")]
     public class IsYeri
     {
         [Key]
@@ -16,21 +16,14 @@ namespace SuperFilm.Enerji.Entites
         [Column(TypeName = "varchar(20)")]
         [StringLength(20)]
         [Required]
-        public string Kod { get; set; }
-        [Column(TypeName = "varchar(100)")]
-        [StringLength(100)]
-        [Required]
-        public string Ad { get; set; }
+        public string? Kodu { get; set; }
         [Column(TypeName = "varchar(255)")]
         [StringLength(255)]
-        [Required]
-        public string Aciklama { get; set; }
-        [Required]
-        public int IsletmeTanimlariId { get; set; } // Foreign Key
-
-        [ForeignKey("IsletmeTanimlariId")]
-        public IsletmeTanimlari? Isletme { get; set; }
-        public IEnumerable<SayacTanimlari>? SayacTanimlari { get; set; }
-
+        public string? Adi { get; set; }
+        [Column(TypeName = "varchar(255)")] 
+        [StringLength(255)]
+        public string? Aciklama { get; set; }
+        public IEnumerable<Isletme>? Isletmeler { get; set; }
+       
     }
 }

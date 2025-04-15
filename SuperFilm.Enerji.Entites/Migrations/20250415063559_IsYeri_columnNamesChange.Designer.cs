@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SuperFilm.Enerji.Entites;
 
@@ -11,9 +12,11 @@ using SuperFilm.Enerji.Entites;
 namespace SuperFilm.Enerji.Entites.Migrations
 {
     [DbContext(typeof(EnerjiDbContext))]
-    partial class EnerjiDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250415063559_IsYeri_columnNamesChange")]
+    partial class IsYeri_columnNamesChange
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -65,7 +68,7 @@ namespace SuperFilm.Enerji.Entites.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("varchar(100)");
 
-                    b.Property<int>("IsyeriId")
+                    b.Property<int?>("IsyeriId")
                         .HasColumnType("int");
 
                     b.Property<string>("Kod")
@@ -238,9 +241,7 @@ namespace SuperFilm.Enerji.Entites.Migrations
                 {
                     b.HasOne("SuperFilm.Enerji.Entites.IsYeri", "Isyeri")
                         .WithMany("Isletmeler")
-                        .HasForeignKey("IsyeriId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("IsyeriId");
 
                     b.Navigation("Isyeri");
                 });

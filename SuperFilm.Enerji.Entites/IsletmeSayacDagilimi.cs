@@ -9,7 +9,7 @@ namespace SuperFilm.Enerji.Entites
         [Key]
         public int Id { get; set; }
 
-        public IsletmeTanimlari Isletme{ get;set;}
+        public Isletme Isletme{ get;set;}
 
         public SayacTanimlari Sayac { get; set; }
         public char Islem { get; set; }

@@ -1,40 +1,52 @@
 ﻿@using SuperFilm.Enerji.Entites;
-@model IsletmeTanimlari;
+
+@model IsYeriIsletmeViewModel;
 @{
-    ViewData["Title"] = "İşletme Ekle";
+    ViewData["Title"] = "İş Yeri Ekle";
 }
 <div class="account-container">
     <div class="account-box">
-    <div class="mb-3">
-        <a asp-controller="Isletme" asp-action="Index" class="text-decoration-none">
-Geri
-        </a>
-    </div>
-    <h1 class="display-4">İşletme Ekle</h1>
-    <form asp-action="AddIsletme" method="post">
-        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
         <div class="mb-3">
-            <label asp-for="IsletmeKodu" class="form-label"></label>
-            <input asp-for="IsletmeKodu" class="form-control" />
-            <span asp-validation-for="IsletmeKodu" class="text-danger"></span>
+            <a asp-controller="Isletme" asp-action="Index" class="text-decoration-none">
+                Geri
+            </a>
         </div>
-        <div class="mb-3">
-            <label asp-for="IsletmeAdi" class="form-label"></label>
-            <input asp-for="IsletmeAdi" class="form-control" />
-            <span asp-validation-for="IsletmeAdi" class="text-danger"></span>
-        </div>
-        <div class="mb-3">
-            <label asp-for="Aciklama" class="form-label"></label>
-            <input asp-for="Aciklama" type="text" class="form-control" />
-            <span asp-validation-for="Aciklama" class="text-danger"></span>
-        </div>
-       @*  <div class="mb-3">
-            <label asp-for="ConfirmPassword" class="form-label"></label>
-            <input asp-for="ConfirmPassword" type="password" class="form-control" />
-            <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
-        </div> *@
+        <h1 class="display-4">İşletme Ekle</h1>
+        <form asp-action="AddIsletme" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="mb-3">
+                <label asp-for="Isletme.Kod" class="form-label"></label>
+                <input asp-for="Isletme.Kod" class="form-control" />
+                <span asp-validation-for="Isletme.Kod" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="Isletme.Ad" class="form-label"></label>
+                <input asp-for="Isletme.Ad" class="form-control" />
+                <span asp-validation-for="Isletme.Ad" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="Isletme.Aciklama" class="form-label"></label>
+                <input asp-for="Isletme.Aciklama" type="text" class="form-control" />
+                <span asp-validation-for="Isletme.Aciklama" class="text-danger"></span>
+            </div>
 
-        <input type="submit" value="Ekle" class="btn btn-success w-100 p-2" />
-    </form>
+            <label for="IsletmeID">İş Yeri</label>
+            <select class="form-control" asp-for="Isletme.IsyeriId">
+                <option value="">Seçiniz</option>
+                @if (Model.IsYerleri != null && Model.IsYerleri.Any())
+                {
+                    foreach (var item in Model.IsYerleri)
+                    {
+                        <option value="@item.Id">@item.Aciklama</option>
+                    }
+                }
+                else
+                {
+                    <option>Mevcut İşYeri Yok</option>
+                }
+
+            </select>
+            <input type="submit" value="Ekle" class="btn btn-success w-100 p-2" />
+        </form>
     </div>
 </div>

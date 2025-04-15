@@ -1,31 +1,47 @@
-﻿@model List<SuperFilm.Enerji.Entites.IsletmeTanimlari>
+﻿@model SuperFilm.Enerji.Entites.IsYeriIsletmeListViewModel
 @{
-    ViewData["Title"] = "İşletme Tanımları";
+    ViewData["Title"] = "İşletmeler";
 }
 
 <div class="text-center">
+    <div class="float-start">
+        <a asp-route-id=0 class="text-decoration-none">
+            Tümü
+        </a>
+        <span> | </span>
+        @foreach (var item in Model.IsYerleri)
+        {
+            <a asp-route-id="@item.Id" class="text-decoration-none">
+                @item.Adi
+            </a>
+            <span> | </span>
+        }
+    </div>
     <div class="float-end">
         <a asp-controller="Isletme" asp-action="AddIsletme" class="text-decoration-none">
-            Isletme Ekle
+             Ekle
         </a>
     </div>
     <table class="table">
         <thead>
             <tr>
-                <th>İşletme Kodu</th>
-                <th>İşletme Adı</th>
-                <th>İşletme Açıklaması</th>
-                
+                <th>Isletme Kodu</th>
+                <th>Isletme Adı</th>
+                <th>Isletme Tipi</th>
+                <th>Isletme Açıklaması</th>
+              @*   <th>İşletme Ad</th> *@
+
             </tr>
         </thead>
         <tbody>
-            @foreach (var item in Model)
+            @foreach (var item in Model.Isletmeler)
             {
                 <tr>
-                    <td>@item.IsletmeKodu</td>
-                    <td>@item.IsletmeAdi</td>
+                    <td>@item.Kod</td>
+                    <td>@item.Ad</td>
+                    <td>@item.Tip</td>
                     <td>@item.Aciklama</td>
-                    
+                   @*  <td>@item.Isletme?.IsletmeAdi</td> *@
                 </tr>
             }
         </tbody>

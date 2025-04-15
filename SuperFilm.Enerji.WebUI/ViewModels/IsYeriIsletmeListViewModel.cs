@@ -8,7 +8,7 @@ namespace SuperFilm.Enerji.Entites
 {
     public class IsYeriIsletmeListViewModel
     {
-        public required List<IsYeri> IsYeri { get; set; }
-        public required List<IsletmeTanimlari> IsletmeTanimlari { get; set; }
+        public required List<Isletme> Isletmeler { get; set; }
+        public required List<IsYeri> IsYerleri { get; set; }
     }
 }
