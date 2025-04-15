@@ -49,9 +49,9 @@ namespace SuperFilm.Enerji.Entites.Migrations
                 name: "IsletmeTanimlariId",
                 table: "IS_YERI");
 
-            migrationBuilder.DropColumn(
-                name: "Tip",
-                table: "IS_YERI");
+            //migrationBuilder.DropColumn(
+            //    name: "Tip",
+            //    table: "IS_YERI");
 
             migrationBuilder.RenameTable(
                 name: "IS_YERI",
