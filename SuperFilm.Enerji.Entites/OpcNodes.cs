@@ -22,8 +22,13 @@ namespace SuperFilm.Enerji.Entites
         [Column(TypeName = "varchar(255)")]
         [StringLength(255)]
         public string NodeId { get; set; }
-        public int NodeNameSpace { get; set; }
-        public int AttributeId { get; set; } = 3;
+        public int NodeNameSpace { get; set; } = 3;
+        public int AttributeId { get; set; } = 13;
+
+        public int IsletmeId { get; set; }
+
+        public Isletme? Isletme { get; set; }
+
 
     }
 }
