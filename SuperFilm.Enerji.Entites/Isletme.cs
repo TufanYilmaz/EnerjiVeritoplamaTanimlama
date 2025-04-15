@@ -29,7 +29,7 @@ namespace SuperFilm.Enerji.Entites
         [Required]
         public int IsyeriId { get; set; }
         public IsYeri? Isyeri { get; set; }
-        public IEnumerable<SayacTanimlari>? SayacTanimlari { get; set; }
+        //public IEnumerable<SayacTanimlari>? SayacTanimlari { get; set; }
 
     }
 }

@@ -3,6 +3,7 @@ using AspNetCoreGeneratedDocument;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SuperFilm.Enerji.Entites;
+using SuperFilm.Enerji.WebUI.ViewModels;
 using TanvirArjel.EFCore.GenericRepository;
 
 namespace SuperFilm.Enerji.WebUI.Controllers

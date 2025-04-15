@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using SuperFilm.Enerji.Entites;
 
-namespace SuperFilm.Enerji.Entites
+namespace SuperFilm.Enerji.WebUI.ViewModels
 {
     public class IsYeriIsletmeViewModel
     {

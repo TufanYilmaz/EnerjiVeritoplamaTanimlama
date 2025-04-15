@@ -1,0 +1,39 @@
+﻿@model List<SuperFilm.Enerji.Entites.OpcNodes>
+@{
+    ViewData["Title"] = "OpcNodes";
+}
+
+<div class="text-center">
+    <div class="float-end">
+        <a asp-controller="OpcNodes" asp-action="AddOpcNodes" class="text-decoration-none">
+            Ekle
+        </a>
+    </div>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Kodu</th>
+                <th>Açıklaması</th>
+                <th>Node Id</th>
+                <th>Node NameSpace</th>
+                <th>Attribute Id</th>
+                
+
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.Code</td>
+                    <td>@item.Description</td>
+                    <td>@item.NodeId</td>
+                    <td>@item.NodeNameSpace</td>
+                    <td>@item.AttributeId</td>
+                    
+
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

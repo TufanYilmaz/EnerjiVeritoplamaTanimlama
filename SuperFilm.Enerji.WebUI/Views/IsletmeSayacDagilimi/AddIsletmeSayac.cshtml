@@ -1,0 +1,63 @@
+﻿
+@using SuperFilm.Enerji.WebUI.ViewModels
+
+@model IsletmeSayacDagilimiViewModel;
+@{
+    ViewData["Title"] = "İşletme Sayaç Ekle";
+}
+<div class="account-container">
+    <div class="account-box">
+        <div class="mb-3">
+            <a asp-controller="IsletmeSayacDagilimi" asp-action="Index" class="text-decoration-none">
+                Geri
+            </a>
+        </div>
+        <h1 class="display-4">İşletme Sayaç Ekle</h1>
+        <form asp-action="AddIsletmeSayac" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <label for="IsletmeID">İş Yeri</label>
+            <select class="form-control" asp-for="IsletmeSayacDagilimi.IsletmeId">
+                <option value="">Seçiniz</option>
+                @if (Model.Isletme != null && Model.Isletme.Any())
+                {
+                    foreach (var item in Model.Isletme)
+                    {
+                        <option value="@item.Id">@item.Ad</option>
+                    }
+                }
+                else
+                {
+                    <option>Mevcut İşletme Yok</option>
+                }
+
+            </select>
+            <label for="SayacId">Sayaç Tanımı</label>
+            <select class="form-control" asp-for="IsletmeSayacDagilimi.SayacId">
+                <option value="">Seçiniz</option>
+                @if (Model.SayacTanimlari != null && Model.SayacTanimlari.Any())
+                {
+                    foreach (var item in Model.SayacTanimlari)
+                    {
+                        <option value="@item.Id">@item.SayacTanimi</option>
+                    }
+                }
+                else
+                {
+                    <option>Mevcut İşletme Yok</option>
+                }
+
+            </select>
+            <div class="mb-3">
+                <label asp-for="IsletmeSayacDagilimi.Carpan" class="form-label"></label>
+                <input asp-for="IsletmeSayacDagilimi.Carpan" type="text" class="form-control" />
+                <span asp-validation-for="IsletmeSayacDagilimi.Carpan" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="IsletmeSayacDagilimi.Islem" class="form-label"></label>
+                <input asp-for="IsletmeSayacDagilimi.Islem" type="text" class="form-control" />
+                <span asp-validation-for="IsletmeSayacDagilimi.Islem" class="text-danger"></span>
+            </div>
+            <input type="submit" value="Ekle" class="btn btn-success w-100 p-2" />
+        </form>
+    </div>
+</div>
