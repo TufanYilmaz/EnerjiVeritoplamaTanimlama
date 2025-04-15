@@ -1,5 +1,4 @@
-﻿@using SuperFilm.Enerji.WebUI.ViewModels
-@model OpcNodesViewModel;
+﻿@model OpcNodesIsletmeViewModel;
 
 @{
     ViewData["Title"] = "OpcNodes Ekle";
@@ -7,41 +6,42 @@
 
 <div class="account-container">
     <div class="account-box">
-        <div class="mb-3">
-            <a asp-controller="OpcNodes" asp-action="Index" class="text-decoration-none">
-                Geri
-            </a>
-        </div>
+
+    <div class="mb-3">
+        <a asp-controller="OpcNodes" asp-action="Index" class="text-decoration-none">
+            Geri
+        </a>
+    </div>
         <h1 class="display-4">OpcNodes Ekle</h1>
         <form asp-action="AddOpcNodes" method="post">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="mb-3">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="mb-3">
                 <label asp-for="OpcNodes.Code" class="form-label"></label>
                 <input asp-for="OpcNodes.Code" class="form-control" />
                 <span asp-validation-for="OpcNodes.Code" class="text-danger"></span>
-            </div>
-            <div class="mb-3">
+        </div>
+        <div class="mb-3">
                 <label asp-for="OpcNodes.Description" class="form-label"></label>
                 <input asp-for="OpcNodes.Description" class="form-control" />
                 <span asp-validation-for="OpcNodes.Description" class="text-danger"></span>
-            </div>
-            <div class="mb-3">
+        </div>
+        <div class="mb-3">
                 <label asp-for="OpcNodes.NodeId" class="form-label"></label>
                 <input asp-for="OpcNodes.NodeId" type="text" class="form-control" />
                 <span asp-validation-for="OpcNodes.NodeId" class="text-danger"></span>
-            </div>
-            <div class="mb-3">
+        </div>
+        <div class="mb-3">
                 <label asp-for="OpcNodes.NodeNameSpace" class="form-label"></label>
                 <input asp-for="OpcNodes.NodeNameSpace" type="text" class="form-control" />
                 <span asp-validation-for="OpcNodes.NodeNameSpace" class="text-danger"></span>
-            </div>
-            <div class="mb-3">
+        </div>
+        <div class="mb-3">
                 <label asp-for="OpcNodes.AttributeId" class="form-label"></label>
                 <input asp-for="OpcNodes.AttributeId" type="text" class="form-control" />
                 <span asp-validation-for="OpcNodes.AttributeId" class="text-danger"></span>
-            </div>
-            <label for="IsletmeID">İşletme</label>
-            <select class="form-control" asp-for="OpcNodes.IsletmeId">
+        </div>
+            <label for="IsletmeId">İşletme </label>
+            <select class="form-control" class="mb-3" asp-for="OpcNodes.IsletmeId">
                 <option value="">Seçiniz</option>
                 @if (Model.Isletmeler != null && Model.Isletmeler.Any())
                 {
@@ -54,9 +54,8 @@
                 {
                     <option>Mevcut İşletme Yok</option>
                 }
-
-            </select>
-            <input type="submit" value="Ekle" class="btn btn-success w-100 p-2" />
-        </form>
+           </select> 
+        <input type="submit" value="Ekle" class="btn btn-success w-100 p-2" />
+    </form>
     </div>
 </div>
