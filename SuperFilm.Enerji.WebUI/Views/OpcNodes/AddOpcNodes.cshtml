@@ -1,4 +1,5 @@
-﻿@model OpcNodesIsletmeViewModel;
+﻿@using SuperFilm.Enerji.WebUI.ViewModels
+@model OpcNodesIsletmeViewModel;
 
 @{
     ViewData["Title"] = "OpcNodes Ekle";
@@ -40,21 +41,7 @@
                 <input asp-for="OpcNodes.AttributeId" type="text" class="form-control" />
                 <span asp-validation-for="OpcNodes.AttributeId" class="text-danger"></span>
         </div>
-            <label for="IsletmeId">İşletme </label>
-            <select class="form-control" class="mb-3" asp-for="OpcNodes.IsletmeId">
-                <option value="">Seçiniz</option>
-                @if (Model.Isletmeler != null && Model.Isletmeler.Any())
-                {
-                    foreach (var item in Model.Isletmeler)
-                    {
-                        <option value="@item.Id">@item.Ad</option>
-                    }
-                }
-                else
-                {
-                    <option>Mevcut İşletme Yok</option>
-                }
-           </select> 
+          
         <input type="submit" value="Ekle" class="btn btn-success w-100 p-2" />
     </form>
     </div>

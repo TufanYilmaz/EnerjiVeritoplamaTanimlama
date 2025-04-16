@@ -31,12 +31,12 @@ namespace SuperFilm.Enerji.WebUI.Controllers
         }
         public async Task<IActionResult> AddOpcNodesAsync()
         {
-            var isletmeler = await _queryRepository.GetQueryable<Isletme>().ToListAsync();
+            //var isletmeler = await _queryRepository.GetQueryable<Isletme>().ToListAsync();
             var model = new OpcNodesIsletmeViewModel
 
             {
                 OpcNodes = new OpcNodes(),
-                Isletmeler = isletmeler
+                
             };
             return View(model);
         }
@@ -45,7 +45,7 @@ namespace SuperFilm.Enerji.WebUI.Controllers
         public async Task<IActionResult> AddOpcNodes(OpcNodesIsletmeViewModel model, CancellationToken cancellationToken)
 
         {
-            ModelState.Remove("Isletmeler");
+            
             if (ModelState.ValidationState == Microsoft.AspNetCore.Mvc.ModelBinding.ModelValidationState.Invalid)
             {
                 return NoContent();
