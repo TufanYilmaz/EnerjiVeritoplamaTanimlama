@@ -12,11 +12,11 @@
     <table class="table">
         <thead>
             <tr>
-                <th>NodeId</th>
-                <th>NodeNameSpace</th>
-                <th>AttributeId</th>
-                <th>Code</th>
-                <th>Description</th>
+                <th>Kodu</th>
+                <th>Açıklaması</th>
+                <th>Node Id</th>
+                <th>Node NameSpace</th>
+                <th>Attribute Id</th>
                 
 
             </tr>
@@ -25,11 +25,12 @@
             @foreach (var item in Model)
             {
                 <tr>
+                    <td>@item.Code</td>
+                    <td>@item.Description</td>
                     <td>@item.NodeId</td>
                     <td>@item.NodeNameSpace</td>
                     <td>@item.AttributeId</td>
-                    <td>@item.Code</td>
-                    <td>@item.Description</td>
+                    
 
                 </tr>
             }
