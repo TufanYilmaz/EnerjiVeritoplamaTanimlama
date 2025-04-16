@@ -1,4 +1,4 @@
-﻿@model OpcNodesIsletmeViewModel;
+﻿@model OpcNodes;
 
 @{
     ViewData["Title"] = "OpcNodes Ekle";
@@ -12,51 +12,51 @@
             Geri
         </a>
     </div>
-        <h1 class="display-4">OpcNodes Ekle</h1>
+        @if (Model.Id == 0)
+        {
+            <h1 class="display-4">OpcNodes Ekle</h1>
+        }
+        else
+        {
+            <h1 class="display-4">OpcNodes Güncelle</h1>
+        }
+        
         <form asp-action="AddOpcNodes" method="post">
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <input type="hidden" asp-for="Id" class="form-control" />
         <div class="mb-3">
-                <label asp-for="OpcNodes.Code" class="form-label"></label>
-                <input asp-for="OpcNodes.Code" class="form-control" />
-                <span asp-validation-for="OpcNodes.Code" class="text-danger"></span>
+                <label asp-for="Code" class="form-label"></label>
+                <input asp-for="Code" class="form-control" />
+                <span asp-validation-for="Code" class="text-danger"></span>
         </div>
         <div class="mb-3">
-                <label asp-for="OpcNodes.Description" class="form-label"></label>
-                <input asp-for="OpcNodes.Description" class="form-control" />
-                <span asp-validation-for="OpcNodes.Description" class="text-danger"></span>
+                <label asp-for="Description" class="form-label"></label>
+                <input asp-for="Description" class="form-control" />
+                <span asp-validation-for="Description" class="text-danger"></span>
         </div>
         <div class="mb-3">
-                <label asp-for="OpcNodes.NodeId" class="form-label"></label>
-                <input asp-for="OpcNodes.NodeId" type="text" class="form-control" />
-                <span asp-validation-for="OpcNodes.NodeId" class="text-danger"></span>
+                <label asp-for="NodeId" class="form-label"></label>
+                <input asp-for="NodeId" type="text" class="form-control" />
+                <span asp-validation-for="NodeId" class="text-danger"></span>
         </div>
         <div class="mb-3">
-                <label asp-for="OpcNodes.NodeNameSpace" class="form-label"></label>
-                <input asp-for="OpcNodes.NodeNameSpace" type="text" class="form-control" />
-                <span asp-validation-for="OpcNodes.NodeNameSpace" class="text-danger"></span>
+                <label asp-for="NodeNameSpace" class="form-label"></label>
+                <input asp-for="NodeNameSpace" type="text" class="form-control" />
+                <span asp-validation-for="NodeNameSpace" class="text-danger"></span>
         </div>
         <div class="mb-3">
-                <label asp-for="OpcNodes.AttributeId" class="form-label"></label>
-                <input asp-for="OpcNodes.AttributeId" type="text" class="form-control" />
-                <span asp-validation-for="OpcNodes.AttributeId" class="text-danger"></span>
+                <label asp-for="AttributeId" class="form-label"></label>
+                <input asp-for="AttributeId" type="text" class="form-control" />
+                <span asp-validation-for="AttributeId" class="text-danger"></span>
         </div>
-            <label for="IsletmeId">İşletme </label>
-            <select class="form-control" class="mb-3" asp-for="OpcNodes.IsletmeId">
-                <option value="">Seçiniz</option>
-                @if (Model.Isletmeler != null && Model.Isletmeler.Any())
-                {
-                    foreach (var item in Model.Isletmeler)
-                    {
-                        <option value="@item.Id">@item.Ad</option>
-                    }
-                }
-                else
-                {
-                    <option>Mevcut İşletme Yok</option>
-                }
-
-           </select> 
-        <input type="submit" value="Ekle" class="btn btn-success w-100 p-2" />
+            @if (Model.Id == 0)
+            {
+                <input type="submit" value="Ekle" class="btn btn-success w-100 p-2" />
+            }
+            else
+            {
+                <input type="submit" value="Güncelle" class="btn btn-success w-100 p-2" />
+            }
     </form>
     </div>
 </div>

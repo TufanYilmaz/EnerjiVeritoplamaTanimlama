@@ -31,15 +31,29 @@ namespace SuperFilm.Enerji.WebUI.Controllers
                                       .ToListAsync();
             return View(model);
         }
-        public async Task<IActionResult> AddIsletmeSayac()
+        public async Task<IActionResult> AddIsletmeSayac(int? id)
         {
-            var isletme = await _queryRepository.GetQueryable<Isletme>().ToListAsync();
+            var isletmeler = await _queryRepository.GetQueryable<Isletme>().ToListAsync();
             var sayactanimlari = await _queryRepository.GetQueryable<SayacTanimlari>().ToListAsync();
+            IsletmeSayacDagilimi isletmesayacmodel = new IsletmeSayacDagilimi();
+
+            if (id != null)
+            {
+                var isletmesayac = await _queryRepository
+                    .GetQueryable<IsletmeSayacDagilimi>()
+                    .Include(i => i.Isletme)
+                    .Include(i => i.Sayac)
+                    .FirstOrDefaultAsync(x => x.Id == id);
+                if (isletmesayac != null)
+                {
+                    isletmesayacmodel = isletmesayac;
+                }
+            }
             var model = new IsletmeSayacDagilimiViewModel
             {
-                Isletme = isletme,
+                Isletme = isletmeler,
                 SayacTanimlari = sayactanimlari,
-                IsletmeSayacDagilimi=new IsletmeSayacDagilimi()
+                IsletmeSayacDagilimi = isletmesayacmodel
 
             };
             return View(model);
@@ -58,7 +72,14 @@ namespace SuperFilm.Enerji.WebUI.Controllers
             try
             {
                 var isletmesayac = model.IsletmeSayacDagilimi;
-                await _repository.AddAsync(isletmesayac, cancellationToken);
+                if (isletmesayac.Id == 0)
+                {
+                    await _repository.AddAsync<IsletmeSayacDagilimi>(isletmesayac, cancellationToken);
+                }
+                else
+                {
+                    await _repository.UpdateAsync<IsletmeSayacDagilimi>(isletmesayac, cancellationToken);
+                }
                 await _repository.SaveChangesAsync(cancellationToken);
             }
             catch (Exception ex)

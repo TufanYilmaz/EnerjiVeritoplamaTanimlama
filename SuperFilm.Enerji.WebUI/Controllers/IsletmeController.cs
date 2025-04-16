@@ -47,10 +47,23 @@ namespace SuperFilm.Enerji.WebUI.Controllers
         public async Task<IActionResult> AddIsletme(int? id)
         {
             var isyerleri = await _queryRepository.GetQueryable<IsYeri>().ToListAsync();
-            
+            Isletme isletmemodel = new Isletme();
+
+            if (id != null)
+            {
+                var isletme = await _queryRepository
+                    .GetQueryable<Isletme>()
+                    .Include(i => i.Isyeri)
+                    .FirstOrDefaultAsync(x => x.Id == id);
+
+                if (isletme != null)
+                {
+                    isletmemodel = isletme;
+                }
+            }
             var model = new IsYeriIsletmeViewModel
             {
-                Isletme = new Isletme(),
+                Isletme = isletmemodel,
                 IsYerleri = isyerleri
             };
             return View(model);
@@ -67,7 +80,15 @@ namespace SuperFilm.Enerji.WebUI.Controllers
             try
             {
                 var isletme = model.Isletme;
-                await _repository.AddAsync(isletme, cancellationToken);
+                if(isletme.Id == 0)
+                {
+                    await _repository.AddAsync<Isletme>(isletme, cancellationToken);
+                }
+                else
+                {
+                    await _repository.UpdateAsync<Isletme>(isletme, cancellationToken);
+                }
+
                 await _repository.SaveChangesAsync(cancellationToken);
             }
             catch (Exception ex)

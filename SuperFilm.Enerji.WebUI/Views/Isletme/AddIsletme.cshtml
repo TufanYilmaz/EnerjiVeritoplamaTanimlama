@@ -9,9 +9,15 @@
                 Geri
             </a>
         </div>
-        <h1 class="display-4">İşletme Ekle</h1>
+        @if(Model.Isletme.Id==0){
+            <h1 class="display-4">İşletme Ekle</h1>
+        }
+        else{
+            <h1 class="display-4">İşletme Güncelle</h1>
+        }
         <form asp-action="AddIsletme" method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Isletme.Id" class="form-control" />
             <div class="mb-3">
                 <label asp-for="Isletme.Kod" class="form-label"></label>
                 <input asp-for="Isletme.Kod" class="form-control" />
@@ -28,7 +34,7 @@
                 <span asp-validation-for="Isletme.Aciklama" class="text-danger"></span>
             </div>
 
-            <label for="IsletmeID">İş Yeri</label>
+            <label for="IsyeriId">İş Yeri</label>
             <select class="form-control" asp-for="Isletme.IsyeriId">
                 <option value="">Seçiniz</option>
                 @if (Model.IsYerleri != null && Model.IsYerleri.Any())
@@ -44,7 +50,15 @@
                 }
 
             </select>
-            <input type="submit" value="Ekle" class="btn btn-success w-100 p-2" />
+            @if (Model.Isletme.Id == 0)
+            {
+                <input type="submit" value="Ekle" class="btn btn-success w-100 p-2" />
+            }
+            else
+            {
+                <input type="submit" value="Güncelle" class="btn btn-success w-100 p-2" />
+            }
+           
         </form>
     </div>
 </div>

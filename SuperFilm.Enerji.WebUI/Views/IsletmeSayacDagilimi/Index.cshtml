@@ -16,6 +16,7 @@
                 <th>Sayaç Tanımı</th>
                 <th>Çarpan</th>
                 <th>İşlem</th>
+                <th>Güncelle</th>
 
             </tr>
         </thead>
@@ -27,6 +28,9 @@
                     <td>@item.Sayac.SayacTanimi</td>
                     <td>@item.Carpan</td>
                     <td>@item.Islem</td>
+                    <td>
+                        <a asp-controller="IsletmeSayacDagilimi" asp-action="AddIsletmeSayac" asp-route-id="@item.Id">Güncelle</a>
+                    </td>
 
                 </tr>
             }

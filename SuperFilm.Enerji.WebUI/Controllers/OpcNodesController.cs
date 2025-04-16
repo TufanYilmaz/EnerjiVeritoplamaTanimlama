@@ -29,31 +29,44 @@ namespace SuperFilm.Enerji.WebUI.Controllers
             var model = await _queryRepository.GetQueryable<OpcNodes>().ToListAsync();
             return View(model);
         }
-        public async Task<IActionResult> AddOpcNodesAsync()
+        public async Task<IActionResult> AddOpcNodesAsync(int? id)
         {
-            var isletmeler = await _queryRepository.GetQueryable<Isletme>().ToListAsync();
-            var model = new OpcNodesIsletmeViewModel
 
+            OpcNodes opcnodesmodel = new OpcNodes();
+            if(id != null)
             {
-                OpcNodes = new OpcNodes(),
-                Isletmeler = isletmeler
-            };
-            return View(model);
+                var opcnodes = await _queryRepository
+                    .GetQueryable<OpcNodes>()
+                    .FirstOrDefaultAsync(x => x.Id == id);
+                if (opcnodes != null)
+                {
+                    opcnodesmodel = opcnodes;
+                }
+            }
+
+            return View(opcnodesmodel);
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddOpcNodes(OpcNodesIsletmeViewModel model, CancellationToken cancellationToken)
+        public async Task<IActionResult> AddOpcNodes(OpcNodes opcnodes, CancellationToken cancellationToken)
 
         {
-            ModelState.Remove("Isletmeler");
             if (ModelState.ValidationState == Microsoft.AspNetCore.Mvc.ModelBinding.ModelValidationState.Invalid)
             {
                 return NoContent();
             }
             try
             {
-                var opcNodes = model.OpcNodes;
-                await _repository.AddAsync(opcNodes, cancellationToken);
+
+                if(opcnodes.Id == 0)
+                {
+                    await _repository.AddAsync<OpcNodes>(opcnodes, cancellationToken);
+                }
+                else
+                {
+                    await _repository.UpdateAsync<OpcNodes>(opcnodes, cancellationToken);
+                }
+                
                 await _repository.SaveChangesAsync(cancellationToken);
             }
             catch (Exception ex)

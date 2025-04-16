@@ -18,6 +18,7 @@
                 <th>Node Id</th>
                 <th>Node NameSpace</th>
                 <th>Attribute Id</th>
+                <th>Güncelle</th>
                 
 
             </tr>
@@ -31,6 +32,9 @@
                     <td>@item.NodeId</td>
                     <td>@item.NodeNameSpace</td>
                     <td>@item.AttributeId</td>
+                    <td>
+                        <a asp-controller="OpcNodes" asp-action="AddOpcNodes" asp-route-id="@item.Id">Güncelle</a>
+                    </td>
                     
 
                 </tr>
