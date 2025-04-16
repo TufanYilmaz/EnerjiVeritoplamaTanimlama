@@ -20,6 +20,7 @@
                 <th>İşletme Adı</th>
                 <th>Çarpan</th>
                 <th>İşlem</th>
+                <th>Güncelle</th>
 
             </tr>
         </thead>
@@ -32,6 +33,9 @@
                     <td>@item.Isletme.Ad</td>
                     <td>@item.Carpan</td>
                     <td>@item.Islem</td>
+                    <td>
+                        <a asp-controller="OpcNodesIsletmeDagilimi" asp-action="AddOpcNodesIsletme" asp-route-id="@item.Id">Güncelle</a>
+                    </td>
 
                 </tr>
             }

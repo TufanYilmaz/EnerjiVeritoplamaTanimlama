@@ -24,10 +24,6 @@ namespace SuperFilm.Enerji.Entites
         public string NodeId { get; set; }
         public int NodeNameSpace { get; set; } = 3;
         public int AttributeId { get; set; } = 13;
-        [Required]
-        public int IsletmeId { get; set; }
-        public Isletme? Isletme { get; set; }
-
 
     }
 }
