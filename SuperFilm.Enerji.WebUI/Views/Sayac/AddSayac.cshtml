@@ -1,5 +1,4 @@
-﻿@using SuperFilm.Enerji.Entites;
-@model SayacViewModel;
+﻿@model SayacTanimlari;
 @{
     ViewData["Title"] = "Sayaç Ekle";
 }
@@ -17,27 +16,27 @@
         <h1 class="display-4">Sayaç Ekle</h1>
         <form asp-action="AddSayac" method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="SayacTanimlari.Id" class="form-control" />
+            <input type="hidden" asp-for="Id" class="form-control" />
             <div class="mb-3">
-                <label asp-for="SayacTanimlari.SayacKodu" class="form-label"></label>
-                <input asp-for="SayacTanimlari.SayacKodu" class="form-control" />
-                <span asp-validation-for="SayacTanimlari.SayacKodu" class="text-danger"></span>
+                <label asp-for="SayacKodu" class="form-label"></label>
+                <input asp-for="SayacKodu" class="form-control" />
+                <span asp-validation-for="SayacKodu" class="text-danger"></span>
             </div>
             <div class="mb-3">
-                <label asp-for="SayacTanimlari.SayacTanimi" class="form-label"></label>
-                <input asp-for="SayacTanimlari.SayacTanimi" class="form-control" />
-                <span asp-validation-for="SayacTanimlari.SayacTanimi" class="text-danger"></span>
+                <label asp-for="SayacTanimi" class="form-label"></label>
+                <input asp-for="SayacTanimi" class="form-control" />
+                <span asp-validation-for="SayacTanimi" class="text-danger"></span>
             </div>
             <div class="mb-3">
-                <label asp-for="SayacTanimlari.SayacAciklama" class="form-label"></label>
-                <input asp-for="SayacTanimlari.SayacAciklama" type="text" class="form-control" />
-                <span asp-validation-for="SayacTanimlari.SayacAciklama" class="text-danger"></span>
+                <label asp-for="SayacAciklama" class="form-label"></label>
+                <input asp-for="SayacAciklama" type="text" class="form-control" />
+                <span asp-validation-for="SayacAciklama" class="text-danger"></span>
             </div>
             
             <div class="mb-3">
-                <label asp-for="SayacTanimlari.SayacYeri" class="form-label"></label>
-                <input asp-for="SayacTanimlari.SayacYeri" class="form-control" />
-                <span asp-validation-for="SayacTanimlari.SayacYeri" class="text-danger"></span>
+                <label asp-for="SayacYeri" class="form-label"></label>
+                <input asp-for="SayacYeri" class="form-control" />
+                <span asp-validation-for="SayacYeri" class="text-danger"></span>
             </div>
 
            

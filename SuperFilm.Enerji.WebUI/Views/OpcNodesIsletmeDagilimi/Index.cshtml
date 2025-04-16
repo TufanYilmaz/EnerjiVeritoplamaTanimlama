@@ -1,20 +1,23 @@
-﻿@model List<SuperFilm.Enerji.Entites.OpcNodesIsletmeDagilimi>
+﻿@model List<OpcNodesIsletmeDagilimi>
+
 @{
     ViewData["Title"] = "OpcNodes İşletme Dağılımı";
 }
 
 <div class="text-center">
     <div class="float-end">
-        <a asp-controller="OpcNodesIsletmeDagilimi" asp-action="AddOpcNodesIsletmeDagilimi" class="text-decoration-none">
+
+        <a asp-controller="OpcNodesIsletmeDagilimi" asp-action="AddOpcNodesIsletme" class="text-decoration-none">
+
             Ekle
         </a>
     </div>
     <table class="table">
         <thead>
             <tr>
-                <th>OpcNodesId</th>
-                <th>OpcNodes Code</th>
-                <th>İşletme </th>
+                <th>OpcNodes Node Id</th>
+                <th>OpcNodes Kodu</th>
+                <th>İşletme Adı</th>
                 <th>Çarpan</th>
                 <th>İşlem</th>
 

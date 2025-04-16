@@ -26,31 +26,34 @@ namespace SuperFilm.Enerji.WebUI.Controllers
         public async Task<IActionResult> Index()
         {
             var model = await _queryRepository.GetQueryable<OpcNodesIsletmeDagilimi>()
-                                      .Include(isd => isd.OpcNodes)
-                                      .Include(isd => isd.Isletme)
+
+                                      .Include(osd => osd.OpcNodes)
+                                      .Include(osd => osd.Isletme)
                                       .ToListAsync();
             return View(model);
         }
-        public async Task<IActionResult> AddOpcNodesIsletmeDagilimi()
+        public async Task<IActionResult> AddOpcNodesIsletme()
         {
             var opcNodes = await _queryRepository.GetQueryable<OpcNodes>().ToListAsync();
-            var ısletme = await _queryRepository.GetQueryable<Isletme>().ToListAsync();
+            var isletmeler = await _queryRepository.GetQueryable<Isletme>().ToListAsync();
             var model = new OpcNodesIsletmeDagilimiViewModel
             {
                 OpcNodes = opcNodes,
-                Isletme = ısletme,
+                Isletme = isletmeler,
+
                 OpcNodesIsletmeDagilimi = new OpcNodesIsletmeDagilimi()
 
             };
             return View(model);
         }
         [HttpPost]
-        public async Task<IActionResult> AddOpcNodesIsletmeDagilimi(OpcNodesIsletmeDagilimiViewModel model, CancellationToken cancellationToken)
+        public async Task<IActionResult> AddOpcNodesIsletme(OpcNodesIsletmeDagilimiViewModel model, CancellationToken cancellationToken)
         {
+            ModelState.Remove("Isletme");
             ModelState.Remove("OpcNodes");
             ModelState.Remove("OpcNodesIsletmeDagilimi.Isletme");
             ModelState.Remove("OpcNodesIsletmeDagilimi.OpcNodes");
-            ModelState.Remove("Isletme");
+
 
             if (ModelState.ValidationState == Microsoft.AspNetCore.Mvc.ModelBinding.ModelValidationState.Invalid)
             {
@@ -58,8 +61,9 @@ namespace SuperFilm.Enerji.WebUI.Controllers
             }
             try
             {
-                var opcnodesIsletme = model.OpcNodesIsletmeDagilimi;
-                await _repository.AddAsync(opcnodesIsletme, cancellationToken);
+                var opcnodesisletme = model.OpcNodesIsletmeDagilimi;
+                await _repository.AddAsync(opcnodesisletme, cancellationToken);
+
                 await _repository.SaveChangesAsync(cancellationToken);
             }
             catch (Exception ex)

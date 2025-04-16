@@ -44,9 +44,10 @@ namespace SuperFilm.Enerji.WebUI.Controllers
             };
             return View(model);
         }
-        public async Task<IActionResult> AddIsletme()
+        public async Task<IActionResult> AddIsletme(int? id)
         {
             var isyerleri = await _queryRepository.GetQueryable<IsYeri>().ToListAsync();
+            
             var model = new IsYeriIsletmeViewModel
             {
                 Isletme = new Isletme(),
