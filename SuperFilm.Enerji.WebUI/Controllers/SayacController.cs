@@ -1,5 +1,5 @@
 ﻿using System.Threading;
-using AspNetCoreGeneratedDocument;
+//using AspNetCoreGeneratedDocument;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SuperFilm.Enerji.Entites;

@@ -340,7 +340,7 @@ namespace SuperFilm.Enerji.Entites.Migrations
                 {
                     b.Navigation("Isletmeler");
                 });
-#pragma warning restore 612, 618
+
         }
     }
 }
