@@ -10,21 +10,21 @@ namespace SuperFilm.Enerji.Entites.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<string>(
-                name: "Gun",
-                table: "SAYAC_VERI",
-                type: "varchar(2)",
-                maxLength: 2,
-                nullable: false,
-                defaultValue: "");
+            //migrationBuilder.AddColumn<string>(
+            //    name: "Gun",
+            //    table: "SAYAC_VERI",
+            //    type: "varchar(2)",
+            //    maxLength: 2,
+            //    nullable: false,
+            //    defaultValue: "");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropColumn(
-                name: "Gun",
-                table: "SAYAC_VERI");
+            //migrationBuilder.DropColumn(
+            //    name: "Gun",
+            //    table: "SAYAC_VERI");
         }
     }
 }

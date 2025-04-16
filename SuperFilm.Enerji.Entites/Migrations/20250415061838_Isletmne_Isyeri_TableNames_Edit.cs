@@ -98,7 +98,7 @@ namespace SuperFilm.Enerji.Entites.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Kod = table.Column<string>(type: "varchar(20)", maxLength: 20, nullable: false),
                     Ad = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false),
-                    Tip = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+                    //Tip = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
                     Aciklama = table.Column<string>(type: "varchar(255)", maxLength: 255, nullable: true),
                     IsletmeTanimlariId = table.Column<int>(type: "int", nullable: true)
                 },
@@ -210,12 +210,12 @@ namespace SuperFilm.Enerji.Entites.Migrations
                 type: "int",
                 nullable: true);
 
-            migrationBuilder.AddColumn<string>(
-                name: "Tip",
-                table: "IS_YERI",
-                type: "nvarchar(50)",
-                maxLength: 50,
-                nullable: true);
+            //migrationBuilder.AddColumn<string>(
+            //    name: "Tip",
+            //    table: "IS_YERI",
+            //    type: "nvarchar(50)",
+            //    maxLength: 50,
+            //    nullable: true);
 
             migrationBuilder.AddPrimaryKey(
                 name: "PK_IS_YERI",

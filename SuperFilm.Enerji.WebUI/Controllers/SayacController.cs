@@ -1,5 +1,5 @@
 ﻿using System.Threading;
-using AspNetCoreGeneratedDocument;
+//using AspNetCoreGeneratedDocument;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SuperFilm.Enerji.Entites;
@@ -34,50 +34,31 @@ namespace SuperFilm.Enerji.WebUI.Controllers
         }
         public async Task<IActionResult> AddSayac(int? id)
         {
-            //var isletmeler = await _queryRepository.GetQueryable<IsYeri>().ToListAsync();
-            //var isyerleri = await _queryRepository.GetQueryable<Isletme>().ToListAsync();
             SayacTanimlari sayacModel = new SayacTanimlari();
-            //IsYeri isletmeTanimi = new IsYeri();
             if (id != null)
             {
                 var sayac = await _queryRepository
                     .GetQueryable<SayacTanimlari>()
                     .FirstOrDefaultAsync(x => x.Id == id);
 
-                //isletmeTanimi = await _queryRepository
-                //    .GetQueryable<IsYeri>()
-                //    .FirstOrDefaultAsync(x => x.Id == sayac.Isyeri.Isletme.Id);
-
                 if (sayac != null)
                 {
                     sayacModel=sayac;
                 }
             }
-            var model = new SayacViewModel
-            {
-                SayacTanimlari = sayacModel,
-                //IsletmeTanimi = isletmeTanimi,
-                //IsletmeTanimlari = isletmeler,
-                //IsYeri = isyerleri,
-
-            };
-            return View(model); 
+       
+            return View(sayacModel); 
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddSayac(SayacViewModel model, CancellationToken cancellationToken)
+        public async Task<IActionResult> AddSayac(SayacTanimlari sayac, CancellationToken cancellationToken)
         {
-            ModelState.Remove("IsletmeTanimi.IsletmeKodu");
-            ModelState.Remove("IsletmeTanimlari");
-            ModelState.Remove("IsYeri");
-            ModelState.Remove("SayacTanimlari.Isyeri");
             if (ModelState.ValidationState == Microsoft.AspNetCore.Mvc.ModelBinding.ModelValidationState.Invalid)
             {
                 return NoContent();
             }
             try
             {
-                var sayac = model.SayacTanimlari;
                 if (sayac.Id == 0)
                 {
                     await _repository.AddAsync<SayacTanimlari>(sayac, cancellationToken);
@@ -101,8 +82,6 @@ namespace SuperFilm.Enerji.WebUI.Controllers
             {
                 var sayac = await _queryRepository
                     .GetQueryable<SayacTanimlari>()
-                    //.Include(r => r.Isyeri)
-                    //.ThenInclude(r => r.Isletme)
                     .FirstOrDefaultAsync(x => x.Id == id);
                 if (sayac != null)
                 {
@@ -116,3 +95,5 @@ namespace SuperFilm.Enerji.WebUI.Controllers
         }
     }
 }
+
+

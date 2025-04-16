@@ -1,0 +1,70 @@
+﻿@using SuperFilm.Enerji.WebUI.ViewModels
+
+@model OpcNodesIsletmeDagilimiViewModel;
+@{
+    ViewData["Title"] = "OpcNodes İşletme Ekle";
+}
+<div class="account-container">
+    <div class="account-box">
+        <div class="mb-3">
+            <a asp-controller="OpcNodesIsletmeDagilimi" asp-action="Index" class="text-decoration-none">
+                Geri
+            </a>
+        </div>
+        <h1 class="display-4">OpcNodes İşletme Ekle</h1>
+        <form asp-action="AddOpcNodesIsletmeDagilimi" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <label for="OpcNodesID">OPCNodesId-Code</label>
+            <select class="form-control" asp-for="OpcNodesIsletmeDagilimi.OpcNodesId">
+                <option value="">Seçiniz</option>
+                @if (Model.OpcNodes != null && Model.OpcNodes.Any())
+                {
+                    foreach (var item in Model.OpcNodes)
+                    {
+                        <option value="@item.Id"> @item.NodeId [@item.Code]</option>
+                    }
+                }
+                else
+                {
+                    <option>Mevcut OpcNodes Yok</option>
+                }
+
+            </select>
+            <label for="IsletmeId">İşletme</label>
+            <select class="form-control" asp-for="OpcNodesIsletmeDagilimi.IsletmeId">
+                <option value="">Seçiniz</option>
+                @if (Model.Isletme != null && Model.Isletme.Any())
+                {
+                    foreach (var item in Model.Isletme)
+                    {
+                        <option value="@item.Id">@item.Ad</option>
+                    }
+                }
+                else
+                {
+                    <option>Mevcut Sayaç Yok</option>
+                }
+
+            </select>
+            <div class="mb-3">
+                <label asp-for="OpcNodesIsletmeDagilimi.Carpan" class="form-label"></label>
+                <input asp-for="OpcNodesIsletmeDagilimi.Carpan" type="text" class="form-control" />
+                <span asp-validation-for="OpcNodesIsletmeDagilimi.Carpan" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">İşlem</label>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="OpcNodesIsletmeDagilimi.Islem" id="islemPlus" value="+" />
+                    <label class="form-check-label" for="islemPlus">+</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="OpcNodesIsletmeDagilimi.Islem" id="islemMinus" value="-" />
+                    <label class="form-check-label" for="islemMinus">-</label>
+                </div>
+                <span asp-validation-for="OpcNodesIsletmeDagilimi.Islem" class="text-danger"></span>
+            </div>
+
+            <input type="submit" value="Ekle" class="btn btn-success w-100 p-2" />
+        </form>
+    </div>
+</div>
