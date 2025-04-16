@@ -1,19 +1,20 @@
-﻿@model List<SuperFilm.Enerji.Entites.OpcNodesSayacDagilimi>
+﻿@model List<SuperFilm.Enerji.Entites.OpcNodesIsletmeDagilimi>
 @{
-    ViewData["Title"] = "OpcNodes Sayaç Dağılımı";
+    ViewData["Title"] = "OpcNodes İşletme Dağılımı";
 }
 
 <div class="text-center">
     <div class="float-end">
-        <a asp-controller="OpcNodesSayacDagilimi" asp-action="AddOpcNodesSayacDagilimi" class="text-decoration-none">
+        <a asp-controller="OpcNodesIsletmeDagilimi" asp-action="AddOpcNodesIsletmeDagilimi" class="text-decoration-none">
             Ekle
         </a>
     </div>
     <table class="table">
         <thead>
             <tr>
-                <th>OpcNodes</th>
-                <th>Sayaç Tanımı</th>
+                <th>OpcNodesId</th>
+                <th>OpcNodes Code</th>
+                <th>İşletme </th>
                 <th>Çarpan</th>
                 <th>İşlem</th>
 
@@ -23,8 +24,9 @@
             @foreach (var item in Model)
             {
                 <tr>
-                    <td>@item.OpcNodes.Description</td>
-                    <td>@item.Sayac.SayacTanimi</td>
+                    <td>@item.OpcNodes.NodeId</td>
+                    <td>@item.OpcNodes.Code</td>
+                    <td>@item.Isletme.Ad</td>
                     <td>@item.Carpan</td>
                     <td>@item.Islem</td>
 
