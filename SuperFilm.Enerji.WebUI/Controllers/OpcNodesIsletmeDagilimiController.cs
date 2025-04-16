@@ -26,6 +26,7 @@ namespace SuperFilm.Enerji.WebUI.Controllers
         public async Task<IActionResult> Index()
         {
             var model = await _queryRepository.GetQueryable<OpcNodesIsletmeDagilimi>()
+
                                       .Include(osd => osd.OpcNodes)
                                       .Include(osd => osd.Isletme)
                                       .ToListAsync();
@@ -39,6 +40,7 @@ namespace SuperFilm.Enerji.WebUI.Controllers
             {
                 OpcNodes = opcNodes,
                 Isletme = isletmeler,
+
                 OpcNodesIsletmeDagilimi = new OpcNodesIsletmeDagilimi()
 
             };
@@ -52,6 +54,7 @@ namespace SuperFilm.Enerji.WebUI.Controllers
             ModelState.Remove("OpcNodesIsletmeDagilimi.Isletme");
             ModelState.Remove("OpcNodesIsletmeDagilimi.OpcNodes");
 
+
             if (ModelState.ValidationState == Microsoft.AspNetCore.Mvc.ModelBinding.ModelValidationState.Invalid)
             {
                 return NoContent();
@@ -60,6 +63,7 @@ namespace SuperFilm.Enerji.WebUI.Controllers
             {
                 var opcnodesisletme = model.OpcNodesIsletmeDagilimi;
                 await _repository.AddAsync(opcnodesisletme, cancellationToken);
+
                 await _repository.SaveChangesAsync(cancellationToken);
             }
             catch (Exception ex)

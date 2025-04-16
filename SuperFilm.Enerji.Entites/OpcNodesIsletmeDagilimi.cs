@@ -20,5 +20,6 @@ namespace SuperFilm.Enerji.Entites
         public char Islem { get; set; }
         [Column(TypeName = "decimal(7,6)")]
         public decimal Carpan { get; set; }
+
     }
 }

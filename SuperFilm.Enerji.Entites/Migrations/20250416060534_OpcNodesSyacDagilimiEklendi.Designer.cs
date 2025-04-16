@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SuperFilm.Enerji.Entites;
 
@@ -11,9 +12,11 @@ using SuperFilm.Enerji.Entites;
 namespace SuperFilm.Enerji.Entites.Migrations
 {
     [DbContext(typeof(EnerjiDbContext))]
-    partial class EnerjiDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250416060534_OpcNodesSyacDagilimiEklendi")]
+    partial class OpcNodesSyacDagilimiEklendi
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -153,8 +156,7 @@ namespace SuperFilm.Enerji.Entites.Migrations
                     b.ToTable("OPC_NODES");
                 });
 
-            modelBuilder.Entity("SuperFilm.Enerji.Entites.OpcNodesIsletmeDagilimi", b =>
-
+            modelBuilder.Entity("SuperFilm.Enerji.Entites.OpcNodesSayacDagilimi", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -169,20 +171,19 @@ namespace SuperFilm.Enerji.Entites.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(1)");
 
-                    b.Property<int>("IsletmeId")
+                    b.Property<int>("OpcNodesId")
                         .HasColumnType("int");
 
-                    b.Property<int>("OpcNodesId")
+                    b.Property<int>("SayacId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("IsletmeId");
-
                     b.HasIndex("OpcNodesId");
 
-                    b.ToTable("OPC_NODES_ISLETME_DAGILIMI");
+                    b.HasIndex("SayacId");
 
+                    b.ToTable("OPC_NODES_SAYAC_DAGİLİMİ");
                 });
 
             modelBuilder.Entity("SuperFilm.Enerji.Entites.SayacTanimlari", b =>
@@ -307,25 +308,23 @@ namespace SuperFilm.Enerji.Entites.Migrations
                     b.Navigation("Isletme");
                 });
 
-
-            modelBuilder.Entity("SuperFilm.Enerji.Entites.OpcNodesIsletmeDagilimi", b =>
-
+            modelBuilder.Entity("SuperFilm.Enerji.Entites.OpcNodesSayacDagilimi", b =>
                 {
-                    b.HasOne("SuperFilm.Enerji.Entites.Isletme", "Isletme")
-                        .WithMany()
-                        .HasForeignKey("IsletmeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("SuperFilm.Enerji.Entites.OpcNodes", "OpcNodes")
                         .WithMany()
                         .HasForeignKey("OpcNodesId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Isletme");
+                    b.HasOne("SuperFilm.Enerji.Entites.SayacTanimlari", "Sayac")
+                        .WithMany()
+                        .HasForeignKey("SayacId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("OpcNodes");
+
+                    b.Navigation("Sayac");
                 });
 
             modelBuilder.Entity("SuperFilm.Enerji.Entites.SayacVeri", b =>
@@ -343,7 +342,7 @@ namespace SuperFilm.Enerji.Entites.Migrations
                 {
                     b.Navigation("Isletmeler");
                 });
-
+#pragma warning restore 612, 618
         }
     }
 }
