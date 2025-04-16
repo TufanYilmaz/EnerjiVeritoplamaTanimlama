@@ -30,6 +30,7 @@
                 <th>Isletme Tipi</th>
                 <th>Isletme Açıklaması</th>
                 <th>İş Yeri Ad</th>
+                <th>Güncelle</th>
 
             </tr>
         </thead>
@@ -42,6 +43,9 @@
                     <td>@item.Tip</td>
                     <td>@item.Aciklama</td>
                     <td>@item.Isyeri?.Adi</td>
+                    <td>
+                        <a asp-controller="Isletme" asp-action="AddIsletme" asp-route-id="@item.Id">Güncelle</a>
+                    </td>
                 </tr>
             }
         </tbody>
