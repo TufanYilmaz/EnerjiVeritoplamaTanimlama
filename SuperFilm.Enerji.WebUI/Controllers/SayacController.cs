@@ -53,10 +53,6 @@ namespace SuperFilm.Enerji.WebUI.Controllers
         [HttpPost]
         public async Task<IActionResult> AddSayac(SayacTanimlari sayac, CancellationToken cancellationToken)
         {
-            ModelState.Remove("IsletmeTanimi.IsletmeKodu");
-            ModelState.Remove("IsletmeTanimlari");
-            ModelState.Remove("IsYeri");
-            ModelState.Remove("SayacTanimlari.Isyeri");
             if (ModelState.ValidationState == Microsoft.AspNetCore.Mvc.ModelBinding.ModelValidationState.Invalid)
             {
                 return NoContent();
