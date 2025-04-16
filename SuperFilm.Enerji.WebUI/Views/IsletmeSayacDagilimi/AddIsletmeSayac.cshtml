@@ -15,7 +15,7 @@
         <h1 class="display-4">İşletme Sayaç Ekle</h1>
         <form asp-action="AddIsletmeSayac" method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <label for="IsletmeID">İş Yeri</label>
+            <label for="IsletmeID">İşletme Yeri</label>
             <select class="form-control" asp-for="IsletmeSayacDagilimi.IsletmeId">
                 <option value="">Seçiniz</option>
                 @if (Model.Isletme != null && Model.Isletme.Any())
@@ -53,10 +53,18 @@
                 <span asp-validation-for="IsletmeSayacDagilimi.Carpan" class="text-danger"></span>
             </div>
             <div class="mb-3">
-                <label asp-for="IsletmeSayacDagilimi.Islem" class="form-label"></label>
-                <input asp-for="IsletmeSayacDagilimi.Islem" type="text" class="form-control" />
+                <label class="form-label">İşlem</label>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="IsletmeSayacDagilimi.Islem" id="islemPlus" value="+" />
+                    <label class="form-check-label" for="islemPlus">+</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="IsletmeSayacDagilimi.Islem" id="islemMinus" value="-" />
+                    <label class="form-check-label" for="islemMinus">-</label>
+                </div>
                 <span asp-validation-for="IsletmeSayacDagilimi.Islem" class="text-danger"></span>
             </div>
+
             <input type="submit" value="Ekle" class="btn btn-success w-100 p-2" />
         </form>
     </div>
