@@ -32,16 +32,28 @@ namespace SuperFilm.Enerji.WebUI.Controllers
                                       .ToListAsync();
             return View(model);
         }
-        public async Task<IActionResult> AddOpcNodesIsletme()
+        public async Task<IActionResult> AddOpcNodesIsletme(int? id)
         {
             var opcNodes = await _queryRepository.GetQueryable<OpcNodes>().ToListAsync();
             var isletmeler = await _queryRepository.GetQueryable<Isletme>().ToListAsync();
+            OpcNodesIsletmeDagilimi opcnodesisletmemodel = new OpcNodesIsletmeDagilimi();
+            if (id != null)
+            {
+                var opcnodesisletme = await _queryRepository
+                    .GetQueryable<OpcNodesIsletmeDagilimi>()
+                    .Include(i => i.OpcNodes)
+                    .Include(i => i.Isletme)
+                    .FirstOrDefaultAsync(x => x.Id == id);
+                if (opcnodesisletme != null)
+                {
+                    opcnodesisletmemodel = opcnodesisletme;
+                }
+            }
             var model = new OpcNodesIsletmeDagilimiViewModel
             {
                 OpcNodes = opcNodes,
                 Isletme = isletmeler,
-
-                OpcNodesIsletmeDagilimi = new OpcNodesIsletmeDagilimi()
+                OpcNodesIsletmeDagilimi = opcnodesisletmemodel
 
             };
             return View(model);
@@ -62,7 +74,14 @@ namespace SuperFilm.Enerji.WebUI.Controllers
             try
             {
                 var opcnodesisletme = model.OpcNodesIsletmeDagilimi;
-                await _repository.AddAsync(opcnodesisletme, cancellationToken);
+                if(opcnodesisletme.Id == 0)
+                {
+                    await _repository.AddAsync<OpcNodesIsletmeDagilimi>(opcnodesisletme, cancellationToken);
+                }
+                else
+                {
+                    await _repository.UpdateAsync<OpcNodesIsletmeDagilimi>(opcnodesisletme, cancellationToken);
+                }
 
                 await _repository.SaveChangesAsync(cancellationToken);
             }

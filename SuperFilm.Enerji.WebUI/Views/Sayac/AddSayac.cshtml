@@ -13,7 +13,15 @@
                 Geri
             </a>
         </div>
-        <h1 class="display-4">Sayaç Ekle</h1>
+        @if (Model.Id == 0)
+        {
+            <h1 class="display-4">Sayaç Ekle</h1>
+        }
+        else
+        {
+            <h1 class="display-4">Sayaç Güncelle</h1>
+        }
+        
         <form asp-action="AddSayac" method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Id" class="form-control" />
@@ -39,8 +47,15 @@
                 <span asp-validation-for="SayacYeri" class="text-danger"></span>
             </div>
 
-           
-            <input type="submit" value="Ekle" class="btn btn-success w-100 p-2" />
+            @if (Model.Id == 0)
+            {
+                <input type="submit" value="Ekle" class="btn btn-success w-100 p-2" />
+            }
+            else
+            {
+                <input type="submit" value="Güncelle" class="btn btn-success w-100 p-2" />
+            }
+            
         </form>
     </div>
 </div>

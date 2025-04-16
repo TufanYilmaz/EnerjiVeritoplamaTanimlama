@@ -19,33 +19,35 @@
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">İş Yerleri</a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" asp-controller="IsYeri" asp-action="Index">İş Yerleri</a></li>
+                                <li><a class="dropdown-item" asp-controller="Isletme" asp-action="Index">İşletme Tanımları</a></li>
+                            </ul>
                         </li>
-                        @* <li class="nav-item"> *@
-                        @*     <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a> *@
-                        @* </li> *@
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="IsYeri" asp-action="Index">İş Yerleri</a>
+
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Sayaçlar</a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" asp-controller="Sayac" asp-action="Index">Sayaç Tanımları</a></li>
+                                <li><a class="dropdown-item" asp-controller="IsletmeSayacDagilimi" asp-action="Index">İşletme Sayaç Dağılımı</a></li>
+                            </ul>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Isletme" asp-action="Index">İşletme Tanımları</a>
+
+
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">OpcNodes</a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" asp-controller="OpcNodes" asp-action="Index">OpcNodes</a></li>
+                                <li><a class="dropdown-item" asp-controller="OpcNodesIsletmeDagilimi" asp-action="Index">OpcNodes İşletme Dağılımı</a></li>
+                            </ul>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Sayac" asp-action="Index">Sayaç Tanımları</a>
-                        </li> 
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="OpcNodes" asp-action="Index">OpcNodes</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="IsletmeSayacDagilimi" asp-action="Index">İşletme Sayaç Dağılımı </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="OpcNodesIsletmeDagilimi" asp-action="Index">OpcNodes İşletme Dağılımı </a>
-                        </li>
-                     
                         <partial name="_LoginPartial" />
+
                     </ul>
+
+
                 </div>
             </div>
         </nav>
