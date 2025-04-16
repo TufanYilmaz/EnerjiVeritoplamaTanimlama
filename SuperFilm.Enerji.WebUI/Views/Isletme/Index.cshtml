@@ -1,4 +1,4 @@
-﻿@model SuperFilm.Enerji.Entites.IsYeriIsletmeListViewModel
+﻿@model IsYeriIsletmeListViewModel
 @{
     ViewData["Title"] = "İşletmeler";
 }
@@ -29,7 +29,7 @@
                 <th>Isletme Adı</th>
                 <th>Isletme Tipi</th>
                 <th>Isletme Açıklaması</th>
-              @*   <th>İşletme Ad</th> *@
+                <th>İş Yeri Ad</th>
 
             </tr>
         </thead>
@@ -41,7 +41,7 @@
                     <td>@item.Ad</td>
                     <td>@item.Tip</td>
                     <td>@item.Aciklama</td>
-                   @*  <td>@item.Isletme?.IsletmeAdi</td> *@
+                    <td>@item.Isyeri?.Adi</td>
                 </tr>
             }
         </tbody>

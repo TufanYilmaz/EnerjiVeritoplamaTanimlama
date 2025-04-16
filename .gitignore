@@ -365,4 +365,4 @@ FodyWeavers.xsd
 /SuperFilm.Enerji.OleDbReader/Client.cs
 /SuperFilm.Enerji.TestClient/SuperFilm.Enerji.TestClient.csproj
 /SuperFilm.Enerji.WebUI/appsettings.json
-/SuperFilm.Enerji.WebUI/appsettings.json
+/SuperFilm.Enerji.WebUI/appsettings.Development.json
