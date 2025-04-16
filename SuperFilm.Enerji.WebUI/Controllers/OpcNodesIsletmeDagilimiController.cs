@@ -6,14 +6,14 @@ using TanvirArjel.EFCore.GenericRepository;
 
 namespace SuperFilm.Enerji.WebUI.Controllers
 {
-    public class OpcNodesSayacDagilimiController : Controller
+    public class OpcNodesIsletmeDagilimiController : Controller
     {
         private readonly ILogger<HomeController> _logger;
         private readonly IRepository _repository;
         private readonly IQueryRepository<EnerjiDbContext> _queryRepository;
         private readonly IRepository<EnerjiDbContext> _enerjiRepository;
 
-        public OpcNodesSayacDagilimiController(ILogger<HomeController> logger,
+        public OpcNodesIsletmeDagilimiController(ILogger<HomeController> logger,
             IRepository repository,
             IQueryRepository<EnerjiDbContext> queryRepository,
             IRepository<EnerjiDbContext> enerjiRepository)
@@ -25,32 +25,32 @@ namespace SuperFilm.Enerji.WebUI.Controllers
         }
         public async Task<IActionResult> Index()
         {
-            var model = await _queryRepository.GetQueryable<OpcNodesSayacDagilimi>()
+            var model = await _queryRepository.GetQueryable<OpcNodesIsletmeDagilimi>()
                                       .Include(isd => isd.OpcNodes)
-                                      .Include(isd => isd.Sayac)
+                                      .Include(isd => isd.Isletme)
                                       .ToListAsync();
             return View(model);
         }
-        public async Task<IActionResult> AddOpcNodesSayacDagilimi()
+        public async Task<IActionResult> AddOpcNodesIsletmeDagilimi()
         {
             var opcNodes = await _queryRepository.GetQueryable<OpcNodes>().ToListAsync();
-            var sayactanimlari = await _queryRepository.GetQueryable<SayacTanimlari>().ToListAsync();
-            var model = new OpcNodesSayacDagilimiViewModel
+            var ısletme = await _queryRepository.GetQueryable<Isletme>().ToListAsync();
+            var model = new OpcNodesIsletmeDagilimiViewModel
             {
                 OpcNodes = opcNodes,
-                SayacTanimlari = sayactanimlari,
-                OpcNodesSayacDagilimi = new OpcNodesSayacDagilimi()
+                Isletme = ısletme,
+                OpcNodesIsletmeDagilimi = new OpcNodesIsletmeDagilimi()
 
             };
             return View(model);
         }
         [HttpPost]
-        public async Task<IActionResult> AddOpcNodesSayacDagilimi(OpcNodesSayacDagilimiViewModel model, CancellationToken cancellationToken)
+        public async Task<IActionResult> AddOpcNodesIsletmeDagilimi(OpcNodesIsletmeDagilimiViewModel model, CancellationToken cancellationToken)
         {
             ModelState.Remove("OpcNodes");
-            ModelState.Remove("OpcNodesSayacDagilimi.Sayac");
-            ModelState.Remove("OpcNodesSayacDagilimi.OpcNodes");
-            ModelState.Remove("SayacTanimlari");
+            ModelState.Remove("OpcNodesIsletmeDagilimi.Isletme");
+            ModelState.Remove("OpcNodesIsletmeDagilimi.OpcNodes");
+            ModelState.Remove("Isletme");
 
             if (ModelState.ValidationState == Microsoft.AspNetCore.Mvc.ModelBinding.ModelValidationState.Invalid)
             {
@@ -58,15 +58,15 @@ namespace SuperFilm.Enerji.WebUI.Controllers
             }
             try
             {
-                var opcnodesSayac = model.OpcNodesSayacDagilimi;
-                await _repository.AddAsync(opcnodesSayac, cancellationToken);
+                var opcnodesIsletme = model.OpcNodesIsletmeDagilimi;
+                await _repository.AddAsync(opcnodesIsletme, cancellationToken);
                 await _repository.SaveChangesAsync(cancellationToken);
             }
             catch (Exception ex)
             {
                 return NotFound(ex.Message);
             }
-            return RedirectToAction("Index", "OpcNodesSayacDagilimi");
+            return RedirectToAction("Index", "OpcNodesIsletmeDagilimi");
 
         }
     }

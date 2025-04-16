@@ -9,15 +9,15 @@ using System.Threading.Tasks;
 
 namespace SuperFilm.Enerji.Entites
 {
-    [Table("OPC_NODES_SAYAC_DAGİLİMİ")]
-    public class OpcNodesSayacDagilimi
+    [Table("OPC_NODES_ISLETME_DAGILIMI")]
+    public class OpcNodesIsletmeDagilimi
     {
         [Key]
         public int Id { get; set; }
         public int OpcNodesId { get; set; }
         public OpcNodes OpcNodes { get; set; }
-        public int SayacId { get; set; }
-        public SayacTanimlari Sayac { get; set; }
+        public int IsletmeId { get; set; }
+        public Isletme Isletme { get; set; }
         public char Islem { get; set; }
         [Column(TypeName = "decimal(7,6)")]
         public decimal Carpan { get; set; }
