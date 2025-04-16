@@ -366,4 +366,3 @@ FodyWeavers.xsd
 /SuperFilm.Enerji.TestClient/SuperFilm.Enerji.TestClient.csproj
 /SuperFilm.Enerji.WebUI/appsettings.json
 /SuperFilm.Enerji.WebUI/appsettings.Development.json
-/SuperFilm.Enerji.Entites/Migrations/20250416071622_OpcNodesSayacEklendi.cs
