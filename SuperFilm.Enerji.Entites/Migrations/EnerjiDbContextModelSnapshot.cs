@@ -324,33 +324,36 @@ namespace SuperFilm.Enerji.Entites.Migrations
 
                     b.Navigation("Sayac");
 
-            modelBuilder.Entity("SuperFilm.Enerji.Entites.SayacTanimlari", b =>
-                {
-                    b.HasOne("SuperFilm.Enerji.Entites.Isletme", "Isletme")
-                        .WithMany()
-                        .HasForeignKey("IsletmeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    modelBuilder.Entity("SuperFilm.Enerji.Entites.SayacTanimlari", b =>
+                        {
+                            b.HasOne("SuperFilm.Enerji.Entites.Isletme", "Isletme")
+                                .WithMany()
+                                .HasForeignKey("IsletmeId")
+                                .OnDelete(DeleteBehavior.Cascade)
+                                .IsRequired();
 
-                    b.Navigation("Isletme");
-                });
+                            b.Navigation("Isletme");
+                        });
 
-            modelBuilder.Entity("SuperFilm.Enerji.Entites.SayacVeri", b =>
-                {
-                    b.HasOne("SuperFilm.Enerji.Entites.SayacTanimlari", "Sayac")
-                        .WithMany()
-                        .HasForeignKey("SayacId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    modelBuilder.Entity("SuperFilm.Enerji.Entites.SayacVeri", b =>
+                        {
+                            b.HasOne("SuperFilm.Enerji.Entites.SayacTanimlari", "Sayac")
+                                .WithMany()
+                                .HasForeignKey("SayacId")
+                                .OnDelete(DeleteBehavior.Cascade)
+                                .IsRequired();
 
-                    b.Navigation("Sayac");
-                });
+                            b.Navigation("Sayac");
+                        });
 
-            modelBuilder.Entity("SuperFilm.Enerji.Entites.IsYeri", b =>
-                {
-                    b.Navigation("Isletmeler");
-                });
-#pragma warning restore 612, 618
+                    modelBuilder.Entity("SuperFilm.Enerji.Entites.IsYeri", b =>
+                        {
+                            b.Navigation("Isletmeler");
+                        });
+
+                }
+
+            );
         }
     }
 }
