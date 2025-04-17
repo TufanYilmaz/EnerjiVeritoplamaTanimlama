@@ -17,7 +17,7 @@
         {
             <h1 class="display-4">OpcNodes İşletme Güncelle</h1>
         }
-       
+
         <form asp-action="AddOpcNodesIsletme" method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="OpcNodesIsletmeDagilimi.Id" class="form-control" />
@@ -43,9 +43,15 @@
                 <option value="">Seçiniz</option>
                 @if (Model.Isletme != null && Model.Isletme.Any())
                 {
-                    foreach (var item in Model.Isletme)
+                    foreach (var isletme in Model.Isletme)
                     {
-                        <option value="@item.Id">@item.Ad</option>
+                        foreach (var isyeri in Model.IsYeri)
+                        {
+							if (isyeri.Id == isletme.IsyeriId)
+							{
+								<option value="@isletme.Id">[ @isyeri.Kodu ] @isletme.Ad [ @isletme.Kod ]</option>
+							}
+                        }
                     }
                 }
                 else

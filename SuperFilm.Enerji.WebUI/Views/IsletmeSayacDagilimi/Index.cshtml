@@ -5,18 +5,18 @@
 
 <div class="text-center">
     <div class="float-end">
-        <a asp-controller="IsletmeSayacDagilimi" asp-action="AddIsletmeSayac" class="text-decoration-none">
+        <a asp-controller="IsletmeSayacDagilimi" asp-action="AddIsletmeSayac" class="btn btn-outline-primary">
             Ekle
         </a>
     </div>
-    <table class="table">
+    <table class="table pageTable">
         <thead>
             <tr>
                 <th>İşletme Adı</th>
                 <th>Sayaç Tanımı</th>
                 <th>Çarpan</th>
                 <th>İşlem</th>
-                <th>Güncelle</th>
+                <th>İşlemler</th>
 
             </tr>
         </thead>
@@ -29,7 +29,7 @@
                     <td>@item.Carpan</td>
                     <td>@item.Islem</td>
                     <td>
-                        <a asp-controller="IsletmeSayacDagilimi" asp-action="AddIsletmeSayac" asp-route-id="@item.Id">Güncelle</a>
+                        <a asp-controller="IsletmeSayacDagilimi" asp-action="AddIsletmeSayac" asp-route-id="@item.Id" class="btn btn-outline-warning">Güncelle</a>
                     </td>
 
                 </tr>

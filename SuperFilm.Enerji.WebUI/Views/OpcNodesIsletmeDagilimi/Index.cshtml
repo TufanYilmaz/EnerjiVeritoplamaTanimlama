@@ -1,4 +1,4 @@
-﻿@model List<OpcNodesIsletmeDagilimi>
+﻿@model OpcNodesIsletmeIsYeriListViewModel
 
 @{
     ViewData["Title"] = "OpcNodes İşletme Dağılımı";
@@ -7,34 +7,43 @@
 <div class="text-center">
     <div class="float-end">
 
-        <a asp-controller="OpcNodesIsletmeDagilimi" asp-action="AddOpcNodesIsletme" class="text-decoration-none">
+        <a asp-controller="OpcNodesIsletmeDagilimi" asp-action="AddOpcNodesIsletme" class="btn btn-outline-primary">
 
             Ekle
         </a>
     </div>
-    <table class="table">
+    <table class="table pageTable">
         <thead>
             <tr>
                 <th>OpcNodes Node Id</th>
                 <th>OpcNodes Kodu</th>
+                <th>İş Yeri Kodu</th>
                 <th>İşletme Adı</th>
                 <th>Çarpan</th>
                 <th>İşlem</th>
-                <th>Güncelle</th>
+                <th>İşlemler</th>
 
             </tr>
         </thead>
         <tbody>
-            @foreach (var item in Model)
+            @foreach (var item in Model.OpcNodesIsletmeDagilimi)
             {
+				
                 <tr>
                     <td>@item.OpcNodes.NodeId</td>
                     <td>@item.OpcNodes.Code</td>
+					@foreach (var isyeri in Model.IsYeri)
+					{
+						if (isyeri.Id == item.Isletme.IsyeriId)
+						{
+							<td>@isyeri.Kodu</td>
+						}
+					}
                     <td>@item.Isletme.Ad</td>
                     <td>@item.Carpan</td>
                     <td>@item.Islem</td>
                     <td>
-                        <a asp-controller="OpcNodesIsletmeDagilimi" asp-action="AddOpcNodesIsletme" asp-route-id="@item.Id">Güncelle</a>
+                        <a asp-controller="OpcNodesIsletmeDagilimi" asp-action="AddOpcNodesIsletme" asp-route-id="@item.Id" class="btn btn-outline-warning">Güncelle</a>
                     </td>
 
                 </tr>
