@@ -25,17 +25,23 @@ namespace SuperFilm.Enerji.WebUI.Controllers
         }
         public async Task<IActionResult> Index()
         {
-            var model = await _queryRepository.GetQueryable<OpcNodesIsletmeDagilimi>()
+            var opcnodesisletmeler = await _queryRepository.GetQueryable<OpcNodesIsletmeDagilimi>().Include(osd => osd.OpcNodes).Include(osd => osd.Isletme).ToListAsync();
+            var isyerleri = await _queryRepository.GetQueryable<IsYeri>().ToListAsync();
 
-                                      .Include(osd => osd.OpcNodes)
-                                      .Include(osd => osd.Isletme)
-                                      .ToListAsync();
+            var model = new OpcNodesIsletmeIsYeriListViewModel
+            {
+                OpcNodesIsletmeDagilimi = opcnodesisletmeler,
+                IsYeri = isyerleri
+            };
+
             return View(model);
         }
         public async Task<IActionResult> AddOpcNodesIsletme(int? id)
         {
             var opcNodes = await _queryRepository.GetQueryable<OpcNodes>().ToListAsync();
             var isletmeler = await _queryRepository.GetQueryable<Isletme>().ToListAsync();
+            var isyeri = await _queryRepository.GetQueryable<IsYeri>().ToListAsync();
+
             OpcNodesIsletmeDagilimi opcnodesisletmemodel = new OpcNodesIsletmeDagilimi();
             if (id != null)
             {
@@ -44,6 +50,7 @@ namespace SuperFilm.Enerji.WebUI.Controllers
                     .Include(i => i.OpcNodes)
                     .Include(i => i.Isletme)
                     .FirstOrDefaultAsync(x => x.Id == id);
+           
                 if (opcnodesisletme != null)
                 {
                     opcnodesisletmemodel = opcnodesisletme;
@@ -53,8 +60,8 @@ namespace SuperFilm.Enerji.WebUI.Controllers
             {
                 OpcNodes = opcNodes,
                 Isletme = isletmeler,
-                OpcNodesIsletmeDagilimi = opcnodesisletmemodel
-
+                OpcNodesIsletmeDagilimi = opcnodesisletmemodel,
+                IsYeri = isyeri
             };
             return View(model);
         }

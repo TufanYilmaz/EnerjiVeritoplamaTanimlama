@@ -18,11 +18,11 @@
         }
     </div>
     <div class="float-end">
-        <a asp-controller="Isletme" asp-action="AddIsletme" class="text-decoration-none">
+        <a asp-controller="Isletme" asp-action="AddIsletme" class="btn btn-outline-primary">
              Ekle
         </a>
     </div>
-    <table class="table">
+    <table class="table pageTable">
         <thead>
             <tr>
                 <th>Isletme Kodu</th>
@@ -30,7 +30,7 @@
                 <th>Isletme Tipi</th>
                 <th>Isletme Açıklaması</th>
                 <th>İş Yeri Ad</th>
-                <th>Güncelle</th>
+                <th>İşlemler</th>
 
             </tr>
         </thead>
@@ -44,7 +44,7 @@
                     <td>@item.Aciklama</td>
                     <td>@item.Isyeri?.Adi</td>
                     <td>
-                        <a asp-controller="Isletme" asp-action="AddIsletme" asp-route-id="@item.Id">Güncelle</a>
+                        <a asp-controller="Isletme" asp-action="AddIsletme" asp-route-id="@item.Id" class="btn btn-outline-warning">Güncelle</a>
                     </td>
                 </tr>
             }
