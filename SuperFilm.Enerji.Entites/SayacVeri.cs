@@ -29,7 +29,7 @@ namespace SuperFilm.Enerji.Entites
         [Column(TypeName = "varchar(6)")]
         [StringLength(6)]
         [Required]
-        public string Zaman { get; set; }
+        public string Zaman { get; set; } //hhmmss //010925
         [Required]
         public DateTime NormalizeDate { get; set; }
         [Required]
