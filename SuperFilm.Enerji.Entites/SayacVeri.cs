@@ -14,6 +14,10 @@ namespace SuperFilm.Enerji.Entites
     {
         [Key]
         public int Id { get; set; }
+        [StringLength(20)]
+        [Column(TypeName = "varchar(20)")]
+        public string? Kod { get; set; }
+
         [Column(TypeName = "varchar(4)")]
         [StringLength(4)]
         [Required]
@@ -37,8 +41,8 @@ namespace SuperFilm.Enerji.Entites
         public decimal Deger { get; set; }
         public DateTime CreateDate { get; set; } = DateTime.Now;
 
-        public int SayacId { get; set; }
-        public int OpcNodesId { get; set; }
+        public int? SayacId { get; set; }
+        public int? OpcNodesId { get; set; }
         
     }
 }

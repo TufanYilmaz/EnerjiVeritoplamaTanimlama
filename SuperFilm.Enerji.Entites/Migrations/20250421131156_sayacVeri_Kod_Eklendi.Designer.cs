@@ -12,8 +12,8 @@ using SuperFilm.Enerji.Entites;
 namespace SuperFilm.Enerji.Entites.Migrations
 {
     [DbContext(typeof(EnerjiDbContext))]
-    [Migration("20250416110046_OpcNodeIsletmeKaldırıldı")]
-    partial class OpcNodeIsletmeKaldırıldı
+    [Migration("20250421131156_sayacVeri_Kod_Eklendi")]
+    partial class sayacVeri_Kod_Eklendi
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -239,8 +239,16 @@ namespace SuperFilm.Enerji.Entites.Migrations
                         .HasMaxLength(2)
                         .HasColumnType("varchar(2)");
 
+                    b.Property<string>("Kod")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("varchar(20)");
+
                     b.Property<DateTime>("NormalizeDate")
                         .HasColumnType("datetime2");
+
+                    b.Property<int>("OpcNodesId")
+                        .HasColumnType("int");
 
                     b.Property<int>("SayacId")
                         .HasColumnType("int");
@@ -256,8 +264,6 @@ namespace SuperFilm.Enerji.Entites.Migrations
                         .HasColumnType("varchar(6)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("SayacId");
 
                     b.ToTable("SAYAC_VERI");
                 });
@@ -309,17 +315,6 @@ namespace SuperFilm.Enerji.Entites.Migrations
                     b.Navigation("Isletme");
 
                     b.Navigation("OpcNodes");
-                });
-
-            modelBuilder.Entity("SuperFilm.Enerji.Entites.SayacVeri", b =>
-                {
-                    b.HasOne("SuperFilm.Enerji.Entites.SayacTanimlari", "Sayac")
-                        .WithMany()
-                        .HasForeignKey("SayacId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Sayac");
                 });
 
             modelBuilder.Entity("SuperFilm.Enerji.Entites.IsYeri", b =>
