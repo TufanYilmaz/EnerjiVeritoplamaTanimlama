@@ -32,7 +32,6 @@ builder.Services.AddIdentity<User, IdentityRole>(options =>
 
 builder.Services.AddRazorPages();
 
-
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

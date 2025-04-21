@@ -5,16 +5,16 @@
 
 <div class="text-center">
     <div class="float-start">
-        <a asp-route-id=0 class="text-decoration-none">
+        <a asp-route-id=0 class="btn btn-dark" style="display:inline;margin-right:0.5rem">
             Tümü
         </a>
-        <span> | </span>
+        <span style="margin-right:0.5rem"> | </span>
         @foreach (var item in Model.IsYerleri)
         {
-            <a asp-route-id="@item.Id" class="text-decoration-none">
+            <a asp-route-id="@item.Id" class="btn btn-outline-dark" style="display:inline;margin-right:0.5rem">
                 @item.Adi
             </a>
-            <span> | </span>
+
         }
     </div>
     <div class="float-end">

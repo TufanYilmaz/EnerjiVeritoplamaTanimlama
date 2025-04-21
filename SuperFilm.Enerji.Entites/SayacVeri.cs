@@ -37,7 +37,8 @@ namespace SuperFilm.Enerji.Entites
         public decimal Deger { get; set; }
         public DateTime CreateDate { get; set; } = DateTime.Now;
 
-        public SayacTanimlari Sayac { get; set; }
+        public int SayacId { get; set; }
+        public int OpcNodesId { get; set; }
         
     }
 }
