@@ -51,6 +51,7 @@ namespace SuperFilm.Enerji.WebUI.Controllers
         public async Task<IActionResult> AddOpcNodes(OpcNodes opcnodes, CancellationToken cancellationToken)
 
         {
+            ModelState.Remove("Isletmeler");
             if (ModelState.ValidationState == Microsoft.AspNetCore.Mvc.ModelBinding.ModelValidationState.Invalid)
             {
                 return NoContent();

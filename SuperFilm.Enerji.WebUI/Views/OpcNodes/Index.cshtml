@@ -6,11 +6,11 @@
 
 <div class="text-center">
     <div class="float-end">
-        <a asp-controller="OpcNodes" asp-action="AddOpcNodes" class="text-decoration-none">
+        <a asp-controller="OpcNodes" asp-action="AddOpcNodes" class="btn btn-outline-primary">
             Ekle
         </a>
     </div>
-    <table class="table">
+    <table class="table pageTable">
         <thead>
             <tr>
                 <th>Kodu</th>
@@ -18,7 +18,7 @@
                 <th>Node Id</th>
                 <th>Node NameSpace</th>
                 <th>Attribute Id</th>
-                <th>Güncelle</th>
+                <th>İşlemler</th>
                 
 
             </tr>
@@ -33,7 +33,7 @@
                     <td>@item.NodeNameSpace</td>
                     <td>@item.AttributeId</td>
                     <td>
-                        <a asp-controller="OpcNodes" asp-action="AddOpcNodes" asp-route-id="@item.Id">Güncelle</a>
+                        <a asp-controller="OpcNodes" asp-action="AddOpcNodes" asp-route-id="@item.Id" class="btn btn-outline-warning">Güncelle</a>
                     </td>
                     
 
