@@ -7,6 +7,8 @@ using Microsoft.Extensions.Configuration;
 using Hangfire;
 using SuperFilm.Enerji.Entites;
 using SuperFilm.Enerji.OleDbReader;
+using Superfilm.Enerji.VeriToplama.Services;
+using TanvirArjel.EFCore.GenericRepository;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,10 +26,15 @@ builder.Services.AddDbContext<EnerjiDbContext>(options =>
     options.UseSqlServer(EnerjiDbContextString));
 
 builder.Services.AddHangfire(x =>
-    x.UseSqlServerStorage(EnerjiDbContextString));
+x.UseInMemoryStorage()
+    //x.UseSqlServerStorage(EnerjiDbContextString)
+    );
 builder.Services.AddHangfireServer();
+builder.Services.AddGenericRepository<EnerjiDbContext>();
+builder.Services.AddQueryRepository<EnerjiDbContext>();
 
-builder.Services.AddScoped<Client>();
+//builder.Services.AddScoped<Client>();
+builder.Services.AddScoped<ISayacVeriKaydet,SayacVeriKaydet>();
 
 /* -----------------------------------------------------------------  */
 
@@ -46,10 +53,10 @@ app.MapRazorPages();
 app.UseHangfireDashboard(); // http://localhost:5000/hangfire ile kontrol edebilirsin
 
 // Baþlangýçta job’u baþlat:
-RecurringJob.AddOrUpdate<Client>(
+RecurringJob.AddOrUpdate<ISayacVeriKaydet>(
     "mdb-okuyucu-job",
-    x => x.Run(),
-    Cron.Minutely // her dakika çalýþýr
+    x => x.Start(),
+    Cron.Hourly // her dakika çalýþýr
 );
 /* -----------------------------------------------------------------  */
 
