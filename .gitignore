@@ -366,3 +366,4 @@ FodyWeavers.xsd
 /SuperFilm.Enerji.TestClient/SuperFilm.Enerji.TestClient.csproj
 /SuperFilm.Enerji.WebUI/appsettings.json
 /SuperFilm.Enerji.WebUI/appsettings.Development.json
+/Superfilm.Enerji.VeriToplama/appsettings.json
