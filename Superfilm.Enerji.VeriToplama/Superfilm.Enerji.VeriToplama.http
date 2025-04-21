@@ -1,0 +1,6 @@
+@Superfilm.Enerji.VeriToplama_HostAddress = http://localhost:5041
+
+GET {{Superfilm.Enerji.VeriToplama_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
