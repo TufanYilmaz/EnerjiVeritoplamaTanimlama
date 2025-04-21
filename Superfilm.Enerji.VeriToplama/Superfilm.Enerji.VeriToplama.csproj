@@ -23,4 +23,8 @@
     <ProjectReference Include="..\SuperFilm.Enerji.OleDbReader\SuperFilm.Enerji.OleDbReader.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Controllers\" />
+  </ItemGroup>
+
 </Project>
