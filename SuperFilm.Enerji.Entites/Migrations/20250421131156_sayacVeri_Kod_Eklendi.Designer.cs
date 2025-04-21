@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SuperFilm.Enerji.Entites;
 
@@ -11,9 +12,11 @@ using SuperFilm.Enerji.Entites;
 namespace SuperFilm.Enerji.Entites.Migrations
 {
     [DbContext(typeof(EnerjiDbContext))]
-    partial class EnerjiDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250421131156_sayacVeri_Kod_Eklendi")]
+    partial class sayacVeri_Kod_Eklendi
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -237,16 +240,17 @@ namespace SuperFilm.Enerji.Entites.Migrations
                         .HasColumnType("varchar(2)");
 
                     b.Property<string>("Kod")
+                        .IsRequired()
                         .HasMaxLength(20)
                         .HasColumnType("varchar(20)");
 
                     b.Property<DateTime>("NormalizeDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("OpcNodesId")
+                    b.Property<int>("OpcNodesId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("SayacId")
+                    b.Property<int>("SayacId")
                         .HasColumnType("int");
 
                     b.Property<string>("Yil")
