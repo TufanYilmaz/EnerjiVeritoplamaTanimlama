@@ -29,15 +29,12 @@ builder.Services.AddHangfire(x =>
 x.UseInMemoryStorage()
     //x.UseSqlServerStorage(EnerjiDbContextString)
     );
+builder.Services.AddScoped<ISayacVeriKaydet,SayacVeriKaydet>();
 builder.Services.AddHangfireServer();
 builder.Services.AddGenericRepository<EnerjiDbContext>();
 builder.Services.AddQueryRepository<EnerjiDbContext>();
 
-//builder.Services.AddScoped<Client>();
-builder.Services.AddScoped<ISayacVeriKaydet,SayacVeriKaydet>();
-
 /* -----------------------------------------------------------------  */
-
 
 var app = builder.Build();
 
