@@ -75,7 +75,14 @@ namespace SuperFilm.Enerji.WebUI.Controllers
             ModelState.Remove("Isletme.Isyeri.Kodu");
             if (ModelState.ValidationState == Microsoft.AspNetCore.Mvc.ModelBinding.ModelValidationState.Invalid)
             {
-                return NoContent();
+                var isyerleri = await _queryRepository.GetQueryable<IsYeri>().ToListAsync();
+                Isletme isletmemodel = new Isletme();
+                var m = new IsYeriIsletmeViewModel
+                {
+                    Isletme = isletmemodel,
+                    IsYerleri = isyerleri
+                };
+                return View(m);
             }
             try
             {

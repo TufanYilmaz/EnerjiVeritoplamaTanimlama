@@ -5,11 +5,11 @@
 
 <div class="text-center">
     <div class="float-end">
-        <a asp-controller="Sayac" asp-action="AddSayac" class="text-decoration-none">
+        <a asp-controller="Sayac" asp-action="AddSayac" class="btn btn-outline-primary">
             Ekle
         </a>
     </div>
-    <table class="table">
+    <table class="table pageTable">
         <thead>
             <tr>
                 <th>Sayaç Kodu</th>
@@ -29,9 +29,9 @@
                     <td>@item.SayacAciklama</td>
                     <td>@item.SayacYeri</td>
                     <td>
-                        <a asp-controller="Sayac" asp-action="AddSayac" asp-route-id="@item.Id">Güncelle</a>
+                        <a class="btn btn-outline-warning" asp-controller="Sayac" asp-action="AddSayac" asp-route-id="@item.Id">Güncelle</a>
                         <span> | </span>
-                        <a class="btn btn-danger" asp-controller="Sayac" asp-action="DeleteSayac" asp-route-id="@item.Id" onclick="return confirm('Bu sayacı silmek istediğinizden emin misiniz?');">Sil</a>
+                        <a class="btn btn-outline-danger" asp-controller="Sayac" asp-action="DeleteSayac" asp-route-id="@item.Id" onclick="return confirm('Bu sayacı silmek istediğinizden emin misiniz?');">Sil</a>
                     </td>
 
                 </tr>

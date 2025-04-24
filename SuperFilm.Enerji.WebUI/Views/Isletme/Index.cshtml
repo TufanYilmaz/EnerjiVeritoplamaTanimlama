@@ -5,24 +5,24 @@
 
 <div class="text-center">
     <div class="float-start">
-        <a asp-route-id=0 class="text-decoration-none">
+        <a asp-route-id=0 class="btn btn-dark" style="display:inline;margin-right:0.5rem">
             Tümü
         </a>
-        <span> | </span>
+        <span style="margin-right:0.5rem"> | </span>
         @foreach (var item in Model.IsYerleri)
         {
-            <a asp-route-id="@item.Id" class="text-decoration-none">
+            <a asp-route-id="@item.Id" class="btn btn-outline-dark" style="display:inline;margin-right:0.5rem">
                 @item.Adi
             </a>
-            <span> | </span>
+
         }
     </div>
     <div class="float-end">
-        <a asp-controller="Isletme" asp-action="AddIsletme" class="text-decoration-none">
+        <a asp-controller="Isletme" asp-action="AddIsletme" class="btn btn-outline-primary">
              Ekle
         </a>
     </div>
-    <table class="table">
+    <table class="table pageTable">
         <thead>
             <tr>
                 <th>Isletme Kodu</th>
@@ -30,7 +30,7 @@
                 <th>Isletme Tipi</th>
                 <th>Isletme Açıklaması</th>
                 <th>İş Yeri Ad</th>
-                <th>Güncelle</th>
+                <th>İşlemler</th>
 
             </tr>
         </thead>
@@ -44,7 +44,7 @@
                     <td>@item.Aciklama</td>
                     <td>@item.Isyeri?.Adi</td>
                     <td>
-                        <a asp-controller="Isletme" asp-action="AddIsletme" asp-route-id="@item.Id">Güncelle</a>
+                        <a asp-controller="Isletme" asp-action="AddIsletme" asp-route-id="@item.Id" class="btn btn-outline-warning">Güncelle</a>
                     </td>
                 </tr>
             }

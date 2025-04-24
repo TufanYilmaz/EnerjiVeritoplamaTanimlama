@@ -7,5 +7,6 @@ namespace SuperFilm.Enerji.WebUI.ViewModels
         public required OpcNodesIsletmeDagilimi OpcNodesIsletmeDagilimi { get; set; } = new();
         public required List<OpcNodes> OpcNodes { get; set; } = new();
         public required List<Isletme> Isletme { get; set; } = new();
+        public required List<IsYeri> IsYeri { get; set; } = new();
     }
 }
