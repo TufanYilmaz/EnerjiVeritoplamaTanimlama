@@ -38,7 +38,6 @@
                             </ul>
                         </li>
 
-
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">OpcNodes</a>
                             <ul class="dropdown-menu">
@@ -46,6 +45,14 @@
                                 <li><a class="dropdown-item" asp-controller="OpcNodesIsletmeDagilimi" asp-action="Index">OpcNodes İşletme Dağılımı</a></li>
                             </ul>
                         </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Sayac Verileri</a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" asp-controller="SayacVeri" asp-action="ListSayacVeri">Verileri Listele</a></li>
+                                <li><a class="dropdown-item" asp-controller="SayacVeri" asp-action="FilterSayacVeri">Verileri Filtrele</a></li>
+                            </ul>
+                        </li>
+
                         <partial name="_LoginPartial" />
 
                     </ul>

@@ -1,6 +1,8 @@
-﻿using SuperFilm.Enerji.Entites;
+﻿using Microsoft.EntityFrameworkCore;
+using SuperFilm.Enerji.Entites;
 using SuperFilm.Enerji.OleDbReader;
 using System.Data;
+using System.Threading;
 using TanvirArjel.EFCore.GenericRepository;
 
 namespace Superfilm.Enerji.VeriToplama.Services
@@ -8,7 +10,8 @@ namespace Superfilm.Enerji.VeriToplama.Services
     public class SayacVeriKaydet(
         IQueryRepository<EnerjiDbContext> queryRepository,
             IRepository<EnerjiDbContext> enerjiRepository,
-        IConfiguration configuration) : ISayacVeriKaydet
+        IConfiguration configuration,
+        IServiceScopeFactory _serviceScopeFactory) : ISayacVeriKaydet
     {
         Client client = new Client(configuration.GetValue<string>( "RootFilePath") ?? "");
         List<string> _fileCodes = new List<string>() { "6", "11", "12", "19", "20", "22", "29" };
@@ -35,8 +38,17 @@ namespace Superfilm.Enerji.VeriToplama.Services
                 sayacverimodel.Gun = time.ToString("dd");
                 sayacverimodel.Zaman = time.ToString("hhmmss");
                 sayacverimodel.Deger = Convert.ToDecimal(row["WHT1"]);
-                //sayacverimodel.Zaman = time.ToString("hh:mm:ss").Replace(":","");
+                sayacverimodel.NormalizeDate = time;
+                sayacverimodel.CreateDate = DateTime.Now;
+                using (var scope = _serviceScopeFactory.CreateScope())
+                {
+                    var re = scope.ServiceProvider.GetService<IRepository<EnerjiDbContext>>();
+                    await re.AddAsync<SayacVeri>(sayacverimodel);
+                    await re.SaveChangesAsync();
+                }
 
+                //await enerjiRepository.AddAsync<SayacVeri>(sayacverimodel);
+                //await enerjiRepository.SaveChangesAsync();
             }
         }
         public async void Start()
@@ -51,7 +63,8 @@ namespace Superfilm.Enerji.VeriToplama.Services
 
         public async Task<DataSet> VeriCek(string fileCode)
         {
-            return await client.ReadFile(fileCode,DateTime.Now.AddDays(-1));
+            //return await client.ReadFile(fileCode,DateTime.Now.AddDays(-1));
+            return await client.ReadFile(fileCode,new DateTime(2025,04,12));
         }
         
     }

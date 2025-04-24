@@ -1,0 +1,146 @@
+﻿@model RequestViewModel
+@using SuperFilm.Enerji.Entites
+@{
+    ViewData["Title"] = "Sayaç Verileri";
+}
+@section Scripts {
+	<script src="~/js/selectdatatype.js"></script>
+}
+
+<div> 
+    <div class="container">
+        <form asp-action="FilterSayacVeri" method="post" style="display:flex;flex-direction:column;gap:1rem">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="row">
+                <div class="col-md-4">
+                    <label asp-for="SayacVeriRequest.DataTypeId">Veri Tipi</label>
+                    <select class="form-control" asp-for="SayacVeriRequest.DataTypeId" id="dataTypeId" required>
+                        <option value="">Seçiniz</option>
+                        <option value="1">Sayac</option>
+                        <option value="2">OpcNodes</option>
+                    </select>
+                </div>
+
+                <div class="col-md-4" id="SayacSelect" style="display:none">
+                    <label for="sayacID">Sayac Code</label>
+                    <select class="form-control" name="sayacID" id="sayacID">
+                        <option value="">Seçiniz</option>
+
+                        @if (Model.SayacTanimlari != null && Model.SayacTanimlari.Any())
+                        {
+                            foreach (var item in Model.SayacTanimlari)
+                            {
+                                <option value="@item.Id">@item.SayacKodu</option>
+                            }
+                        }
+                        else
+                        {
+                            <option value="">Mevcut Sayac Yok</option>
+                        }
+                    </select>
+                </div>
+
+                <div class="col-md-4" id="OpcNodesSelect" style="display:none">
+                    <label for="opcNodesID" >OpcNodes Code</label>
+                    <select class="form-control" name="opcNodesID" id="opcNodesID">
+                        <option value="">Seçiniz</option>
+
+                        @if (Model.OpcNodes != null && Model.OpcNodes.Any())
+                        {
+                            foreach (var item in Model.OpcNodes)
+                            {
+                                <option value="@item.Id">@item.Code</option>
+                            }
+                        }
+                        else
+                        {
+                            <option value="">Mevcut Veri Yok</option>
+                        }
+                    </select>
+                </div>
+
+                <input type="hidden" asp-for="SayacVeriRequest.SayacOpcNodesID" id="sayacOpcNodesID" />
+            </div>
+
+            <div class="row">
+                <div class="col-md-4" style="display:flex;flex-direction:row;gap:1rem">
+                    <label for="startDate">Başlangıç Tarihi</label>
+                    <input type="datetime-local" asp-for="SayacVeriRequest.StartDate">
+                </div>
+
+                <div class="col-md-4" style="display:flex;flex-direction:row;gap:1rem">
+                    <label for="endDate">Bitiş Tarihi</label>
+                    <input type="datetime-local" asp-for="SayacVeriRequest.EndDate">
+                </div>
+            </div>
+
+            <div class="row mb-5">
+                <div class="col-md-4" style="display:flex;flex-direction:row;gap:1rem">
+                    <label for="numData">Veri Sayısı (min:1000)</label>
+                    <input type="number" asp-for="SayacVeriRequest.NumData" step="100" min="1000" value="1000">
+                </div>
+
+                <div class="col-md-4" style="display:flex;flex-direction:row;gap:1rem">
+                    <label class="form-label">Order By</label>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" asp-for="SayacVeriRequest.OrderBy" value="@OrderBy.Ascending" />
+                        <label class="form-check-label" asp-for="SayacVeriRequest.OrderBy">Asc</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" asp-for="SayacVeriRequest.OrderBy" value="@OrderBy.Descending" />
+                        <label class="form-check-label" asp-for="SayacVeriRequest.OrderBy">Desc</label>
+                    </div>
+                </div>
+                <div class="col-md-4" style="display:flex;flex-direction:row;gap:1rem">
+                    <input type="submit" value="Getir" class="btn btn-success w-100 p-1">
+                </div>
+
+            </div>
+
+        </form>
+    </div>
+
+    <table class="table pageTable text-center" id="pageTable">
+        <thead class="bg-dark text-light">
+            <tr>
+                @if (Model.SayacVeri.Count != 0 && Model.SayacVeri[0].SayacId!=null){ 
+                     <th>Sayac Kodu</th> 
+                } 
+                @if (Model.SayacVeri.Count != 0 && Model.SayacVeri[0].OpcNodesId!=null){ 
+                     <th>OpcNodes Id</th> 
+                }
+                <th>Sayaç Veri Değer</th>
+                <th>Sayaç Veri Tarih</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.SayacVeri == null || Model.SayacVeri.Count == 0)
+            {
+                <tr>
+                    <td colspan="4" class="text-center">Henüz Veri Yok</td>
+                </tr>
+            }
+            else
+            {
+                @foreach (var item in Model.SayacVeri)
+                {
+                    <tr>
+                        @if (item.SayacId != null) 
+                        { 
+                             <td>@item.Kod</td> 
+                        } 
+                        @if (item.OpcNodesId != null)
+                        { 
+                            <td>@item.OpcNodesId</td> 
+                        } 
+
+                        <td>@item.Deger</td>
+                        <td>@item.NormalizeDate</td>
+                    </tr>
+                }
+            }
+
+        </tbody>
+    </table>
+</div>

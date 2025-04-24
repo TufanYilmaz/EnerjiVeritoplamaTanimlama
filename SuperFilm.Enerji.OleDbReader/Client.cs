@@ -11,7 +11,7 @@ namespace SuperFilm.Enerji.OleDbReader
         //string _connectionString = "Provider=Microsoft.Jet.OLEDB.4.0;";
         const string _connectionString = "Provider=Microsoft.ACE.OLEDB.12.0;";
         readonly string _rootFile = string.Empty;
-        List<string> _fileCodes = new List<string>() { "6", "11", "12", "19", "20", "22", "29" };
+        //List<string> _fileCodes = new List<string>() { "6", "11", "12", "19", "20", "22", "29" };
         public Client(string rootFile)
         {
             _rootFile = rootFile.Replace("\"","");
