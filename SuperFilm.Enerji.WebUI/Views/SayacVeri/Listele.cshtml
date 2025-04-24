@@ -1,0 +1,29 @@
+﻿@{
+    ViewData["Title"] = "SayacVeri";
+}
+
+
+<div class="container">
+    <table class="page pageTable" id="tblData"
+           style="width:100%; height:auto; border-radius:6px; overflow:hidden; text-align:center;">
+        <thead style="background-color:#343a40; color:#fff;">
+            <tr>
+                <th style="padding:8px 12px; border-bottom:1px solid #ddd;">
+                    Kod
+                </th>
+                <th style="padding:8px 12px; border-bottom:1px solid #ddd;">
+                    OPC Node ID
+                </th>
+                <th style="padding:8px 12px; border-bottom:1px solid #ddd;">
+                    Normalize Tarihi
+                </th>
+            </tr>
+        </thead>
+    </table>
+</div>
+
+
+
+@section scripts {
+    <script src="~/js/serverdt.js"></script>
+}
