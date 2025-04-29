@@ -1,21 +1,44 @@
 ﻿@using Microsoft.AspNetCore.Identity;
 @using SuperFilm.Enerji.WebUI.Services.Identity;
+@using Microsoft.AspNetCore.Http;
 @inject SignInManager<User> signInManager
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor httpContextAccessor
+
+
 <ul class="navbar-nav ms-auto">
     @if (signInManager.IsSignedIn(User))
     {
-        <li class="nav-item">
-            <a class="nav-link text-dark" asp-controller="Account" asp-action="Logout">Çıkış</a>
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle text-dark" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Merhaba, @User.Identity.Name
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                <li>
+                    <a class="dropdown-item" asp-controller="Account" asp-action="Profile">
+                        <i class="bi bi-person me-2"></i> Profil
+                    </a>
+                </li>
+                <li>
+                    <a class="dropdown-item" asp-controller="Account" asp-action="ChangePassword">
+                        <i class="bi bi-lock me-2"></i> Parola Değiştir
+                    </a>
+                </li>
+                <li><hr class="dropdown-divider" /></li>
+                <li>
+                    <a class="dropdown-item" asp-controller="Account" asp-action="Logout">
+                        <i class="bi bi-box-arrow-right me-2"></i> Çıkış
+                    </a>
+                </li>
+            </ul>
         </li>
     }
     else
     {
         <li class="nav-item">
-            <a class="nav-link text-dark" asp-controller="Account" asp-action="Login">Giriş</a>
+            <a class="nav-link text-dark" asp-controller="Account" asp-action="Login">
+                <i class="bi bi-box-arrow-in-right me-2"></i> Giriş
+            </a>
         </li>
-        <li class="nav-item">
-            <a class="nav-link text-dark" asp-controller="Account" asp-action="Register">Kaydol</a>
-        </li>
-    }
 
+    }
 </ul>

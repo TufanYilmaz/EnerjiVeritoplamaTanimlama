@@ -1,0 +1,48 @@
+﻿@model List<SuperFilm.Enerji.WebUI.ViewModels.UserViewModels.UserListViewModel>
+
+@{
+    ViewData["Title"] = "Kullanıcı Listesi";
+}
+
+<h1>Kullanıcı Listesi</h1>
+
+<a class="btn btn-primary mb-3" asp-controller="Users" asp-action="Create">Yeni Kullanıcı Ekle</a>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Adı</th>
+            <th>Email</th>
+            <th>Rol</th>
+            <th>İşlemler</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model != null && Model.Any())
+        {
+            int counter = 1;
+            foreach (var user in Model)
+            {
+                <tr>
+                    <td>@counter</td>
+                    <td>@user.Name</td>
+                    <td>@user.Email</td>
+                    <td>@string.Join(", ", user.SelectedRoles)</td>
+                    <td>
+                        <a class="btn btn-sm btn-warning" asp-action="Edit" asp-route-id="@user.Id">Düzenle</a>
+                        <a class="btn btn-sm btn-danger" asp-action="Delete" asp-route-id="@user.Id"
+                           onclick="return confirm('Bu kullanıcıyı silmek istediğinize emin misiniz?');">Sil</a>
+                    </td>
+                </tr>
+                counter++;
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="5" class="text-center">Kayıtlı kullanıcı bulunamadı.</td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -1,0 +1,46 @@
+﻿@model SuperFilm.Enerji.WebUI.ViewModels.UserViewModels.EditUserViewModel
+@using Microsoft.AspNetCore.Identity
+
+@{
+    ViewData["Title"] = "Kullanıcıyı Güncelle";
+}
+
+<h1>Kullanıcıyı Güncelle</h1>
+
+<form asp-action="Edit" method="post">
+    <input type="hidden" asp-for="Id" />
+
+    <div class="mb-3">
+        <label asp-for="Name" class="form-label"></label>
+        <input asp-for="Name" class="form-control" />
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Email" class="form-label"></label>
+        <input asp-for="Email" class="form-control" />
+        <span asp-validation-for="Email" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Roller</label>
+        <div class="form-check" style="margin-bottom:5px">
+            @foreach (var role in (List<IdentityRole>)ViewBag.Roles)
+            {
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="SelectedRoles" value="@role.Name"
+                    @(Model.SelectedRoles != null && Model.SelectedRoles.Contains(role.Name) ? "checked" : "") />
+                    <label class="form-check-label">@role.Name</label>
+                </div>
+            }
+        </div>
+    </div>
+
+
+    <button type="submit" class="btn btn-primary">Güncelle</button>
+    <a class="btn btn-secondary" asp-action="Index">İptal</a>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
