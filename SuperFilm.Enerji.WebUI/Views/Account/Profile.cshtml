@@ -1,0 +1,17 @@
+﻿@model SuperFilm.Enerji.WebUI.ViewModels.AccountViewModels.ProfileViewModel
+
+@{
+    ViewData["Title"] = "Profil Bilgileri";
+}
+
+<h1>Profil Bilgileri</h1>
+
+<div class="card">
+    <div class="card-body">
+        <p><strong>İsim:</strong> @Model.Name</p>
+        <p><strong>Email:</strong> @Model.Email</p>
+        <p><strong>Roller:</strong> @string.Join(", ", Model.Roles)</p>
+    </div>
+</div>
+
+<a href="@Url.Action("ChangePassword", "Account")" class="btn btn-success">Parolayı Güncelle</a>
