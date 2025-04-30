@@ -1,0 +1,41 @@
+﻿
+@using Syncfusion.EJ2;
+    <div class="control-section" align="center">
+        @Html.EJS().Chart("container").Series(series =>
+                {
+                    series.Type(Syncfusion.EJ2.Charts.ChartSeriesType.Line).Width(2).XName("Zaman").YName("Deger").Name("SayacVeri")
+                    .Marker(mr => mr.Visible(true).Width(7).Height(7).Shape(Syncfusion.EJ2.Charts.ChartShape.Circle).IsFilled(true))
+                    .DataSource(ViewData["ChartData"]).Add();
+
+                }).PrimaryXAxis(px => px.ValueType(Syncfusion.EJ2.Charts.ValueType.Double)
+                .MajorGridLines(mg => mg.Width(0))
+                .EdgeLabelPlacement(Syncfusion.EJ2.Charts.EdgeLabelPlacement.Shift)
+                ).PrimaryYAxis(py => py.Title("Sayaç Verileri")
+                .MajorTickLines(mt => mt.Width(0)).MinorTickLines(mt => mt.Width(0))
+                // .LineStyle(ls => ls.Width(0)).Interval(5).Minimum(0).Maximum(25)
+                )
+                .Title("Sayaç Verileri")
+                .SubTitle("Source: wikipedia.org")
+                .Tooltip(tt => tt.Enable(true)
+                @* .Header("<b>sa</b>") *@
+                @* .Format("${point.x} : <b>${point.y}M</b>") *@
+                @* .ShowNearestTooltip(true) *@
+                .EnableHighlight(true)
+                )
+                .Load("load")
+                .ChartArea(area => area.Border(br => br.Width(0))
+                .Margin(margin => margin.Bottom(12)))
+                .LegendSettings(leg => leg.Visible(true)
+                .EnableHighlight(true)
+                ).Render()
+    </div>
+
+
+    @* <script src="~/Scripts/chart/theme-color.js"></script> *@
+    <script>
+
+        var load = function (args) {
+            // loadChartTheme(args);
+            args.chart.width = ej.base.Browser.isDevice ? "100%" : "75%";
+        };
+    </script>
