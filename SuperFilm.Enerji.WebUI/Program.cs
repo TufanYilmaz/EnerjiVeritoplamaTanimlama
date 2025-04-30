@@ -2,6 +2,7 @@ using System;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using SuperFilm.Enerji.Entites;
+using SuperFilm.Enerji.Repository;
 using SuperFilm.Enerji.WebUI.Services.Identity;
 using TanvirArjel.EFCore.GenericRepository;
 
@@ -13,6 +14,9 @@ builder.Services.AddDbContext<EnerjiDbContext>(options => options.UseSqlServer(b
 builder.Services.AddGenericRepository<EnerjiDbContext>();
 builder.Services.AddQueryRepository<EnerjiDbContext>();
 builder.Services.AddDbContext<AppIdentityDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("EnerjiDbContext")));
+builder.Services.AddScoped(typeof(EnerjiVeriRepository<>));
+//builder.Services.AddScoped(IEnerjiVeriRepository, EnerjiVeriRepository);
+
 
 builder.Services.AddIdentity<User, IdentityRole>(options =>
 {

@@ -22,6 +22,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.7" />
+    <PackageReference Include="Syncfusion.EJ2.AspNet.Core" Version="23.1.36" />
     <PackageReference Include="System.Data.OleDb" Version="9.0.4" />
     <PackageReference Include="System.Data.SqlClient" Version="4.9.0" />
     <PackageReference Include="System.Linq.Dynamic.Core" Version="1.6.0.2" />
@@ -31,6 +32,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\SuperFilm.Enerji.Entites\SuperFilm.Enerji.Entites.csproj" />
+    <ProjectReference Include="..\SuperFilm.Enerji.Repository\SuperFilm.Enerji.Repository.csproj" />
   </ItemGroup>
 
   <ItemGroup>
