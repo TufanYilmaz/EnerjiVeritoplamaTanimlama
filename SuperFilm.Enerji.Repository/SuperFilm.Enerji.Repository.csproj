@@ -11,4 +11,12 @@
     <Folder Include="Concrate\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="TanvirArjel.EFCore.GenericRepository" Version="6.0.4" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\SuperFilm.Enerji.Entites\SuperFilm.Enerji.Entites.csproj" />
+  </ItemGroup>
+
 </Project>
