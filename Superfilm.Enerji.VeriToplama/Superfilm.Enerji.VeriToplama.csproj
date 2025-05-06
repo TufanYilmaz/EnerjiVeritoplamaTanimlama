@@ -24,10 +24,17 @@
   <ItemGroup>
     <ProjectReference Include="..\SuperFilm.Enerji.Entites\SuperFilm.Enerji.Entites.csproj" />
     <ProjectReference Include="..\SuperFilm.Enerji.OleDbReader\SuperFilm.Enerji.OleDbReader.csproj" />
+    <ProjectReference Include="..\SuperFilm.Enerji.OpcUAReader\SuperFilm.Enerji.OpcUAReader.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="Controllers\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Client.Config.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

@@ -28,6 +28,7 @@ namespace SuperFilm.Enerji.OpcUAReader
             EndpointConfiguration endpointConfiguration = EndpointConfiguration.Create(m_configuration);
             endpoint = new ConfiguredEndpoint(null, endpointDescription, endpointConfiguration);
             m_reconnectHandler = new SessionReconnectHandler(true, 10 * 1000);
+            CreateSession();
         }
 
         private void CertificateValidator_CertificateValidation(CertificateValidator sender, CertificateValidationEventArgs e)
@@ -78,6 +79,22 @@ namespace SuperFilm.Enerji.OpcUAReader
             //ResponseHeader readHeader = m_session.Read(null, 0, TimestampsToReturn.Neither, nodesToRead, out readResults, out readDiagnosticInfos);
             var readRes = await m_session!.ReadAsync(null, 0, TimestampsToReturn.Neither, nodesToRead, cancellationToken);
 
+            //var readHeader = await m_session.ReadValuesAsync(nodesToRead.Select(r => r.NodeId).ToList(), cancellationToken);
+            readResults = readRes.Results;
+            ClientBase.ValidateResponse(readResults, nodesToRead);
+            ClientBase.ValidateDiagnosticInfos(readDiagnosticInfos, nodesToRead);
+
+            return readResults;
+        }
+       
+        public async Task<DataValueCollection> ReadNodesWithParameterAsync(ReadValueIdCollection nodesToRead, CancellationToken cancellationToken)
+        {
+            DataValueCollection readResults = null;
+            DiagnosticInfoCollection readDiagnosticInfos = null;
+
+            //ResponseHeader readHeader = m_session.Read(null, 0, TimestampsToReturn.Neither, nodesToRead, out readResults, out readDiagnosticInfos);
+            var readRes = await m_session!.ReadAsync(null, 0, TimestampsToReturn.Neither, nodesToRead, cancellationToken);
+
             var readHeader = await m_session.ReadValuesAsync(nodesToRead.Select(r => r.NodeId).ToList(), cancellationToken);
             //readRes.Results
             ClientBase.ValidateResponse(readResults, nodesToRead);
@@ -85,5 +102,6 @@ namespace SuperFilm.Enerji.OpcUAReader
 
             return readHeader.Item1;
         }
+
     }
 }
