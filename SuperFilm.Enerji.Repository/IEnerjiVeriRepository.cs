@@ -12,6 +12,8 @@ namespace SuperFilm.Enerji.Repository
     {
         Task<List<SayacVeri>> GetDailyAsync(DateTime gun, int sayacId);
         Task<List<SayacVeri>> GetMonthlyAsync (DateTime ay, int sayacId);
+        Task<List<SayacVeri>> GetDailyDiffAsync(DateTime gun, int sayacId);
+        Task<List<SayacVeri>> GetMonthlyDiffAsync(DateTime ay, int sayacId);
     }
 
 }

@@ -1,83 +1,253 @@
 ﻿@model List<SayacTanimlari>
 
-
-<form asp-action="Index" method="post">
-    <label for="TimeTypeId">Zaman Tipi</label>
-    <select class="form-control" name="TimeTypeId" id="TimeTypeId" required>
-        <option value="">Seçiniz</option>
-        <option value="1">Günlük</option>
-        <option value="2">Aylık</option>
-    </select>
-    <div id="Gun" style="display:none">
-        <label for="Gun">Gün</label>
-        <input type="date" name="Gun">
+<div class="container">
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5>Veri Seçimi</h5>
+                </div>
+                <div class="card-body">
+                    <form asp-action="Index" method="post">
+                        <div class="form-group mb-3">
+                            <label for="TimeTypeId">Zaman Tipi</label>
+                            <select class="form-control" name="TimeTypeId" id="TimeTypeId" required>
+                                <option value="">Seçiniz</option>
+                                <option value="1">Günlük</option>
+                                <option value="2">Aylık</option>
+                            </select>
+                        </div>
+                        <div id="Gun" class="form-group mb-3" style="display:none">
+                            <label for="Gun">Gün</label>
+                            <input type="date" name="Gun" class="form-control">
+                        </div>
+                        <div id="Ay" class="form-group mb-3" style="display:none">
+                            <label for="Ay">Ay</label>
+                            <input type="month" name="Ay" class="form-control">
+                        </div>
+                        <div class="form-group mb-3">
+                            <label for="SayacId">Sayaç</label>
+                            <select class="form-control" name="SayacId" id="SayacId" required>
+                                @if (Model != null && Model.Any())
+                                {
+                                    foreach (var item in Model)
+                                    {
+                                        <option value="@item.Id">@item.SayacKodu</option>
+                                    }
+                                }
+                                else
+                                {
+                                    <option value="">Mevcut Sayaç Yok</option>
+                                }
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Göster</button>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
-    <div id="Ay" style="display:none">
-        <label for="Ay">Ay</label>
-        <input type="month" name="Ay">
-    </div>
-    <label for="SayacId">Sayaç</label>
-    <select class="form-control" name="SayacId" id="SayacId" required>
-        @if (Model != null && Model.Any())
-        {
-            foreach (var item in Model)
-            {
-                <option value="@item.Id">@item.SayacKodu</option>
-            }
-        }
-        else
-        {
-            <option value="">Mevcut Sayaç Yok</option>
-        }
-        
-    </select>
-    <input type="submit" value="Ekle"/>
-</form>
 
-@* @(await Html.RenderPartialAsync("_GrafikPartial")) *@
-@* <partial name="_GrafikPartial" /> *@
+    @if (!string.IsNullOrEmpty(ViewBag.ErrorMessage))
+    {
+        <div class="row">
+            <div class="col-12">
+                <div class="alert alert-danger">
+                    <h4>Hata!</h4>
+                    <p>@ViewBag.ErrorMessage</p>
+                </div>
+            </div>
+        </div>
+    }
 
-@using Syncfusion.EJ2;
-<div class="control-section" align="center">
-    @Html.EJS().Chart("container").Series(series =>
-            {
-                series.Type(Syncfusion.EJ2.Charts.ChartSeriesType.Line).Width(2).XName("Zaman").YName("Deger").Name("SayacVeri")
-                .Marker(mr => mr.Visible(true).Width(7).Height(7).Shape(Syncfusion.EJ2.Charts.ChartShape.Circle).IsFilled(true))
-                .DataSource(ViewData["ChartData"]).Add();
-
-            }).PrimaryXAxis(px => px.ValueType(Syncfusion.EJ2.Charts.ValueType.Double)
-            .MajorGridLines(mg => mg.Width(0))
-            .EdgeLabelPlacement(Syncfusion.EJ2.Charts.EdgeLabelPlacement.Shift)
-            ).PrimaryYAxis(py => py.Title("Sayaç Verileri")
-            .MajorTickLines(mt => mt.Width(0)).MinorTickLines(mt => mt.Width(0))
-            // .LineStyle(ls => ls.Width(0)).Interval(5).Minimum(0).Maximum(25)
-            )
-    .Title("Sayaç Verileri")
-    .SubTitle("Source: wikipedia.org")
-    .Tooltip(tt => tt.Enable(true)
-    @* .Header("<b>sa</b>") *@
-    @* .Format("${point.x} : <b>${point.y}M</b>") *@
-    @* .ShowNearestTooltip(true) *@
-    .EnableHighlight(true)
-    )
-    @* .Load("load") *@
-    .ChartArea(area => area.Border(br => br.Width(0))
-    .Margin(margin => margin.Bottom(12)))
-    .LegendSettings(leg => leg.Visible(true)
-    .EnableHighlight(true)
-    ).Render()
+    @if (ViewBag.HasData == true)
+    {
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5>@ViewBag.ChartTitle</h5>
+                    </div>
+                    <div class="card-body">
+                        <div id="chartContainer" style="width: 100%; height: 450px;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    else if (ViewData["ChartData"] != null)
+    {
+        <div class="row">
+            <div class="col-md-12">
+                <div class="alert alert-warning">
+                    <h4>Uyarı!</h4>
+                    <p>Seçilen kriterlere uygun veri bulunamadı.</p>
+                </div>
+            </div>
+        </div>
+    }
 </div>
-
-
-@* <script src="~/Scripts/chart/theme-color.js"></script> *@
-<script>
-
-    var load = function (args) {
-        // loadChartTheme(args);
-        args.chart.width = ej.base.Browser.isDevice ? "100%" : "75%";
-    };
-</script>
 
 @section Scripts {
     <script src="~/js/setdate.js"></script>
+    <script src="~/js/chartHelper.js"></script>
+    <script src="https://cdn.syncfusion.com/ej2/dist/ej2.min.js" defer></script>
+    <script>
+        // Form yüklendiğinde çalışacak kod
+        document.addEventListener("DOMContentLoaded", function() {
+            // Trigger the change event to show/hide the appropriate date inputs
+            var timeTypeSelect = document.getElementById("TimeTypeId");
+            if (timeTypeSelect.value) {
+                timeTypeSelect.dispatchEvent(new Event('change'));
+            }
+            
+            @if (ViewBag.ChartDataJson != null)
+            {
+                @:setTimeout(function() {
+                @:    var chartData = @Html.Raw(ViewBag.ChartDataJson);
+                @:    var chartTitle = @Html.Raw(Json.Serialize(ViewBag.ChartTitle));          /* "@ViewBag.ChartTitle"; */
+                @:    var timeTypeId = @ViewBag.TimeTypeId;
+                @:    var minValue = @ViewBag.MinValue;
+                @:    var maxValue = @ViewBag.MaxValue;
+                @:    var interval = @ViewBag.Interval;
+                @:    
+                @:    console.log("Grafik verileri yükleniyor:", chartData);
+                @:
+                @:    if (chartData && chartData.length > 0) {
+                @:        console.log("Grafik verileri başarıyla yüklendi:", chartData.length, "veri noktası");
+                @:        console.log("Grafik aralıkları: Min:", minValue, "Max:", maxValue, "Interval:", interval);
+                @:
+                @:        // Grafik yükleme - Gecikme ile yükle (sayfa oluşumunu engellemez)
+                @:        var chart = new ej.charts.Chart({
+                @:            primaryXAxis: {
+                @:                valueType: 'Category',
+                @:                title: timeTypeId == 1 ? 'Saat' : 'Gün',
+                @:                labelIntersectAction: 'Rotate45',
+                @:                majorGridLines: { width: 0.5, color: '#e0e0e0' },
+                @:                labelStyle: {
+                @:                    fontWeight: '600',
+                @:                    size: '12px',
+                @:                    color: '#333'
+                @:                },
+                @:                titleStyle: {
+                @:                    size: '14px',
+                @:                    fontWeight: '600',
+                @:                    color: '#424242',
+
+                @:                }
+                @:            },
+                @:            primaryYAxis: {
+                @:                title: 'Değer',
+                @:                minimum: minValue,
+                @:                maximum: maxValue,
+                @:                interval: interval,
+                @:                labelFormat: '#,##0.00',
+                @:                majorGridLines: { width: 0.5, color: '#e0e0e0' },
+                @:                majorTickLines: { width: 0 },
+                @:                minorTickLines: { width: 0 },
+                @:                labelStyle: {
+                @:                    fontWeight: '500',
+                @:                    size: '11px',
+                @:                    color: '#424242'
+                @:                },
+                @:                titleStyle: {
+                @:                    size: '14px',
+                @:                    fontWeight: '600',
+                @:                    color: '#424242'
+                @:                }
+                @:            },
+                @:            chartArea: { 
+                @:                border: { width: 0 },
+                @:                background: '#fff'
+                @:            },
+                @:            tooltip: {
+                @:                enable: true,
+                @:                shared: false,
+                @:                format: '${point.x}: <b>${point.y}</b>',
+                @:                textStyle: {
+                @:                    fontWeight: 'bold',
+                @:                    size: '14px',
+                @:                    color: '#333333'
+                @:                },
+                @:                fill: '#ffffff',
+                @:                opacity: 0.9,
+                @:                border: { width: 1, color: '#009688' }
+                @:            },
+                @:            title: chartTitle,
+                @:            titleStyle: {
+                @:                size: '16px',
+                @:                fontWeight: 'bold',
+                @:                color: '#212529',
+                @:                textAlignment: 'Center'
+                @:            },
+                @:            legendSettings: { 
+                @:                visible: true,
+                @:                position: 'Bottom',
+                @:                textStyle: {
+                @:                    size: '13px',
+                @:                    color: '#424242'
+                @:                },
+                @:                background: 'transparent',
+                @:                border: { width: 0 }
+                @:            },
+                @:            width: '100%',
+                @:            height: '450px',
+                @:            background: '#ffffff',
+                @:            margin: { left: 15, right: 15, top: 20, bottom: 15 },
+                @:            palettes: ["#009688", "#2196f3", "#4caf50", "#e91e63"],
+                @:            series: [
+                @:                {
+                @:                    dataSource: chartData,
+                @:                    xName: 'Zaman',
+                @:                    yName: 'Deger',
+                @:                    name: 'Sayaç Değerleri',
+                @:                    type: 'Line',
+                @:                    width: 3,
+                @:                    dashArray: '',
+                @:                    fill: '#009688',
+                @:                    marker: {
+                @:                        visible: true,
+                @:                        width: 10,
+                @:                        height: 10,
+                @:                        shape: 'Circle',
+                @:                        isFilled: true,
+                @:                        fill: '#009688',
+                @:                        border: { width: 2, color: '#ffffff' }
+                @:                    },
+                @:                    animation: { 
+                @:                        enable: true,
+                @:                        duration: 1200,
+                @:                        delay: 100
+                @:                    },
+                @:                    tooltipMappingName: 'Deger'
+                @:                }
+                @:            ],
+                @:            loaded: function(args) {
+                @:                console.log("Grafik yükleme tamamlandı!");
+                @:                // Konsola değerleri yazdır
+                @:                console.log("Yüklenen veri değerleri:");
+                @:                chartData.forEach(function(item) {
+                @:                    console.log(item.Zaman + ": " + item.Deger.toFixed(2));
+                @:                });
+                @:            },
+                @:            // Tema ve yükleme işlevi
+                @:            load: function(args) {
+                @:                args.chart.theme = "Material";
+                @:                
+                @:                // Genişleme için animasyon hızı
+                @:                args.chart.animationComplete = function() {
+                @:                    console.log("Grafik animasyonu tamamlandı!");
+                @:                };
+                @:            }
+                @:        });
+                @:
+                @:        chart.appendTo('#chartContainer');
+                @:        console.log("Grafik başarıyla oluşturuldu!");
+                @:    } else {
+                @:        console.error("Grafik verisi bulunamadı veya boş!");
+                @:    }
+                @:}, 100); // 100ms gecikme ile yükle
+            }
+        });
+    </script>
 }
