@@ -48,72 +48,72 @@ namespace SuperFilm.Enerji.WebUI.Controllers
                 {
                     _logger?.LogInformation($"Günlük veri çekiliyor: Tarih {Gun.Value:dd/MM/yyyy}, SayacId: {SayacId}");
 
-                    //// Repository'den verileri çek
-                    //var days = await _repository.GetDailyAsync(Gun.Value, SayacId);
+                    // Repository'den verileri çek
+                    var days = await _repository.GetDailyAsync(Gun.Value, SayacId);
 
-                    //if (days != null && days.Any())
-                    //{
-                    //    // Debuglama için tüm verileri yazdır
-                    //    _logger?.LogInformation($"Veritabanından {days.Count} kayıt alındı");
-                    //    foreach (var day in days)
-                    //    {
-                    //        _logger?.LogInformation($"Saat: {day.Zaman}, Değer: {day.Deger}");
-                    //    }
+                    if (days != null && days.Any())
+                    {
+                        // Debuglama için tüm verileri yazdır
+                        _logger?.LogInformation($"Veritabanından {days.Count} kayıt alındı");
+                        foreach (var day in days)
+                        {
+                            _logger?.LogInformation($"Saat: {day.Zaman}, Değer: {day.Deger}");
+                        }
 
-                    //    // Repository'den gelen verileri doğrudan LineChartData'ya dönüştür
-                    //    chartData = days.Select(d => new LineChartData 
-                    //    { 
-                    //        Zaman = $"{d.Zaman}:00",  // Saat formatı: HH:00
-                    //        Deger = d.Deger,          // Değeri olduğu gibi al
-                    //    }).ToList();
+                        // Repository'den gelen verileri doğrudan LineChartData'ya dönüştür
+                        chartData = days.Select(d => new LineChartData
+                        {
+                            Zaman = $"{d.Zaman}:00",  // Saat formatı: HH:00
+                            Deger = d.Deger,          // Değeri olduğu gibi al
+                        }).ToList();
 
-                    //    // Verilerin tam olduğundan emin ol (eksik saatler için 0 ekle)
-                    //    chartData = CompleteDailyData(chartData);
+                        // Verilerin tam olduğundan emin ol (eksik saatler için 0 ekle)
+                        chartData = CompleteDailyData(chartData);
 
-                    //    ViewBag.ChartTitle = "Günlük Veriler - " + Gun.Value.ToString("dd/MM/yyyy");
-                    //    _logger?.LogInformation($"Toplam {chartData.Count} günlük veri oluşturuldu");
+                        ViewBag.ChartTitle = "Günlük Veriler - " + Gun.Value.ToString("dd/MM/yyyy");
+                        _logger?.LogInformation($"Toplam {chartData.Count} günlük veri oluşturuldu");
 
-                    //    // Debug için değerleri logla
-                    //    foreach (var item in chartData)
-                    //    {
-                    //        _logger?.LogDebug($"Grafik verisi: Zaman={item.Zaman}, Değer={item.Deger}");
-                    //    }
-                    //}
-                    //else
-                    //{
-                    //    _logger?.LogWarning($"SayacId {SayacId} için {Gun.Value:dd/MM/yyyy} tarihine ait veri bulunamadı.");
-                    //    chartData = GenerateSampleDailyData(Gun.Value);
-                    //}
-                    chartData = _repository.GetDailyDiffAsync(Gun.Value, SayacId).Result.Select(r => new LineChartData() { Deger = r.Deger, Zaman = r.Zaman }).ToList();
+                        // Debug için değerleri logla
+                        foreach (var item in chartData)
+                        {
+                            _logger?.LogDebug($"Grafik verisi: Zaman={item.Zaman}, Değer={item.Deger}");
+                        }
+                    }
+                    else
+                    {
+                        _logger?.LogWarning($"SayacId {SayacId} için {Gun.Value:dd/MM/yyyy} tarihine ait veri bulunamadı.");
+                        chartData = GenerateSampleDailyData(Gun.Value);
+                    }
+                    //chartData = _repository.GetDailyDiffAsync(Gun.Value, SayacId).Result.Select(r => new LineChartData() { Deger = r.Deger, Zaman = r.Zaman }).ToList();
                 }
                 else if (TimeTypeId == 2 && Ay.HasValue) // Aylık
                 {
                     _logger?.LogInformation($"Aylık veri çekiliyor: Ay {Ay.Value:MM/yyyy}, SayacId: {SayacId}");
 
-                    //// Performans iyileştirmesi: Her gün için 23:59 verisini al
-                    //var months = await _repository.GetMonthlyEndOfDayAsync(Ay.Value, SayacId);
+                    // Performans iyileştirmesi: Her gün için 23:59 verisini al
+                    var months = await _repository.GetMonthlyEndOfDayAsync(Ay.Value, SayacId);
 
-                    //if (months != null && months.Any())
-                    //{
-                    //    // Repository'den gelen verileri doğrudan kullan
-                    //    chartData = months.Select(m => new LineChartData 
-                    //    { 
-                    //        Zaman = $"{m.Gun}/{m.Ay}", // Gün/Ay formatı
-                    //        Deger = m.Deger 
-                    //    }).ToList();
+                    if (months != null && months.Any())
+                    {
+                        // Repository'den gelen verileri doğrudan kullan
+                        chartData = months.Select(m => new LineChartData
+                        {
+                            Zaman = $"{m.Gun}/{m.Ay}", // Gün/Ay formatı
+                            Deger = m.Deger
+                        }).ToList();
 
-                    //    // Eksik günler için tamamlayıcı veri oluştur
-                    //    chartData = CompleteMonthlyData(chartData, Ay.Value);
+                        // Eksik günler için tamamlayıcı veri oluştur
+                        chartData = CompleteMonthlyData(chartData, Ay.Value);
 
-                    //    ViewBag.ChartTitle = "Aylık Veriler - " + Ay.Value.ToString("MM/yyyy");
-                    //    _logger?.LogInformation($"Toplam {chartData.Count} aylık veri bulundu.");
-                    //}
-                    //else
-                    //{
-                    //    _logger?.LogWarning($"SayacId {SayacId} için {Ay.Value:MM/yyyy} ayına ait veri bulunamadı.");
-                    //    chartData = GenerateSampleMonthlyData(Ay.Value);
-                    //}
-                    chartData = _repository.GetMonthlyDiffAsync(Ay.Value, SayacId).Result.Select(r => new LineChartData() { Deger = r.Deger, Zaman = r.Zaman }).ToList();
+                        ViewBag.ChartTitle = "Aylık Veriler - " + Ay.Value.ToString("MM/yyyy");
+                        _logger?.LogInformation($"Toplam {chartData.Count} aylık veri bulundu.");
+                    }
+                    else
+                    {
+                        _logger?.LogWarning($"SayacId {SayacId} için {Ay.Value:MM/yyyy} ayına ait veri bulunamadı.");
+                        chartData = GenerateSampleMonthlyData(Ay.Value);
+                    }
+                    //chartData = _repository.GetMonthlyDiffAsync(Ay.Value, SayacId).Result.Select(r => new LineChartData() { Deger = r.Deger, Zaman = r.Zaman }).ToList();
 
                 }
 
@@ -178,8 +178,8 @@ namespace SuperFilm.Enerji.WebUI.Controllers
                 }
 
                 // ViewBag ile grafik ayarlarını aktar 
-                ViewBag.MinValue = minValue;
-                ViewBag.MaxValue = maxValue;
+                ViewBag.MinValue = (int)minValue;
+                ViewBag.MaxValue = (int)maxValue;
                 
                 // Uygun değer aralığı hesapla
                 decimal interval = CalculateYAxisInterval(minValue, maxValue);

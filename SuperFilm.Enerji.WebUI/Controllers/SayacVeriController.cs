@@ -8,6 +8,9 @@ using SuperFilm.Enerji.WebUI.ViewModels;
 using TanvirArjel.EFCore.GenericRepository;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using System.Linq.Dynamic.Core;
+using Hangfire.Storage;
+using Newtonsoft.Json.Linq;
+using System.Xml.Linq;
 
 namespace SuperFilm.Enerji.WebUI.Controllers
 {
@@ -46,7 +49,6 @@ namespace SuperFilm.Enerji.WebUI.Controllers
             {
                 SayacTanimlari = sayaclar,
                 OpcNodes = opcnodeslar,
-                SayacVeri = new List<SayacVeri>(),
                 SayacVeriRequest = new SayacVeriRequest()
             };
             return View(model);
@@ -83,9 +85,9 @@ namespace SuperFilm.Enerji.WebUI.Controllers
                     recordsTotal = totalRecord,
                     data = cData
                 };
-            return new JsonResult(jsonData);
+                return new JsonResult(jsonData);
 
-        }
+            }
             catch (Exception)
             {
 
@@ -93,6 +95,7 @@ namespace SuperFilm.Enerji.WebUI.Controllers
             }
             
         }
+
         [HttpPost]
         public async Task<IActionResult> FilterSayacVeri(SayacVeriRequest sayacVeriRequest)
         {
@@ -106,21 +109,21 @@ namespace SuperFilm.Enerji.WebUI.Controllers
                 {
                     SayacTanimlari = sayaclar,
                     OpcNodes = opcnodeslar,
-                    SayacVeri = sayacverileri,
                     SayacVeriRequest = new SayacVeriRequest()
+
                 };
                 return View(m);
             }
             var sayacverileriQuery = _queryRepository.GetQueryable<SayacVeri>()
                 .Where(r => sayacVeriRequest.DataTypeId == 1 ? r.SayacId > 0 : r.OpcNodesId > 0);
 
-            if (sayacVeriRequest.DataTypeId == 1 && sayacVeriRequest.SayacOpcNodesID > 0)
+            if (sayacVeriRequest.DataTypeId == 1 && sayacVeriRequest.SayacID > 0)
             {
-                sayacverileriQuery = sayacverileriQuery.Where(i => i.SayacId == sayacVeriRequest.SayacOpcNodesID);
+                sayacverileriQuery = sayacverileriQuery.Where(i => i.SayacId == sayacVeriRequest.SayacID);
             }
-            if (sayacVeriRequest.DataTypeId == 2 && sayacVeriRequest.SayacOpcNodesID > 0)
+            if (sayacVeriRequest.DataTypeId == 2 && sayacVeriRequest.OpcNodesID > 0)
             {
-                sayacverileriQuery = sayacverileriQuery.Where(i => i.OpcNodesId == sayacVeriRequest.SayacOpcNodesID);
+                sayacverileriQuery = sayacverileriQuery.Where(i => i.OpcNodesId == sayacVeriRequest.OpcNodesID);
             }
             if (sayacVeriRequest.StartDate != null && sayacVeriRequest.StartDate != default)
             {
@@ -138,21 +141,29 @@ namespace SuperFilm.Enerji.WebUI.Controllers
             {
                 sayacverileriQuery = sayacverileriQuery.OrderByDescending(i => i.NormalizeDate);
             }
-
-            sayacverileri = await sayacverileriQuery
-                .Take(sayacVeriRequest.NumData)
-                .ToListAsync();
-
-            var model = new RequestViewModel
+  
+            try
             {
-                SayacTanimlari = sayaclar,
-                OpcNodes = opcnodeslar,
-                SayacVeri = sayacverileri,
-                SayacVeriRequest = sayacVeriRequest
-            };
-            return View(model);
-        }
+                sayacverileri = await sayacverileriQuery
+               .Take(sayacVeriRequest.NumData)
+               .ToListAsync();
+                int totalRecord = sayacverileri.Count();
 
+                var jsonData = new
+                {
+                    recordsFiltered = totalRecord,
+                    recordsTotal = totalRecord,
+                    data = sayacverileri
+                };
+                return new JsonResult(jsonData);
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+
+        }
 
     }
 }

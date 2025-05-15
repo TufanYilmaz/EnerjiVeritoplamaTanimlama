@@ -3,13 +3,10 @@
 @{
     ViewData["Title"] = "Sayaç Verileri";
 }
-@section Scripts {
-	<script src="~/js/selectdatatype.js"></script>
-}
 
 <div> 
     <div class="container">
-        <form asp-action="FilterSayacVeri" method="post" style="display:flex;flex-direction:column;gap:1rem">
+        <form asp-action="FilterSayacVeri" id="myform" method="post" style="display:flex;flex-direction:column;gap:1rem">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
             <div class="row">
@@ -23,8 +20,8 @@
                 </div>
 
                 <div class="col-md-4" id="SayacSelect" style="display:none">
-                    <label for="sayacID">Sayac Code</label>
-                    <select class="form-control" name="sayacID" id="sayacID">
+                    <label asp-for="SayacVeriRequest.SayacID">Sayac Code</label>
+                    <select class="form-control" asp-for="SayacVeriRequest.SayacID" id="sayacID">
                         <option value="">Seçiniz</option>
 
                         @if (Model.SayacTanimlari != null && Model.SayacTanimlari.Any())
@@ -42,8 +39,8 @@
                 </div>
 
                 <div class="col-md-4" id="OpcNodesSelect" style="display:none">
-                    <label for="opcNodesID" >OpcNodes Code</label>
-                    <select class="form-control" name="opcNodesID" id="opcNodesID">
+                    <label asp-for="SayacVeriRequest.OpcNodesID">OpcNodes Code</label>
+                    <select class="form-control" asp-for="SayacVeriRequest.OpcNodesID" id="opcNodesID">
                         <option value="">Seçiniz</option>
 
                         @if (Model.OpcNodes != null && Model.OpcNodes.Any())
@@ -60,7 +57,7 @@
                     </select>
                 </div>
 
-                <input type="hidden" asp-for="SayacVeriRequest.SayacOpcNodesID" id="sayacOpcNodesID" />
+                @* <input type="hidden" asp-for="SayacVeriRequest.SayacOpcNodesID" id="sayacOpcNodesID" /> *@
             </div>
 
             <div class="row">
@@ -93,7 +90,9 @@
                     </div>
                 </div>
                 <div class="col-md-4" style="display:flex;flex-direction:row;gap:1rem">
-                    <input type="submit" value="Getir" class="btn btn-success w-100 p-1">
+                    @* <input type="submit" id="Getir" value="Getir" class="btn btn-success w-100 p-1"> *@
+                    <input type="button" id="Getir" value="Getir" class="btn btn-success w-100 p-1">
+
                 </div>
 
             </div>
@@ -101,46 +100,71 @@
         </form>
     </div>
 
-    <table class="table pageTable text-center" id="pageTable">
+    <table class="table pageTable text-center" id="Tablo">
         <thead class="bg-dark text-light">
             <tr>
-                @if (Model.SayacVeri.Count != 0 && Model.SayacVeri[0].SayacId!=null){ 
-                     <th>Sayac Kodu</th> 
-                } 
-                @if (Model.SayacVeri.Count != 0 && Model.SayacVeri[0].OpcNodesId!=null){ 
-                     <th>OpcNodes Id</th> 
-                }
+                 
+                <th>Sayac Kodu</th> 
+                 
+                
+                <th>OpcNodes Id</th> 
+                
                 <th>Sayaç Veri Değer</th>
                 <th>Sayaç Veri Tarih</th>
             </tr>
         </thead>
         <tbody>
-            @if (Model.SayacVeri == null || Model.SayacVeri.Count == 0)
-            {
-                <tr>
-                    <td colspan="4" class="text-center">Henüz Veri Yok</td>
-                </tr>
-            }
-            else
-            {
-                @foreach (var item in Model.SayacVeri)
-                {
-                    <tr>
-                        @if (item.SayacId != null) 
-                        { 
-                             <td>@item.Kod</td> 
-                        } 
-                        @if (item.OpcNodesId != null)
-                        { 
-                            <td>@item.OpcNodesId</td> 
-                        } 
-
-                        <td>@item.Deger</td>
-                        <td>@item.NormalizeDate</td>
-                    </tr>
-                }
-            }
 
         </tbody>
     </table>
 </div>
+
+@section Scripts {
+    <script src="~/js/selectdatatype.js"></script>
+    @* <script src="~/js/serverdtfilter.js"></script> *@
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            var tbl = $('#Tablo').DataTable({
+                // columns: [
+                //     { data: 'kod', title: 'Sayaç Kodu' },
+                //     { data: 'opcNodesId', title: 'OpcNodes Id' },
+                //     { data: 'deger', title: 'Sayaç Veri Değer' },
+                //     { data: 'normalizeDate', title: 'Sayaç Veri Tarih' }
+                // ]
+            });
+
+            $("#Getir").on("click", function () {
+                var formData = $("#myform").serialize();
+                console.log(formData);
+                $.ajax({
+                    type: "POST",
+                    url: "@Url.Action("FilterSayacVeri", "SayacVeri")",
+                    data: formData,
+                    success: function (response) {
+                        tbl.clear().draw();
+
+                        // tbl.rows.add(response.data);
+                        // Her bir veri satırını tek tek DataTable'a ekle
+                        $.each(response.data, function (i, item) {
+                            tbl.row.add([
+                                item.kod,
+                                item.opcNodesId,
+                                item.deger,
+                                item.normalizeDate
+                            ]);
+                        });
+                        tbl.draw();
+                    },
+                    error: function (xhr, status, error) {
+                        console.error(error);
+                    }
+                });
+            });
+        });
+
+
+    </script>
+
+}

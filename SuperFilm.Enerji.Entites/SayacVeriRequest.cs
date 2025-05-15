@@ -17,7 +17,8 @@ namespace SuperFilm.Enerji.Entites
         [Key]
         public int Id { get; set; }
         public int DataTypeId { get; set; }
-        public int? SayacOpcNodesID { get; set; }
+        public int? SayacID { get; set; }
+        public int? OpcNodesID { get; set; }
         public DateTime? StartDate { get; set; }
         public DateTime? EndDate { get; set; }
         public int NumData { get; set; }

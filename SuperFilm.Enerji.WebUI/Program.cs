@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using SuperFilm.Enerji.Entites;
 using SuperFilm.Enerji.Repository;
+using SuperFilm.Enerji.WebUI.Hubs;
 using SuperFilm.Enerji.WebUI.Services.Identity;
 using TanvirArjel.EFCore.GenericRepository;
 
@@ -14,9 +15,21 @@ builder.Services.AddDbContext<EnerjiDbContext>(options => options.UseSqlServer(b
 builder.Services.AddGenericRepository<EnerjiDbContext>();
 builder.Services.AddQueryRepository<EnerjiDbContext>();
 builder.Services.AddDbContext<AppIdentityDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("EnerjiDbContext")));
-builder.Services.AddScoped(typeof(IEnerjiVeriRepository<>),typeof(EnerjiVeriRepository<>));
+builder.Services.AddScoped(typeof(EnerjiVeriRepository<>));
 //builder.Services.AddScoped(IEnerjiVeriRepository, EnerjiVeriRepository);
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("CorsPolicy",
+        builder => builder
+            .WithOrigins("https://localhost:7018")
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .SetIsOriginAllowed((host)=>true)
+			.AllowCredentials());
+
+});
+builder.Services.AddSignalR();
 
 builder.Services.AddIdentity<User, IdentityRole>(options =>
 {
@@ -45,14 +58,21 @@ if (!app.Environment.IsDevelopment())
 	app.UseHsts();
 }
 
-
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+app.UseCors("CorsPolicy");
 app.UseSession();
 app.UseAuthorization();
 app.MapRazorPages();
+
+app.UseEndpoints(endpoints =>
+{
+	endpoints.MapHub<OpcNodesHub>("/opcNodesHub");
+});
+    
+
 app.MapControllerRoute(
 	name: "default",
 	pattern: "{controller=Home}/{action=Index}/{id?}");

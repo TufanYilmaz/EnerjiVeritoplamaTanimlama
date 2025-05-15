@@ -1,0 +1,49 @@
+﻿<h1>SignalR Test</h1>
+
+<div class="container">
+
+	<div class="content">
+		<div class="container-fluid">
+			<div class="row">
+
+				<div class="col-md-6 mt-5">
+					<div class="card">
+						<div id="count"></div>
+					</div>
+				</div>
+
+			</div>
+		</div>
+	</div>
+
+	<div class="mt-5" id="constatus"></div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@@microsoft/signalr@8.0.7/dist/browser/signalr.min.js"></script>
+
+@section Scripts {
+	<script>
+		var connection = new signalR.HubConnectionBuilder()
+			.withUrl("/opcNodesHub")
+			.build();
+
+		document.getElementById("constatus").innerHTML = connection.state;
+
+		connection.start()
+			.then(() => {
+				document.getElementById("constatus").innerHTML = connection.state;
+				setInterval(() => {
+					connection.invoke("SendOpcNodesCount").catch(function (err) {
+						console.error("Invoke error: " + err.toString());
+					});
+				}, 1000);
+			})
+			.catch(function (err) {
+				console.error("Connection error: " + err.toString());
+			});
+
+		connection.on("ReceiveMessage", (numOfOpcNodes) => {
+			document.getElementById("count").innerText = "OPC Node Sayısı: " + numOfOpcNodes;
+		});
+	</script>
+}
