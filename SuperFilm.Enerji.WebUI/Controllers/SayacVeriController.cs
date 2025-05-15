@@ -11,6 +11,7 @@ using System.Linq.Dynamic.Core;
 using Hangfire.Storage;
 using Newtonsoft.Json.Linq;
 using System.Xml.Linq;
+using System;
 
 namespace SuperFilm.Enerji.WebUI.Controllers
 {
@@ -56,6 +57,7 @@ namespace SuperFilm.Enerji.WebUI.Controllers
         [HttpPost]
         public async Task<IActionResult> GetData()
         {
+
             try
             {
                 int pageSize = 0;
@@ -74,16 +76,57 @@ namespace SuperFilm.Enerji.WebUI.Controllers
                 }
                 if (!string.IsNullOrEmpty(searchValue))
                 {
-                    data=data.Where(e=>e.Kod.Contains(searchValue)||/* e.SayacId.ToString().Contains(searchValue)||*/ e.OpcNodesId.ToString().Contains(searchValue)|| e.NormalizeDate.ToString().Contains(searchValue));
+                    data=data.Where(e=>e.Kod.Contains(searchValue) || e.OpcNodesId.ToString().Contains(searchValue) || e.Deger.ToString().Contains(searchValue) || e.NormalizeDate.ToString().Contains(searchValue));
                 }
                 int totalRecord = data.Count();
                 var cData=data.Skip(skip).Take(pageSize).ToList();
+
+                var list = new List<SayacVeriList>();
+
+                if(cData.Count != 0)
+                {
+                    foreach (var c in cData)
+                    {
+                        var kod = "";
+                        var sayacTanim = "";
+                        var description = "";
+
+                        var sayacquery = _queryRepository.GetQueryable<SayacTanimlari>().FirstOrDefault(x => x.SayacKodu == c.Kod);
+                        var opcnodequery = _queryRepository.GetQueryable<OpcNodes>().FirstOrDefault(x => x.Id == c.OpcNodesId);
+
+                        // Sayaca aitse
+                        if (c.Kod != null && sayacquery != null)
+                        {
+                            kod = c.Kod;
+                            sayacTanim = sayacquery.SayacTanimi;
+                            description = null;
+                        }
+                        // OpcNodes aitse
+                        if (c.Kod == null && opcnodequery != null)
+                        {
+                            kod = opcnodequery.Code;
+                            sayacTanim = null;
+                            description = opcnodequery.Description;
+                        }
+
+                        list.Add(new SayacVeriList
+                        {
+                            Kod = kod,
+                            SayacTanimi = sayacTanim,
+                            Description = description,
+                            NormalizeDate = c.NormalizeDate,
+                            Deger = c.Deger,
+
+                        });
+                    }
+                }
+
                 var jsonData = new
                 {
                     draw = draw,
                     recordsFiltered = totalRecord,
                     recordsTotal = totalRecord,
-                    data = cData
+                    data = list
                 };
                 return new JsonResult(jsonData);
 
@@ -141,23 +184,89 @@ namespace SuperFilm.Enerji.WebUI.Controllers
             {
                 sayacverileriQuery = sayacverileriQuery.OrderByDescending(i => i.NormalizeDate);
             }
-  
+            
             try
             {
-                sayacverileri = await sayacverileriQuery
-               .Take(sayacVeriRequest.NumData)
-               .ToListAsync();
-                int totalRecord = sayacverileri.Count();
+                var query = from v in sayacverileriQuery.Take(sayacVeriRequest.NumData).AsEnumerable()
+                            join s in _queryRepository.GetListAsync<SayacTanimlari>().Result.AsEnumerable()
+                                on v.SayacId equals s.Id into sayacGroup
+                            from s in sayacGroup.DefaultIfEmpty()
+
+                            join o in _queryRepository.GetListAsync<OpcNodes>().Result.AsEnumerable()
+                                on v.OpcNodesId equals o.Id into opcGroup
+                            from o in opcGroup.DefaultIfEmpty()
+                            
+                            select new SayacVeriList()
+                            {
+                                Kod = v.Kod,
+                                SayacTanimi = s != null ? s.SayacTanimi : null,
+                                Description = o != null ? o.Description : null,
+                                Deger = v.Deger,
+                                NormalizeDate = v.NormalizeDate,
+                            };
+
+
+                // sayacverileri = await sayacverileriQuery
+                //.Take(sayacVeriRequest.NumData)
+                //.ToListAsync();
+
+                // var list = new List<SayacVeriList>();
+
+                //                if (sayacverileri.Count != 0)
+                //                {
+                //                    foreach (var c in sayacverileri)
+                //                    {
+                //                        var kod = "";
+                //                        var sayacTanim = "";
+                //                        var description = "";
+                //                        /*
+                //select S.SayacTanimi,O.Description, V.* from SAYAC_VERI V
+                //left join SAYAC_TANIMLARI S on S.Id=V.SayacId
+                //left join OPC_NODES O on O.Id=V.OpcNodesId 
+                //where OpcNodesId>0 or SayacId<12
+                //                         */
+                //                        var sayacquery = _queryRepository.GetQueryable<SayacTanimlari>().FirstOrDefault(x => x.SayacKodu == c.Kod);
+                //                        var opcnodequery = _queryRepository.GetQueryable<OpcNodes>().FirstOrDefault(x => x.Id == c.OpcNodesId);
+
+                //                        // Sayaca aitse
+                //                        if (c.Kod != null && sayacquery != null)
+                //                        {
+                //                            kod = c.Kod;
+                //                            sayacTanim = sayacquery.SayacTanimi;
+                //                            description = null;
+                //                        }
+                //                        // OpcNodes aitse
+                //                        if (c.Kod == null && opcnodequery != null)
+                //                        {
+                //                            kod = opcnodequery.Code;
+                //                            sayacTanim = null;
+                //                            description = opcnodequery.Description;
+                //                        }
+
+                //                        list.Add(new SayacVeriList
+                //                        {
+                //                            Kod = kod,
+                //                            SayacTanimi = sayacTanim,
+                //                            Description = description,
+                //                            NormalizeDate = c.NormalizeDate,
+                //                            Deger = c.Deger,
+
+                //                        });
+                //                    }
+                //                }
+                var list = query.ToList();
+
+                int totalRecord = list.Count();
 
                 var jsonData = new
                 {
                     recordsFiltered = totalRecord,
                     recordsTotal = totalRecord,
-                    data = sayacverileri
+                    data = list,
                 };
                 return new JsonResult(jsonData);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
 
                 throw;

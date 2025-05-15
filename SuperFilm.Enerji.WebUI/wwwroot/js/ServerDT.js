@@ -15,16 +15,11 @@ function GetAllData() {
             dataType: 'json'
         },
         columns: [
-          /*  { "data": "id", "name": "Id", "autowidth": true },*/
+ 
             { "data": "kod", "name": "Kod", "autowidth": true },
-            //{ "data": "yil", "name": "Yil", "autowidth": true },
-            //{ "data": "ay", "name": "Ay", "autowidth": true },
-            //{ "data": "gun", "name": "Gun", "autowidth": true },
-            //{ "data": "zaman", "name": "Zaman", "autowidth": true },
-            //{ "data": "deger", "name": "Deger", "autowidth": true },
-            //{ "data": "createDate", "name": "CreateDate", "autowidth": true },
-          /*  { "data": "sayacId", "name": "SayacId", "autowidth": true },*/
-            { "data": "opcNodesId", "name": "OpcNodesId", "autowidth": true },
+            { "data": "sayacTanimi", "name": "SayacTanimi", "autowidth": true },
+            { "data": "description", "name": "Description", "autowidth": true },
+            { "data": "deger", "name": "Deger", "autowidth": true },
             { "data": "normalizeDate", "name": "NormalizeDate", "autowidth": true },
         
 
