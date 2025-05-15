@@ -104,13 +104,12 @@
         <thead class="bg-dark text-light">
             <tr>
                  
-                <th>Sayac Kodu</th> 
-                 
-                
-                <th>OpcNodes Id</th> 
-                
-                <th>Sayaç Veri Değer</th>
-                <th>Sayaç Veri Tarih</th>
+                <th>Kod</th>
+                <th>SayacTanimi</th>
+                <th>Description</th>
+                <th>Değer</th>
+                <th>Normalize Tarihi</th>
+
             </tr>
         </thead>
         <tbody>
@@ -142,7 +141,8 @@
                         $.each(response.data, function (i, item) {
                             tbl.row.add([
                                 item.kod,
-                                item.opcNodesId,
+                                item.sayacTanimi,
+                                item.description,
                                 item.deger,
                                 item.normalizeDate
                             ]);
