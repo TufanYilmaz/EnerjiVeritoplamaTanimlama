@@ -66,7 +66,7 @@ app.UseHangfireDashboard(); // http://localhost:5000/hangfire ile kontrol edebil
 RecurringJob.AddOrUpdate<IOpcVeriKaydet>(
     "opc-okuyucu-job",
     x => x.Start(CancellationToken.None),
-    Cron.Minutely() // her dak ika çalýþýr
+    Cron.Minutely(),new RecurringJobOptions() { MisfireHandling=MisfireHandlingMode.Ignorable} // her dak ika çalýþýr
 );
 /* -----------------------------------------------------------------  */
 
