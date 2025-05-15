@@ -121,31 +121,23 @@
 
 @section Scripts {
     <script src="~/js/selectdatatype.js"></script>
-    @* <script src="~/js/serverdtfilter.js"></script> *@
 
     <script type="text/javascript">
 
         $(document).ready(function () {
-            var tbl = $('#Tablo').DataTable({
-                // columns: [
-                //     { data: 'kod', title: 'Sayaç Kodu' },
-                //     { data: 'opcNodesId', title: 'OpcNodes Id' },
-                //     { data: 'deger', title: 'Sayaç Veri Değer' },
-                //     { data: 'normalizeDate', title: 'Sayaç Veri Tarih' }
-                // ]
-            });
 
             $("#Getir").on("click", function () {
                 var formData = $("#myform").serialize();
-                console.log(formData);
+
                 $.ajax({
                     type: "POST",
                     url: "@Url.Action("FilterSayacVeri", "SayacVeri")",
                     data: formData,
                     success: function (response) {
+                        var tbl = $('#Tablo').DataTable();
+
                         tbl.clear().draw();
 
-                        // tbl.rows.add(response.data);
                         // Her bir veri satırını tek tek DataTable'a ekle
                         $.each(response.data, function (i, item) {
                             tbl.row.add([
