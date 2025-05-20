@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk.Worker">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>dotnet-SuperFilm.Enerji.VeriToplamaWService-3b186bd0-38bc-46de-baed-de32084cc925</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Hangfire" Version="1.8.20" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.1" />
+    <PackageReference Include="TanvirArjel.EFCore.GenericRepository" Version="6.0.4" />
+    <PackageReference Include="TanvirArjel.EFCore.QueryRepository" Version="1.5.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\SuperFilm.Enerji.Entites\SuperFilm.Enerji.Entites.csproj" />
+    <ProjectReference Include="..\SuperFilm.Enerji.OpcUAReader\SuperFilm.Enerji.OpcUAReader.csproj" />
+  </ItemGroup>
+</Project>
