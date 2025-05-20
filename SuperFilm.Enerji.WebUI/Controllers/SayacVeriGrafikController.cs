@@ -84,7 +84,7 @@ namespace SuperFilm.Enerji.WebUI.Controllers
                         _logger?.LogWarning($"SayacId {SayacId} için {Gun.Value:dd/MM/yyyy} tarihine ait veri bulunamadı.");
                         chartData = GenerateSampleDailyData(Gun.Value);
                     }
-                    //chartData = _repository.GetDailyDiffAsync(Gun.Value, SayacId).Result.Select(r => new LineChartData() { Deger = r.Deger, Zaman = r.Zaman }).ToList();
+                    chartData = _repository.GetDailyDiffAsync(Gun.Value, SayacId).Result.Select(r => new LineChartData() { Deger = r.Deger, Zaman = r.Zaman }).ToList();
                 }
                 else if (TimeTypeId == 2 && Ay.HasValue) // Aylık
                 {
@@ -113,7 +113,7 @@ namespace SuperFilm.Enerji.WebUI.Controllers
                         _logger?.LogWarning($"SayacId {SayacId} için {Ay.Value:MM/yyyy} ayına ait veri bulunamadı.");
                         chartData = GenerateSampleMonthlyData(Ay.Value);
                     }
-                    //chartData = _repository.GetMonthlyDiffAsync(Ay.Value, SayacId).Result.Select(r => new LineChartData() { Deger = r.Deger, Zaman = r.Zaman }).ToList();
+                    chartData = _repository.GetMonthlyDiffAsync(Ay.Value, SayacId).Result.Select(r => new LineChartData() { Deger = r.Deger, Zaman = r.Zaman }).ToList();
 
                 }
 
@@ -357,5 +357,7 @@ namespace SuperFilm.Enerji.WebUI.Controllers
             public string Zaman { get; set; }
             public decimal Deger { get; set; }
         }
+
+       
     }
 }

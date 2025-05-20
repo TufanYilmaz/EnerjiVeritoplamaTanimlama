@@ -24,6 +24,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Superfilm.Enerji.VeriToplam
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SuperFilm.Enerji.OpcUAReader", "SuperFilm.Enerji.OpcUAReader\SuperFilm.Enerji.OpcUAReader.csproj", "{820489FD-970E-42F4-8202-E595CD5F465E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SuperFilm.Enerji.VeriToplamaWService", "SuperFilm.Enerji.VeriToplamaWService\SuperFilm.Enerji.VeriToplamaWService.csproj", "{612FFFB0-896F-4FBC-9477-65CCD4F53047}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -96,6 +98,14 @@ Global
 		{820489FD-970E-42F4-8202-E595CD5F465E}.Release|Any CPU.Build.0 = Release|Any CPU
 		{820489FD-970E-42F4-8202-E595CD5F465E}.Release|x86.ActiveCfg = Release|Any CPU
 		{820489FD-970E-42F4-8202-E595CD5F465E}.Release|x86.Build.0 = Release|Any CPU
+		{612FFFB0-896F-4FBC-9477-65CCD4F53047}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{612FFFB0-896F-4FBC-9477-65CCD4F53047}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{612FFFB0-896F-4FBC-9477-65CCD4F53047}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{612FFFB0-896F-4FBC-9477-65CCD4F53047}.Debug|x86.Build.0 = Debug|Any CPU
+		{612FFFB0-896F-4FBC-9477-65CCD4F53047}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{612FFFB0-896F-4FBC-9477-65CCD4F53047}.Release|Any CPU.Build.0 = Release|Any CPU
+		{612FFFB0-896F-4FBC-9477-65CCD4F53047}.Release|x86.ActiveCfg = Release|Any CPU
+		{612FFFB0-896F-4FBC-9477-65CCD4F53047}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

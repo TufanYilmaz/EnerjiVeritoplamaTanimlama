@@ -25,6 +25,7 @@
     <ProjectReference Include="..\SuperFilm.Enerji.Entites\SuperFilm.Enerji.Entites.csproj" />
     <ProjectReference Include="..\SuperFilm.Enerji.OleDbReader\SuperFilm.Enerji.OleDbReader.csproj" />
     <ProjectReference Include="..\SuperFilm.Enerji.OpcUAReader\SuperFilm.Enerji.OpcUAReader.csproj" />
+    <ProjectReference Include="..\SuperFilm.Enerji.Repository\SuperFilm.Enerji.Repository.csproj" />
   </ItemGroup>
 
   <ItemGroup>
