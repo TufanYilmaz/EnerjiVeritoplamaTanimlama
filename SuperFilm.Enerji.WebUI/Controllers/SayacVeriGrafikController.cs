@@ -358,6 +358,147 @@ namespace SuperFilm.Enerji.WebUI.Controllers
             public decimal Deger { get; set; }
         }
 
-       
+        [HttpPost]
+        public async Task<IActionResult> GetGraphData(int TimeTypeId, DateTime? Gun, DateTime? Ay, int SayacId)
+        {
+            List<LineChartData> chartData = new List<LineChartData>();
+            string chartTitle = "";
+            decimal minValue = 0;
+            decimal maxValue = 0;
+            decimal interval = 0;
+            
+            try
+            {
+                if (TimeTypeId == 1 && Gun.HasValue) // Günlük
+                {
+                    _logger?.LogInformation($"Günlük veri çekiliyor: Tarih {Gun.Value:dd/MM/yyyy}, SayacId: {SayacId}");
+
+                    var days = await _repository.GetDailyAsync(Gun.Value, SayacId);
+
+                    if (days != null && days.Any())
+                    {
+                        _logger?.LogInformation($"Veritabanından {days.Count} kayıt alındı");
+                        foreach (var day in days)
+                        {
+                            _logger?.LogInformation($"Saat: {day.Zaman}, Değer: {day.Deger}");
+                        }
+
+                        chartData = days.Select(d => new LineChartData
+                        {
+                            Zaman = $"{d.Zaman}:00",
+                            Deger = d.Deger,
+                        }).ToList();
+
+                        chartData = CompleteDailyData(chartData);
+                        chartTitle = "Günlük Veriler - " + Gun.Value.ToString("dd/MM/yyyy");
+                        _logger?.LogInformation($"Toplam {chartData.Count} günlük veri oluşturuldu");
+                    }
+                    else
+                    {
+                        _logger?.LogWarning($"SayacId {SayacId} için {Gun.Value:dd/MM/yyyy} tarihine ait veri bulunamadı.");
+                        chartData = GenerateSampleDailyData(Gun.Value);
+                    }
+                    chartData = _repository.GetDailyDiffAsync(Gun.Value, SayacId).Result.Select(r => new LineChartData() { Deger = r.Deger, Zaman = r.Zaman }).ToList();
+                }
+                else if (TimeTypeId == 2 && Ay.HasValue) // Aylık
+                {
+                    _logger?.LogInformation($"Aylık veri çekiliyor: Ay {Ay.Value:MM/yyyy}, SayacId: {SayacId}");
+
+                    var months = await _repository.GetMonthlyEndOfDayAsync(Ay.Value, SayacId);
+
+                    if (months != null && months.Any())
+                    {
+                        chartData = months.Select(m => new LineChartData
+                        {
+                            Zaman = $"{m.Gun}/{m.Ay}",
+                            Deger = m.Deger
+                        }).ToList();
+
+                        chartData = CompleteMonthlyData(chartData, Ay.Value);
+                        chartTitle = "Aylık Veriler - " + Ay.Value.ToString("MM/yyyy");
+                        _logger?.LogInformation($"Toplam {chartData.Count} aylık veri bulundu.");
+                    }
+                    else
+                    {
+                        _logger?.LogWarning($"SayacId {SayacId} için {Ay.Value:MM/yyyy} ayına ait veri bulunamadı.");
+                        chartData = GenerateSampleMonthlyData(Ay.Value);
+                    }
+                    chartData = _repository.GetMonthlyDiffAsync(Ay.Value, SayacId).Result.Select(r => new LineChartData() { Deger = r.Deger, Zaman = r.Zaman }).ToList();
+                }
+
+                // Verileri sırala
+                if (TimeTypeId == 1)
+                {
+                    chartData = chartData.OrderBy(c => {
+                        if (int.TryParse(c.Zaman.Split(':')[0], out int hour))
+                            return hour;
+                        return 0;
+                    }).ToList();
+                }
+                else if (TimeTypeId == 2)
+                {
+                    chartData = chartData.OrderBy(c => {
+                        if (int.TryParse(c.Zaman.Split('/')[0], out int day))
+                            return day;
+                        return 0;
+                    }).ToList();
+                }
+
+                if (chartData.Any())
+                {
+                    var nonZeroValues = chartData.Where(c => c.Deger != 0).Select(c => c.Deger).ToList();
+                    if (nonZeroValues.Any())
+                    {
+                        minValue = nonZeroValues.Min();
+                        maxValue = nonZeroValues.Max();
+                    }
+                    else
+                    {
+                        minValue = chartData.Min(c => c.Deger);
+                        maxValue = chartData.Max(c => c.Deger);
+                    }
+                    
+                    var range = maxValue - minValue;
+                    
+                    if (range < 1)
+                    {
+                        minValue = minValue * 0.9m;
+                        maxValue = maxValue * 1.1m;
+                    }
+                    else
+                    {
+                        minValue = minValue - (range * 0.1m);
+                        maxValue = maxValue + (range * 0.1m);
+                    }
+                    
+                    if (minValue > 0)
+                        minValue = 0;
+
+                    interval = CalculateYAxisInterval(minValue, maxValue);
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger?.LogError(ex, "Sayaç veri çekerken hata oluştu");
+                return Json(new { success = false, message = "Veri çekme işlemi sırasında bir hata oluştu: " + ex.Message });
+            }
+
+            var jsonSettings = new JsonSerializerSettings
+            {
+                Formatting = Formatting.None,
+                Culture = CultureInfo.InvariantCulture
+            };
+
+            return Json(new
+            {
+                success = true,
+                chartData = JsonConvert.SerializeObject(chartData, jsonSettings),
+                chartTitle = chartTitle,
+                minValue = (int)minValue,
+                maxValue = (int)maxValue,
+                interval = (int)interval,
+                timeTypeId = TimeTypeId
+            });
+        }
     }
 }

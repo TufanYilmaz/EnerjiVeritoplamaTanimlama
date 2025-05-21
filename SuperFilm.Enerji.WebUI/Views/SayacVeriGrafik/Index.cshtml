@@ -8,7 +8,7 @@
                     <h5>Veri Seçimi</h5>
                 </div>
                 <div class="card-body">
-                    <form asp-action="Index" method="post">
+                    <form id="graphForm" onsubmit="return false;">
                         <div class="form-group mb-3">
                             <label for="TimeTypeId">Zaman Tipi</label>
                             <select class="form-control" name="TimeTypeId" id="TimeTypeId" required>
@@ -41,51 +41,43 @@
                                 }
                             </select>
                         </div>
-                        <button type="submit" class="btn btn-primary">Göster</button>
+                        <button type="submit" class="btn btn-primary" onclick="loadGraphData()">Göster</button>
                     </form>
                 </div>
             </div>
         </div>
     </div>
 
-    @if (!string.IsNullOrEmpty(ViewBag.ErrorMessage))
-    {
-        <div class="row">
-            <div class="col-12">
-                <div class="alert alert-danger">
-                    <h4>Hata!</h4>
-                    <p>@ViewBag.ErrorMessage</p>
-                </div>
+    <div id="errorContainer" class="row" style="display:none">
+        <div class="col-12">
+            <div class="alert alert-danger">
+                <h4>Hata!</h4>
+                <p id="errorMessage"></p>
             </div>
         </div>
-    }
+    </div>
 
-    @if (ViewBag.HasData == true)
-    {
-        <div class="row">
-            <div class="col-md-12">
-                <div class="card">
-                    <div class="card-header">
-                        <h5>@ViewBag.ChartTitle</h5>
-                    </div>
-                    <div class="card-body">
-                        <div id="chartContainer" style="width: 100%; height: 450px;"></div>
-                    </div>
+    <div id="graphContainer" class="row" style="display:none">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 id="chartTitle"></h5>
+                </div>
+                <div class="card-body">
+                    <div id="chartContainer" style="width: 100%; height: 450px;"></div>
                 </div>
             </div>
         </div>
-    }
-    else if (ViewData["ChartData"] != null)
-    {
-        <div class="row">
-            <div class="col-md-12">
-                <div class="alert alert-warning">
-                    <h4>Uyarı!</h4>
-                    <p>Seçilen kriterlere uygun veri bulunamadı.</p>
-                </div>
+    </div>
+
+    <div id="noDataContainer" class="row" style="display:none">
+        <div class="col-md-12">
+            <div class="alert alert-warning">
+                <h4>Uyarı!</h4>
+                <p>Seçilen kriterlere uygun veri bulunamadı.</p>
             </div>
         </div>
-    }
+    </div>
 </div>
 
 @section Scripts {
@@ -93,160 +85,181 @@
     <script src="~/js/chartHelper.js"></script>
     <script src="https://cdn.syncfusion.com/ej2/dist/ej2.min.js" defer></script>
     <script>
+        let currentChart = null;
+
+        function loadGraphData() {
+            const form = document.getElementById('graphForm');
+            const formData = new FormData(form);
+            
+            // Show loading state
+            document.getElementById('errorContainer').style.display = 'none';
+            document.getElementById('noDataContainer').style.display = 'none';
+            document.getElementById('graphContainer').style.display = 'none';
+            
+            fetch('/SayacVeriGrafik/GetGraphData', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Hide error container if visible
+                    document.getElementById('errorContainer').style.display = 'none';
+                    
+                    // Show graph container
+                    document.getElementById('graphContainer').style.display = 'block';
+                    document.getElementById('chartTitle').textContent = data.chartTitle;
+                    
+                    // Parse the chart data
+                    const chartData = JSON.parse(data.chartData);
+                    
+                    // Destroy existing chart if it exists
+                    if (currentChart) {
+                        currentChart.destroy();
+                    }
+                    
+                    // Create new chart
+                    currentChart = new ej.charts.Chart({
+                        primaryXAxis: {
+                            valueType: 'Category',
+                            title: data.timeTypeId == 1 ? 'Saat' : 'Gün',
+                            labelIntersectAction: 'Rotate45',
+                            majorGridLines: { width: 0.5, color: '#e0e0e0' },
+                            labelStyle: {
+                                fontWeight: '600',
+                                size: '12px',
+                                color: '#333'
+                            },
+                            titleStyle: {
+                                size: '14px',
+                                fontWeight: '600',
+                                color: '#424242'
+                            }
+                        },
+                        primaryYAxis: {
+                            title: 'Değer',
+                            minimum: data.minValue,
+                            maximum: data.maxValue,
+                            interval: data.interval,
+                            labelFormat: '#,##0.00',
+                            majorGridLines: { width: 0.5, color: '#e0e0e0' },
+                            majorTickLines: { width: 0 },
+                            minorTickLines: { width: 0 },
+                            labelStyle: {
+                                fontWeight: '500',
+                                size: '11px',
+                                color: '#424242'
+                            },
+                            titleStyle: {
+                                size: '14px',
+                                fontWeight: '600',
+                                color: '#424242'
+                            }
+                        },
+                        chartArea: { 
+                            border: { width: 0 },
+                            background: '#fff'
+                        },
+                        tooltip: {
+                            enable: true,
+                            shared: false,
+                            format: '${point.x}: <b>${point.y}</b>',
+                            textStyle: {
+                                fontWeight: 'bold',
+                                size: '14px',
+                                color: '#333333'
+                            },
+                            fill: '#ffffff',
+                            opacity: 0.9,
+                            border: { width: 1, color: '#009688' }
+                        },
+                        title: data.chartTitle,
+                        titleStyle: {
+                            size: '16px',
+                            fontWeight: 'bold',
+                            color: '#212529',
+                            textAlignment: 'Center'
+                        },
+                        legendSettings: { 
+                            visible: true,
+                            position: 'Bottom',
+                            textStyle: {
+                                size: '13px',
+                                color: '#424242'
+                            },
+                            background: 'transparent',
+                            border: { width: 0 }
+                        },
+                        width: '100%',
+                        height: '450px',
+                        background: '#ffffff',
+                        margin: { left: 15, right: 15, top: 20, bottom: 15 },
+                        palettes: ["#009688", "#2196f3", "#4caf50", "#e91e63"],
+                        series: [
+                            {
+                                dataSource: chartData,
+                                xName: 'Zaman',
+                                yName: 'Deger',
+                                name: 'Sayaç Değerleri',
+                                type: 'Line',
+                                width: 3,
+                                dashArray: '',
+                                fill: '#009688',
+                                marker: {
+                                    visible: true,
+                                    width: 10,
+                                    height: 10,
+                                    shape: 'Circle',
+                                    isFilled: true,
+                                    fill: '#009688',
+                                    border: { width: 2, color: '#ffffff' }
+                                },
+                                animation: { 
+                                    enable: true,
+                                    duration: 1200,
+                                    delay: 100
+                                },
+                                tooltipMappingName: 'Deger'
+                            }
+                        ],
+                        loaded: function(args) {
+                            console.log("Grafik yükleme tamamlandı!");
+                            // Konsola değerleri yazdır
+                            console.log("Yüklenen veri değerleri:");
+                            chartData.forEach(function(item) {
+                                console.log(item.Zaman + ": " + item.Deger.toFixed(2));
+                            });
+                        },
+                        load: function(args) {
+                            args.chart.theme = "Material";
+                            
+                            // Genişleme için animasyon hızı
+                            args.chart.animationComplete = function() {
+                                console.log("Grafik animasyonu tamamlandı!");
+                            };
+                        }
+                    });
+                    
+                    currentChart.appendTo('#chartContainer');
+                } else {
+                    // Show error message
+                    document.getElementById('errorContainer').style.display = 'block';
+                    document.getElementById('errorMessage').textContent = data.message;
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                document.getElementById('errorContainer').style.display = 'block';
+                document.getElementById('errorMessage').textContent = 'Veri yüklenirken bir hata oluştu.';
+            });
+        }
+
         // Form yüklendiğinde çalışacak kod
         document.addEventListener("DOMContentLoaded", function() {
             // Trigger the change event to show/hide the appropriate date inputs
             var timeTypeSelect = document.getElementById("TimeTypeId");
             if (timeTypeSelect.value) {
                 timeTypeSelect.dispatchEvent(new Event('change'));
-            }
-            
-            @if (ViewBag.ChartDataJson != null)
-            {
-                @:setTimeout(function() {
-                @:    var chartData = @Html.Raw(ViewBag.ChartDataJson);
-                @:    var chartTitle = @Html.Raw(Json.Serialize(ViewBag.ChartTitle));          /* "@ViewBag.ChartTitle"; */
-                @:    var timeTypeId = @ViewBag.TimeTypeId;
-                @:    var minValue = @ViewBag.MinValue;
-                @:    var maxValue = @ViewBag.MaxValue;
-                @:    var interval = @ViewBag.Interval;
-                @:    
-                @:    console.log("Grafik verileri yükleniyor:", chartData);
-                @:
-                @:    if (chartData && chartData.length > 0) {
-                @:        console.log("Grafik verileri başarıyla yüklendi:", chartData.length, "veri noktası");
-                @:        console.log("Grafik aralıkları: Min:", minValue, "Max:", maxValue, "Interval:", interval);
-                @:
-                @:        // Grafik yükleme - Gecikme ile yükle (sayfa oluşumunu engellemez)
-                @:        var chart = new ej.charts.Chart({
-                @:            primaryXAxis: {
-                @:                valueType: 'Category',
-                @:                title: timeTypeId == 1 ? 'Saat' : 'Gün',
-                @:                labelIntersectAction: 'Rotate45',
-                @:                majorGridLines: { width: 0.5, color: '#e0e0e0' },
-                @:                labelStyle: {
-                @:                    fontWeight: '600',
-                @:                    size: '12px',
-                @:                    color: '#333'
-                @:                },
-                @:                titleStyle: {
-                @:                    size: '14px',
-                @:                    fontWeight: '600',
-                @:                    color: '#424242',
-
-                @:                }
-                @:            },
-                @:            primaryYAxis: {
-                @:                title: 'Değer',
-                @:                minimum: minValue,
-                @:                maximum: maxValue,
-                @:                interval: interval,
-                @:                labelFormat: '#,##0.00',
-                @:                majorGridLines: { width: 0.5, color: '#e0e0e0' },
-                @:                majorTickLines: { width: 0 },
-                @:                minorTickLines: { width: 0 },
-                @:                labelStyle: {
-                @:                    fontWeight: '500',
-                @:                    size: '11px',
-                @:                    color: '#424242'
-                @:                },
-                @:                titleStyle: {
-                @:                    size: '14px',
-                @:                    fontWeight: '600',
-                @:                    color: '#424242'
-                @:                }
-                @:            },
-                @:            chartArea: { 
-                @:                border: { width: 0 },
-                @:                background: '#fff'
-                @:            },
-                @:            tooltip: {
-                @:                enable: true,
-                @:                shared: false,
-                @:                format: '${point.x}: <b>${point.y}</b>',
-                @:                textStyle: {
-                @:                    fontWeight: 'bold',
-                @:                    size: '14px',
-                @:                    color: '#333333'
-                @:                },
-                @:                fill: '#ffffff',
-                @:                opacity: 0.9,
-                @:                border: { width: 1, color: '#009688' }
-                @:            },
-                @:            title: chartTitle,
-                @:            titleStyle: {
-                @:                size: '16px',
-                @:                fontWeight: 'bold',
-                @:                color: '#212529',
-                @:                textAlignment: 'Center'
-                @:            },
-                @:            legendSettings: { 
-                @:                visible: true,
-                @:                position: 'Bottom',
-                @:                textStyle: {
-                @:                    size: '13px',
-                @:                    color: '#424242'
-                @:                },
-                @:                background: 'transparent',
-                @:                border: { width: 0 }
-                @:            },
-                @:            width: '100%',
-                @:            height: '450px',
-                @:            background: '#ffffff',
-                @:            margin: { left: 15, right: 15, top: 20, bottom: 15 },
-                @:            palettes: ["#009688", "#2196f3", "#4caf50", "#e91e63"],
-                @:            series: [
-                @:                {
-                @:                    dataSource: chartData,
-                @:                    xName: 'Zaman',
-                @:                    yName: 'Deger',
-                @:                    name: 'Sayaç Değerleri',
-                @:                    type: 'Line',
-                @:                    width: 3,
-                @:                    dashArray: '',
-                @:                    fill: '#009688',
-                @:                    marker: {
-                @:                        visible: true,
-                @:                        width: 10,
-                @:                        height: 10,
-                @:                        shape: 'Circle',
-                @:                        isFilled: true,
-                @:                        fill: '#009688',
-                @:                        border: { width: 2, color: '#ffffff' }
-                @:                    },
-                @:                    animation: { 
-                @:                        enable: true,
-                @:                        duration: 1200,
-                @:                        delay: 100
-                @:                    },
-                @:                    tooltipMappingName: 'Deger'
-                @:                }
-                @:            ],
-                @:            loaded: function(args) {
-                @:                console.log("Grafik yükleme tamamlandı!");
-                @:                // Konsola değerleri yazdır
-                @:                console.log("Yüklenen veri değerleri:");
-                @:                chartData.forEach(function(item) {
-                @:                    console.log(item.Zaman + ": " + item.Deger.toFixed(2));
-                @:                });
-                @:            },
-                @:            // Tema ve yükleme işlevi
-                @:            load: function(args) {
-                @:                args.chart.theme = "Material";
-                @:                
-                @:                // Genişleme için animasyon hızı
-                @:                args.chart.animationComplete = function() {
-                @:                    console.log("Grafik animasyonu tamamlandı!");
-                @:                };
-                @:            }
-                @:        });
-                @:
-                @:        chart.appendTo('#chartContainer');
-                @:        console.log("Grafik başarıyla oluşturuldu!");
-                @:    } else {
-                @:        console.error("Grafik verisi bulunamadı veya boş!");
-                @:    }
-                @:}, 100); // 100ms gecikme ile yükle
             }
         });
     </script>

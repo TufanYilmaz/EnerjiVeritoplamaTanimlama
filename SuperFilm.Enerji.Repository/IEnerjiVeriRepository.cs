@@ -21,6 +21,7 @@ namespace SuperFilm.Enerji.Repository
         List<SayacVeri> CompleteMonthlyData(List<SayacVeri> existingData, DateTime selectedMonth);
         Task<List<SayacVeri>> OpcGetDailyDiffAsync(DateTime gun, int? OpcNodesId);
         Task<List<SayacVeri>> OpcGetMonthlyDiffAsync(DateTime ay, int? OpcNodesId);
-        Task<List<string>> GetDistinctOpcNodeIds();
+        Task<List<SayacVeri>> GetDistinctOpcNodeIds();
+     
     }
 }
