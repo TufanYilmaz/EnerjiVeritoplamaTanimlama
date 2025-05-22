@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -13,6 +14,7 @@ using TanvirArjel.EFCore.GenericRepository;
 
 namespace SuperFilm.Enerji.WebUI.Controllers
 {
+    [Authorize]
     public class OpcNodesGrafikController : Controller
     {
         private readonly EnerjiVeriRepository<EnerjiDbContext> _repository;
@@ -37,9 +39,10 @@ namespace SuperFilm.Enerji.WebUI.Controllers
         }
         
         [HttpPost]
-        public async Task<IActionResult> Index(int TimeTypeId, DateTime? Gun, DateTime? Ay, int? OpcNodesId)
+        public async Task<IActionResult> Index(int TimeTypeId, DateTime? Gun, DateTime? Ay, int? OpcNodesId, int? OpcNodesId2)
         {
             List<LineChartData> chartData = new List<LineChartData>();
+            List<LineChartData> chartData2 = new List<LineChartData>();
             
             try
             {
@@ -51,6 +54,7 @@ namespace SuperFilm.Enerji.WebUI.Controllers
                 }
 
                 List<SayacVeri> data = null;
+                List<SayacVeri> data2 = null;
                 
                 if (TimeTypeId == 1 && Gun.HasValue) // Günlük
                 {
@@ -63,9 +67,19 @@ namespace SuperFilm.Enerji.WebUI.Controllers
                         ViewBag.ChartTitle = $"OPC Node - {OpcNodesId} - Günlük Veriler ({Gun.Value:dd/MM/yyyy})";
                     }
                     chartData = _repository.OpcGetDailyDiffAsync(Gun.Value, OpcNodesId).Result.Select(r => new LineChartData() { Deger = r.Deger, Zaman = r.Zaman }).ToList();
-                }
-                
 
+                    if (OpcNodesId2.HasValue && OpcNodesId2 > 0)
+                    {
+                        data2 = await _repository.GetOpcNodeDailyAsync(Gun.Value, OpcNodesId2.Value);
+                        if (data2 != null && data2.Any())
+                        {
+                            
+                            data2 = _repository.CompleteDailyData(data2);
+                            ViewBag.ChartTitle = $"OPC Node Karşılaştırma - Günlük Veriler ({Gun.Value:dd/MM/yyyy})";
+                        }
+                        chartData2 = _repository.OpcGetDailyDiffAsync(Gun.Value, OpcNodesId2).Result.Select(r => new LineChartData() { Deger = r.Deger, Zaman = r.Zaman }).ToList();
+                    }
+                }
                 else if (TimeTypeId == 2 && Ay.HasValue) // Aylık
                 {
                     _logger?.LogInformation($"Aylık OPC veri çekiliyor: Ay {Ay.Value:MM/yyyy}, OpcNodeId: {OpcNodesId}");
@@ -77,28 +91,35 @@ namespace SuperFilm.Enerji.WebUI.Controllers
                         ViewBag.ChartTitle = $"OPC Node - {OpcNodesId} - Aylık Veriler ({Ay.Value:MM/yyyy})";
                     }
                     chartData = _repository.OpcGetMonthlyDiffAsync(Ay.Value, OpcNodesId).Result.Select(r => new LineChartData() { Deger = r.Deger, Zaman = r.Zaman }).ToList();
+
+                    if (OpcNodesId2.HasValue && OpcNodesId2 > 0)
+                    {
+                        data2 = await _repository.GetOpcNodeMonthlyEndOfDayAsync(Ay.Value, OpcNodesId2.Value);
+                        if (data2 != null && data2.Any())
+                        {
+                            data2 = _repository.CompleteMonthlyData(data2, Ay.Value);
+                            ViewBag.ChartTitle = $"OPC Node Karşılaştırma - Aylık Veriler ({Ay.Value:MM/yyyy})";
+                        }
+                        chartData2 = _repository.OpcGetMonthlyDiffAsync(Ay.Value, OpcNodesId2).Result.Select(r => new LineChartData() { Deger = r.Deger, Zaman = r.Zaman }).ToList();
+                    }
                 }
 
-                if (data != null && data.Any())
+                if ((data != null && data.Any()) || (data2 != null && data2.Any()))
                 {
-                    // Verileri LineChartData'ya dönüştür
-                    //chartData = chartData.Select(d => new LineChartData
-                    //{
-                    //    Zaman = TimeTypeId == 1 ? $"{d.Zaman}:00" : $"{d.Gun}/{d.Ay}",
-                    //    Deger = d.Deger
-                    //}).ToList();
+                    var allValues = new List<decimal>();
+                    if (chartData.Any()) allValues.AddRange(chartData.Select(d => d.Deger));
+                    if (chartData2.Any()) allValues.AddRange(chartData2.Select(d => d.Deger));
 
-                    // Grafik eksen değerlerini hesapla
-                    //var (minValue, maxValue, interval) = await _repository.CalculateChartAxisValues(data);
-                    var (minValue, maxValue) = (0, chartData.Max(r => r.Deger));
+                    var (minValue, maxValue) = (0, allValues.Max());
                     ViewBag.MinValue = (int)minValue;
-                    ViewBag.MaxValue = (int)(maxValue*(decimal)1.05);
-                    ViewBag.Interval =(int)( maxValue-minValue)/chartData.Count;
+                    ViewBag.MaxValue = (int)(maxValue * (decimal)1.05);
+                    ViewBag.Interval = (int)(maxValue - minValue) / Math.Max(chartData.Count, chartData2.Count);
                 }
                 else
                 {
                     _logger?.LogWarning($"OpcNodeId {OpcNodesId} için veri bulunamadı.");
                     chartData = new List<LineChartData>();
+                    chartData2 = new List<LineChartData>();
                 }
             }
             catch (Exception ex)
@@ -109,9 +130,11 @@ namespace SuperFilm.Enerji.WebUI.Controllers
 
             // ViewData ve ViewBag'i güncelle
             ViewData["ChartData"] = chartData;
-            ViewBag.HasData = chartData.Count > 0;
+            ViewData["ChartData2"] = chartData2;
+            ViewBag.HasData = chartData.Count > 0 || chartData2.Count > 0;
             ViewBag.TimeTypeId = TimeTypeId;
             ViewBag.SelectedOpcNodeId = OpcNodesId;
+            ViewBag.SelectedOpcNodeId2 = OpcNodesId2;
             
             // JSON serialization ayarlarıyla kültüre uygun ondalık gösterimi
             var jsonSettings = new JsonSerializerSettings
@@ -121,6 +144,7 @@ namespace SuperFilm.Enerji.WebUI.Controllers
             };
             
             ViewBag.ChartDataJson = JsonConvert.SerializeObject(chartData, jsonSettings);
+            ViewBag.ChartData2Json = JsonConvert.SerializeObject(chartData2, jsonSettings);
             
             // OpcNodes tablosundan ID'leri tekrar çek
             var finalNodeIds = await _repository.GetDistinctOpcNodeIds();
@@ -131,6 +155,116 @@ namespace SuperFilm.Enerji.WebUI.Controllers
         {
             public string Zaman { get; set; }
             public decimal Deger { get; set; }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> GetGraphData(int TimeTypeId, DateTime? Gun, DateTime? Ay, int? OpcNodesId, int? OpcNodesId2)
+        {
+            List<LineChartData> chartData = new List<LineChartData>();
+            List<LineChartData> chartData2 = new List<LineChartData>();
+            string chartTitle = "";
+            decimal minValue = 0;
+            decimal maxValue = 0;
+            decimal interval = 0;
+            
+            try
+            {
+                if (!OpcNodesId.HasValue || OpcNodesId <= 0)
+                {
+                    return Json(new { success = false, message = "Geçerli bir OPC Node ID seçilmedi." });
+                }
+
+                List<SayacVeri> data = null;
+                List<SayacVeri> data2 = null;
+                
+                if (TimeTypeId == 1 && Gun.HasValue) // Günlük
+                {
+                    _logger?.LogInformation($"Günlük OPC veri çekiliyor: Tarih {Gun.Value:dd/MM/yyyy}, OpcNodeId: {OpcNodesId}");
+
+                    data = await _repository.GetOpcNodeDailyAsync(Gun.Value, OpcNodesId.Value);
+                    if (data != null && data.Any())
+                    {
+                        data = _repository.CompleteDailyData(data);
+                        chartTitle = $"OPC Node - {OpcNodesId} - Günlük Veriler ({Gun.Value:dd/MM/yyyy})";
+                    }
+                    chartData = _repository.OpcGetDailyDiffAsync(Gun.Value, OpcNodesId).Result.Select(r => new LineChartData() { Deger = r.Deger, Zaman = r.Zaman }).ToList();
+
+                    if (OpcNodesId2.HasValue && OpcNodesId2 > 0)
+                    {
+                        data2 = await _repository.GetOpcNodeDailyAsync(Gun.Value, OpcNodesId2.Value);
+                        if (data2 != null && data2.Any())
+                        {
+                            data2 = _repository.CompleteDailyData(data2);
+                            chartTitle = $"OPC Node Karşılaştırma - Günlük Veriler ({Gun.Value:dd/MM/yyyy})";
+                        }
+                        chartData2 = _repository.OpcGetDailyDiffAsync(Gun.Value, OpcNodesId2).Result.Select(r => new LineChartData() { Deger = r.Deger, Zaman = r.Zaman }).ToList();
+                    }
+                }
+                else if (TimeTypeId == 2 && Ay.HasValue) // Aylık
+                {
+                    _logger?.LogInformation($"Aylık OPC veri çekiliyor: Ay {Ay.Value:MM/yyyy}, OpcNodeId: {OpcNodesId}");
+
+                    data = await _repository.GetOpcNodeMonthlyEndOfDayAsync(Ay.Value, OpcNodesId.Value);
+                    if (data != null && data.Any())
+                    {
+                        data = _repository.CompleteMonthlyData(data, Ay.Value);
+                        chartTitle = $"OPC Node - {OpcNodesId} - Aylık Veriler ({Ay.Value:MM/yyyy})";
+                    }
+                    chartData = _repository.OpcGetMonthlyDiffAsync(Ay.Value, OpcNodesId).Result.Select(r => new LineChartData() { Deger = r.Deger, Zaman = r.Zaman }).ToList();
+
+                    if (OpcNodesId2.HasValue && OpcNodesId2 > 0)
+                    {
+                        data2 = await _repository.GetOpcNodeMonthlyEndOfDayAsync(Ay.Value, OpcNodesId2.Value);
+                        if (data2 != null && data2.Any())
+                        {
+                            data2 = _repository.CompleteMonthlyData(data2, Ay.Value);
+                            chartTitle = $"OPC Node Karşılaştırma - Aylık Veriler ({Ay.Value:MM/yyyy})";
+                        }
+                        chartData2 = _repository.OpcGetMonthlyDiffAsync(Ay.Value, OpcNodesId2).Result.Select(r => new LineChartData() { Deger = r.Deger, Zaman = r.Zaman }).ToList();
+                    }
+                }
+
+                if ((data != null && data.Any()) || (data2 != null && data2.Any()))
+                {
+                    var allValues = new List<decimal>();
+                    if (chartData.Any()) allValues.AddRange(chartData.Select(d => d.Deger));
+                    if (chartData2.Any()) allValues.AddRange(chartData2.Select(d => d.Deger));
+
+                    minValue = 0;
+                    maxValue = allValues.Max();
+                    interval = (maxValue - minValue) / Math.Max(chartData.Count, chartData2.Count);
+                }
+                else
+                {
+                    _logger?.LogWarning($"OpcNodeId {OpcNodesId} için veri bulunamadı.");
+                    return Json(new { success = false, message = "Seçilen kriterlere uygun veri bulunamadı." });
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger?.LogError(ex, "OPC veri çekerken hata oluştu");
+                return Json(new { success = false, message = "OPC veri çekme işlemi sırasında bir hata oluştu: " + ex.Message });
+            }
+
+            var jsonSettings = new JsonSerializerSettings
+            {
+                Formatting = Formatting.None,
+                Culture = CultureInfo.InvariantCulture
+            };
+
+            return Json(new
+            {
+                success = true,
+                chartData = JsonConvert.SerializeObject(chartData, jsonSettings),
+                chartData2 = JsonConvert.SerializeObject(chartData2, jsonSettings),
+                chartTitle = chartTitle,
+                minValue = (int)minValue,
+                maxValue = (int)(maxValue * (decimal)1.05),
+                interval = (int)interval,
+                timeTypeId = TimeTypeId,
+                selectedNodeId = OpcNodesId,
+                selectedNodeId2 = OpcNodesId2
+            });
         }
     }
 }

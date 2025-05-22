@@ -4,9 +4,11 @@ using SuperFilm.Enerji.Entites;
 using SuperFilm.Enerji.WebUI.Models;
 using System.Diagnostics;
 using TanvirArjel.EFCore.GenericRepository;
+using Microsoft.AspNetCore.Authorization;
 
 namespace SuperFilm.Enerji.WebUI.Controllers
 {
+	[Authorize]
 	public class HomeController : Controller
 	{
 		private readonly ILogger<HomeController> _logger;

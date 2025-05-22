@@ -236,14 +236,19 @@ namespace SuperFilm.Enerji.Repository
 
         #region OpcNodes Methods
 
-        public async Task<List<string>> GetDistinctOpcNodeIds()
+        public async Task<List<SayacVeri>> GetDistinctOpcNodeIds()
         {
+            // SayacVeri içinde OpcNodesId != null ve SayacId == null (sadece OPC kayıtlar)
             return await _dbContext.Set<SayacVeri>()
-                .Where(x => x.OpcNodesId != null)
-                .Select(x => x.OpcNodesId.Value.ToString())
-                .Distinct()
+                .Where(x => x.OpcNodesId != null && x.SayacId == null)
+                // Aynı OpcNodesId-Kod ikilisi için tekrar edenleri grupla
+                .GroupBy(x => new { x.OpcNodesId, x.Kod })
+                // Her gruptan ilk kaydı al
+                .Select(g => g.First())
                 .ToListAsync();
         }
+
+
 
         public async Task<List<SayacVeri>> GetOpcNodeDailyAsync(DateTime gun, int opcNodeId)
         {

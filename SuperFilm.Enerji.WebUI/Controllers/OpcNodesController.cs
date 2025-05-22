@@ -4,9 +4,11 @@ using Microsoft.EntityFrameworkCore;
 using SuperFilm.Enerji.Entites;
 using SuperFilm.Enerji.WebUI.ViewModels;
 using TanvirArjel.EFCore.GenericRepository;
+using Microsoft.AspNetCore.Authorization;
 
 namespace SuperFilm.Enerji.WebUI.Controllers
 {
+    [Authorize]
     public class OpcNodesController : Controller
     {
         private readonly ILogger<HomeController> _logger;

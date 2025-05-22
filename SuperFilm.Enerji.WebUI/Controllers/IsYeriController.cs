@@ -2,9 +2,11 @@
 using Microsoft.EntityFrameworkCore;
 using SuperFilm.Enerji.Entites;
 using TanvirArjel.EFCore.GenericRepository;
+using Microsoft.AspNetCore.Authorization;
 
 namespace SuperFilm.Enerji.WebUI.Controllers
 {
+    [Authorize]
     public class IsYeriController : Controller
     {
         private readonly ILogger<HomeController> _logger;

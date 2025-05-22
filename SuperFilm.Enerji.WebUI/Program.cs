@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using SuperFilm.Enerji.Entites;
 using SuperFilm.Enerji.Repository;
 using SuperFilm.Enerji.WebUI.Hubs;
+using SuperFilm.Enerji.WebUI.Services;
 using SuperFilm.Enerji.WebUI.Services.Identity;
 using TanvirArjel.EFCore.GenericRepository;
 
@@ -49,6 +50,7 @@ builder.Services.AddRazorPages();
 builder.Services.AddSession();
 
 var app = builder.Build();
+await SeedService.SeedDatabase(app.Services);
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
@@ -64,7 +66,11 @@ app.UseStaticFiles();
 app.UseRouting();
 app.UseCors("CorsPolicy");
 app.UseSession();
+
+// Add authentication middleware
+app.UseAuthentication();
 app.UseAuthorization();
+
 app.MapRazorPages();
 
 app.UseEndpoints(endpoints =>
@@ -75,6 +81,6 @@ app.UseEndpoints(endpoints =>
 
 app.MapControllerRoute(
 	name: "default",
-	pattern: "{controller=Home}/{action=Index}/{id?}");
+	pattern: "{controller=Account}/{action=Login}/{id?}");
 
 app.Run();
