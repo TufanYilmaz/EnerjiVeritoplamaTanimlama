@@ -11,9 +11,11 @@ using NuGet.Protocol.Core.Types;
 using SuperFilm.Enerji.Entites;
 using SuperFilm.Enerji.Repository;
 using TanvirArjel.EFCore.GenericRepository;
+using Microsoft.AspNetCore.Authorization;
 
 namespace SuperFilm.Enerji.WebUI.Controllers
 {
+    [Authorize]
     public class SayacVeriGrafikController : Controller
     {
         private readonly EnerjiVeriRepository<EnerjiDbContext> _repository;

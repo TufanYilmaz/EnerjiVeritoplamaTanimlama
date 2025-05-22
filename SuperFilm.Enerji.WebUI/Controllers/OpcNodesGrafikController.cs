@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -13,6 +14,7 @@ using TanvirArjel.EFCore.GenericRepository;
 
 namespace SuperFilm.Enerji.WebUI.Controllers
 {
+    [Authorize]
     public class OpcNodesGrafikController : Controller
     {
         private readonly EnerjiVeriRepository<EnerjiDbContext> _repository;

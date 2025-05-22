@@ -1,5 +1,4 @@
-﻿
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Migrations.Operations.Builders;
@@ -12,9 +11,11 @@ using Hangfire.Storage;
 using Newtonsoft.Json.Linq;
 using System.Xml.Linq;
 using System;
+using Microsoft.AspNetCore.Authorization;
 
 namespace SuperFilm.Enerji.WebUI.Controllers
 {
+    [Authorize]
     public class SayacVeriController : Controller
     {
         private readonly ILogger<HomeController> _logger;

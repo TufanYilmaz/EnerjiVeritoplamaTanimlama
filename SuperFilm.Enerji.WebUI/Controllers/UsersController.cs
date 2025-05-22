@@ -2,9 +2,11 @@
 using Microsoft.AspNetCore.Mvc;
 using SuperFilm.Enerji.WebUI.Services.Identity;
 using SuperFilm.Enerji.WebUI.ViewModels.UserViewModels;
+using Microsoft.AspNetCore.Authorization;
 
 namespace SuperFilm.Enerji.WebUI.Controllers
 {
+    [Authorize]
     public class UsersController : Controller
     {
         private readonly UserManager<User> _userManager;
