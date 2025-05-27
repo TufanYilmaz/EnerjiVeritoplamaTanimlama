@@ -10,6 +10,7 @@
   <ItemGroup>
     <PackageReference Include="Hangfire" Version="1.8.20" />
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.1" />
+    <PackageReference Include="Microsoft.Extensions.Hosting.WindowsServices" Version="8.0.1" />
     <PackageReference Include="TanvirArjel.EFCore.GenericRepository" Version="6.0.4" />
     <PackageReference Include="TanvirArjel.EFCore.QueryRepository" Version="1.5.3" />
   </ItemGroup>
