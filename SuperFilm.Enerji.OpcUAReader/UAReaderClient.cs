@@ -1,6 +1,8 @@
 ﻿using Opc.Ua;
 using Opc.Ua.Client;
+using static System.Net.Mime.MediaTypeNames;
 using Opc.Ua.Configuration;
+using Microsoft.Extensions.Configuration;
 
 namespace SuperFilm.Enerji.OpcUAReader
 {
@@ -27,11 +29,71 @@ namespace SuperFilm.Enerji.OpcUAReader
         public UAReaderClient (string url):base()
         {
             application.ApplicationType = ApplicationType.Client;
+            application.LoadApplicationConfiguration(@"C:\Client.Config.xml", false);
             application.ConfigSectionName = "Client";
             application.LoadApplicationConfiguration(false).Wait();
             application.CheckApplicationInstanceCertificates(false, 0).Wait();
-
             m_configuration = application.ApplicationConfiguration;
+            //var configuration = new ApplicationConfiguration()
+            //{
+            //    ApplicationName = "Superfilm Enerji Veritoplama",
+            //    ApplicationUri = url,
+            //    ProductUri = "http://opcfoundation.org/UA/DataAccessClient",
+            //    ApplicationType = ApplicationType.Client,
+            //    ClientConfiguration = new ClientConfiguration()
+            //    {
+            //        DefaultSessionTimeout = 60000,
+            //        MinSubscriptionLifetime = 10000,
+            //        WellKnownDiscoveryUrls = new StringCollection(new List<string>() { "opc.tcp://{0}:4840", "http://{0}:52601/UADiscovery", "http://{0}/UADiscovery/Default.svc" })
+            //    },
+            //    TransportConfigurations = new TransportConfigurationCollection(),
+            //    TransportQuotas = new TransportQuotas()
+            //    {
+            //        OperationTimeout = 600000,
+            //        MaxStringLength = 1048576,
+            //        MaxByteStringLength = 1048576,
+            //        MaxArrayLength = 65535,
+            //        MaxMessageSize = 4194304,
+            //        MaxBufferSize = 65535,
+            //        ChannelLifetime = 300000,
+            //        SecurityTokenLifetime = 3600000,
+            //    },
+            //    DiscoveryServerConfiguration = new DiscoveryServerConfiguration(),
+            //    ServerConfiguration = new ServerConfiguration(),
+            //    TraceConfiguration = new TraceConfiguration()
+            //    {
+            //        DeleteOnLoad = false,
+            //        OutputFilePath = @"Logs\Quickstarts.DataAccessClient.log.txt",
+            //        TraceMasks = 515
+            //    },
+            //    Extensions = new XmlElementCollection(),
+            //    SecurityConfiguration = new SecurityConfiguration()
+            //    {
+            //        ApplicationCertificate = new CertificateIdentifier()
+            //        {
+            //            StoreType = "Directory",
+            //            StorePath = @"%CommonApplicationData%\OPC Foundation\pki\own",
+            //            SubjectName = "SubjectName",
+            //        },
+            //        TrustedIssuerCertificates = new CertificateTrustList()
+            //        {
+            //            StoreType = "Directory",
+            //            StorePath = @"%CommonApplicationData%\OPC Foundation\pki\issuer"
+            //        },
+            //        TrustedPeerCertificates = new CertificateTrustList()
+            //        {
+            //            StoreType = "Directory",
+            //            StorePath = @"%CommonApplicationData%\OPC Foundation\pki\trusted",
+            //        },
+            //        RejectedCertificateStore = new CertificateStoreIdentifier()
+            //        {
+            //            StoreType = "Directory",
+            //            StorePath = @"%CommonApplicationData%\OPC Foundation\pki\rejected",
+            //        },
+            //    }
+
+            //};
+            //m_configuration = configuration;
             m_configuration.CertificateValidator.CertificateValidation += CertificateValidator_CertificateValidation;
             string serverUrl = url;
             //string serverUrl = configuration.GetValue<string>("OpcUrl")!;

@@ -16,7 +16,7 @@ builder.Services.AddGenericRepository<EnerjiDbContext>(ServiceLifetime.Scoped);
 builder.Services.AddQueryRepository<EnerjiDbContext>(ServiceLifetime.Scoped);
 
 
-builder.Services.AddHostedService<Worker>();
+//builder.Services.AddHostedService<Worker>();
 builder.Services.AddHostedService<OpcVeriKaydetWService>();
 builder.Services.AddWindowsService(o=>o.ServiceName="SuperEnerji VeriToplama");
 var host = builder.Build();
