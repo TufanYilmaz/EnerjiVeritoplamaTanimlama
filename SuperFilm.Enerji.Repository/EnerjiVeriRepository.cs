@@ -241,9 +241,7 @@ namespace SuperFilm.Enerji.Repository
             // SayacVeri içinde OpcNodesId != null ve SayacId == null (sadece OPC kayıtlar)
             return await _dbContext.Set<SayacVeri>()
                 .Where(x => x.OpcNodesId != null && x.SayacId == null)
-                // Aynı OpcNodesId-Kod ikilisi için tekrar edenleri grupla
                 .GroupBy(x => new { x.OpcNodesId, x.Kod })
-                // Her gruptan ilk kaydı al
                 .Select(g => g.First())
                 .ToListAsync();
         }
