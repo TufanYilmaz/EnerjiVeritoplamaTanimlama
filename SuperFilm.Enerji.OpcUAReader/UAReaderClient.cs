@@ -12,7 +12,19 @@ namespace SuperFilm.Enerji.OpcUAReader
         ApplicationConfiguration m_configuration;
         ConfiguredEndpoint endpoint;
         ReadValueIdCollection testNodesToRead = new ReadValueIdCollection();
-        public UAReaderClient (string url)
+        static UAReaderClient _instance;
+        public UAReaderClient()
+        {
+            if (_instance == null)
+            {
+                _instance = this;
+            }
+        }
+        public static UAReaderClient GetInstance()
+        {
+            return _instance;
+        }
+        public UAReaderClient (string url):base()
         {
             application.ApplicationType = ApplicationType.Client;
             application.ConfigSectionName = "Client";
@@ -30,6 +42,7 @@ namespace SuperFilm.Enerji.OpcUAReader
             m_reconnectHandler = new SessionReconnectHandler(true, 10 * 1000);
             CreateSession();
         }
+
 
         private void CertificateValidator_CertificateValidation(CertificateValidator sender, CertificateValidationEventArgs e)
         {

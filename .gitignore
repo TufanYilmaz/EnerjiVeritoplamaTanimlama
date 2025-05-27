@@ -373,3 +373,6 @@ FodyWeavers.xsd
 /Superfilm.Enerji.VeriToplama/appsettings.Development.json
 /Superfilm.Enerji.VeriToplama/appsettings.Production.json
 /Superfilm.Enerji.VeriToplama/appsettings.Development.json
+/SuperFilm.Enerji.VeriToplamaWService/appsettings.json
+/SuperFilm.Enerji.VeriToplamaWService/appsettings.Development.json
+/SuperFilm.Enerji.VeriToplamaWService/appsettings.Production.json

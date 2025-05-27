@@ -10,13 +10,17 @@ namespace SuperFilm.Enerji.VeriToplamaWService.Services
 {
     public class OpcVeriKaydetWService : BackgroundService
     {
+        private readonly ILogger<OpcVeriKaydetWService> _logger;
         private readonly IServiceScopeFactory _serviceScopeFactory;
         private readonly IConfiguration _configuration;
 
-        public OpcVeriKaydetWService(IServiceScopeFactory serviceScopeFactory, IConfiguration configuration)
+        public OpcVeriKaydetWService(ILogger<OpcVeriKaydetWService> logger,
+            IServiceScopeFactory serviceScopeFactory, 
+            IConfiguration configuration)
         {
             _serviceScopeFactory = serviceScopeFactory;
             _configuration = configuration;
+            _logger = logger;
         }
 
         public async Task Kaydet(List<SayacVeri> data, List<OpCodes> opcNodes)
