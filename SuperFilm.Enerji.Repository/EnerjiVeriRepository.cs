@@ -551,7 +551,7 @@ namespace SuperFilm.Enerji.Repository
                 daily[i].Deger = daily[i + 1].Deger - daily[i].Deger;
                 daily[i].Zaman = daily[i].Zaman.Substring(0, 2);
             }
-            if (!sonDegerVar)
+            if (!sonDegerVar && daily.Count>0)
             {
                 daily.RemoveAt(daily.Count - 1);
             }
