@@ -1,4 +1,4 @@
-@model List<SuperFilm.Enerji.Entites.SayacVeri>
+@model List<SuperFilm.Enerji.Entites.OpcNodes>
 
 <div class="container">
     <div class="row mb-4">
@@ -19,11 +19,11 @@
                         </div>
                         <div id="Gun" class="form-group mb-3" style="display:none">
                             <label for="Gun">Gün</label>
-                            <input type="date" name="Gun" class="form-control">
+                            <input id="dateEditGun" type="date" name="Gun" class="form-control">
                         </div>
                         <div id="Ay" class="form-group mb-3" style="display:none">
                             <label for="Ay">Ay</label>
-                            <input type="month" name="Ay" class="form-control">
+                            <input id="dateEditAy" type="month" name="Ay" class="form-control">
                         </div>
 
                         <div class="form-group mb-3">
@@ -32,9 +32,9 @@
                                 <option value="">Seçiniz</option>
                                @if (Model != null && Model.Any())
                                {
-                                    @foreach (var item in Model ?? Enumerable.Empty<SuperFilm.Enerji.Entites.SayacVeri>())
+                                    @foreach (var item in Model ?? Enumerable.Empty<SuperFilm.Enerji.Entites.OpcNodes>())
                                     {
-                                        <option value="@item.OpcNodesId"> @item.OpcNodesId-@item.Kod </option>
+                                        <option value="@item.Id"> @item.Code [ @item.Description ] </option>
                                     }
                                }
                                 else
@@ -58,7 +58,7 @@
                                 }
                             </select>
                         </div> *@
-                        <button type="submit" class="btn btn-primary" onclick="loadGraphData()">Göster</button>
+                        <button type="submit" class="btn btn-primary" onclick="loadGraphData()">Grafiğe Ekle</button>
                     </form>
                 </div>
             </div>
@@ -190,7 +190,7 @@
                 if (chartData && chartData.length > 0) {
                     series.push({
                         dataSource: chartData,
-                        xName: 'Zaman',
+                        xName: document.getElementById('TimeTypeId').value == 1 ? 'Zaman' : 'Gun',
                         yName: 'Deger',
                         name: nodeData.code,
                         type: 'Line',
@@ -316,10 +316,16 @@
         }
 
         function loadGraphData() {
+            // $("#TimeTypeId").prop("disabled", true);
+            // $("#dateEditAy").prop("disabled", true);
+            // $("#dateEditGun").prop("disabled", true);
+            // $("#TimeTypeId").hide();
+            // $("#dateEditAy").hide();
+            // $("#dateEditGun").hide();
             const form = document.getElementById('graphForm');
             const formData = new FormData(form);
             const selectedNode = document.getElementById('OpcNodesId');
-            const nodeCode = selectedNode.options[selectedNode.selectedIndex].text.split('-')[1].trim();
+            const nodeCode = selectedNode.options[selectedNode.selectedIndex].text;// .text.split('-')[1].trim();
             
             // Show loading state
             document.getElementById('errorContainer').style.display = 'none';

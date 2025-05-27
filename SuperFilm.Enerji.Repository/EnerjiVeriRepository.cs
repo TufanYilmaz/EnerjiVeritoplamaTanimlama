@@ -535,27 +535,54 @@ namespace SuperFilm.Enerji.Repository
                .GroupBy(x => x.NormalizeDate.Hour)
                .Select(r => r.OrderBy(r => r.NormalizeDate).FirstOrDefault())
                .ToListAsync();
-
+            var nextFirstValue = await _dbContext.Set<SayacVeri>()
+                .Where(x => x.NormalizeDate.Date == gun.Date.AddDays(1) && x.OpcNodesId == OpcNodesId)
+                .OrderBy(r => r.NormalizeDate)
+                .Take(1)
+                .FirstOrDefaultAsync();
+            bool sonDegerVar = false;
+            if(nextFirstValue!= null || nextFirstValue != default)
+            {
+                sonDegerVar = true;
+                daily.Add(nextFirstValue);
+            }
             for (int i = 0; i < daily.Count - 1; i++)
             {
                 daily[i].Deger = daily[i + 1].Deger - daily[i].Deger;
                 daily[i].Zaman = daily[i].Zaman.Substring(0, 2);
             }
-
-            daily.RemoveAt(daily.Count - 1);
+            if (!sonDegerVar)
+            {
+                daily.RemoveAt(daily.Count - 1);
+            }
             return daily;
         }
 
         public async Task<List<SayacVeri>> OpcGetMonthlyDiffAsync(DateTime ay, int? OpcNodesId)
         {
-            var monthly = await _dbContext.Set<SayacVeri>().Where(x => x.Ay == ay.ToString("MM") && x.Yil == ay.ToString("yyyy") && x.OpcNodesId == OpcNodesId)
+            var monthly = await _dbContext.Set<SayacVeri>()
+                .Where(x => x.Ay == ay.ToString("MM") && x.Yil == ay.ToString("yyyy") && x.OpcNodesId == OpcNodesId)
              .GroupBy(x => x.NormalizeDate.Day)
              .Select(r => r.OrderBy(r => r.NormalizeDate).FirstOrDefault())
              .ToListAsync();
-
+            var nextFirstValue = await _dbContext.Set<SayacVeri>()
+                .Where(x => x.NormalizeDate.Date == ay.Date.AddMonths(1) && x.OpcNodesId == OpcNodesId)
+                .OrderBy(r => r.NormalizeDate)
+                .Take(1)
+                .FirstOrDefaultAsync();
+            bool sonDegerVar = false;
+            if (nextFirstValue != null || nextFirstValue != default)
+            {
+                sonDegerVar = true;
+                monthly.Add(nextFirstValue);
+            }
             for (int i = 0; i < monthly.Count - 1; i++)
             {
                 monthly[i].Deger = monthly[i + 1].Deger - monthly[i].Deger;
+            }
+            if (!sonDegerVar)
+            {
+                monthly.RemoveAt(monthly.Count - 1);
             }
             return monthly;
         }
