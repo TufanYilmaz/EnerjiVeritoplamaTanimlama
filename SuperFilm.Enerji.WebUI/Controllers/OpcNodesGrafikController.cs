@@ -158,14 +158,11 @@ namespace SuperFilm.Enerji.WebUI.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> GetGraphData(int TimeTypeId, DateTime? Gun, DateTime? Ay, int? OpcNodesId, int? OpcNodesId2)
+        public async Task<IActionResult> GetGraphData(int TimeTypeId, DateTime? Gun, DateTime? Ay, int? OpcNodesId)
         {
             List<LineChartData> chartData = new List<LineChartData>();
-            List<LineChartData> chartData2 = new List<LineChartData>();
             string chartTitle = "";
-            decimal minValue = 0;
-            decimal maxValue = 0;
-            decimal interval = 0;
+            
             
             try
             {
@@ -175,7 +172,6 @@ namespace SuperFilm.Enerji.WebUI.Controllers
                 }
 
                 List<SayacVeri> data = null;
-                List<SayacVeri> data2 = null;
                 
                 if (TimeTypeId == 1 && Gun.HasValue) // Günlük
                 {
@@ -188,17 +184,6 @@ namespace SuperFilm.Enerji.WebUI.Controllers
                         chartTitle = $"OPC Node - {OpcNodesId} - Günlük Veriler ({Gun.Value:dd/MM/yyyy})";
                     }
                     chartData = _repository.OpcGetDailyDiffAsync(Gun.Value, OpcNodesId).Result.Select(r => new LineChartData() { Deger = r.Deger, Zaman = r.Zaman }).ToList();
-
-                    if (OpcNodesId2.HasValue && OpcNodesId2 > 0)
-                    {
-                        data2 = await _repository.GetOpcNodeDailyAsync(Gun.Value, OpcNodesId2.Value);
-                        if (data2 != null && data2.Any())
-                        {
-                            data2 = _repository.CompleteDailyData(data2);
-                            chartTitle = $"OPC Node Karşılaştırma - Günlük Veriler ({Gun.Value:dd/MM/yyyy})";
-                        }
-                        chartData2 = _repository.OpcGetDailyDiffAsync(Gun.Value, OpcNodesId2).Result.Select(r => new LineChartData() { Deger = r.Deger, Zaman = r.Zaman }).ToList();
-                    }
                 }
                 else if (TimeTypeId == 2 && Ay.HasValue) // Aylık
                 {
@@ -211,28 +196,23 @@ namespace SuperFilm.Enerji.WebUI.Controllers
                         chartTitle = $"OPC Node - {OpcNodesId} - Aylık Veriler ({Ay.Value:MM/yyyy})";
                     }
                     chartData = _repository.OpcGetMonthlyDiffAsync(Ay.Value, OpcNodesId).Result.Select(r => new LineChartData() { Deger = r.Deger, Zaman = r.Zaman }).ToList();
-
-                    if (OpcNodesId2.HasValue && OpcNodesId2 > 0)
-                    {
-                        data2 = await _repository.GetOpcNodeMonthlyEndOfDayAsync(Ay.Value, OpcNodesId2.Value);
-                        if (data2 != null && data2.Any())
-                        {
-                            data2 = _repository.CompleteMonthlyData(data2, Ay.Value);
-                            chartTitle = $"OPC Node Karşılaştırma - Aylık Veriler ({Ay.Value:MM/yyyy})";
-                        }
-                        chartData2 = _repository.OpcGetMonthlyDiffAsync(Ay.Value, OpcNodesId2).Result.Select(r => new LineChartData() { Deger = r.Deger, Zaman = r.Zaman }).ToList();
-                    }
                 }
 
-                if ((data != null && data.Any()) || (data2 != null && data2.Any()))
+                if (data != null && data.Any())
                 {
-                    var allValues = new List<decimal>();
-                    if (chartData.Any()) allValues.AddRange(chartData.Select(d => d.Deger));
-                    if (chartData2.Any()) allValues.AddRange(chartData2.Select(d => d.Deger));
+                    var jsonSettings = new JsonSerializerSettings
+                    {
+                        Formatting = Formatting.None,
+                        Culture = CultureInfo.InvariantCulture
+                    };
 
-                    minValue = 0;
-                    maxValue = allValues.Max();
-                    interval = (maxValue - minValue) / Math.Max(chartData.Count, chartData2.Count);
+                    return Json(new
+                    {
+                        success = true,
+                        chartData = JsonConvert.SerializeObject(chartData, jsonSettings),
+                        chartTitle = chartTitle,
+                        selectedNodeId = OpcNodesId
+                    });
                 }
                 else
                 {
@@ -245,26 +225,6 @@ namespace SuperFilm.Enerji.WebUI.Controllers
                 _logger?.LogError(ex, "OPC veri çekerken hata oluştu");
                 return Json(new { success = false, message = "OPC veri çekme işlemi sırasında bir hata oluştu: " + ex.Message });
             }
-
-            var jsonSettings = new JsonSerializerSettings
-            {
-                Formatting = Formatting.None,
-                Culture = CultureInfo.InvariantCulture
-            };
-
-            return Json(new
-            {
-                success = true,
-                chartData = JsonConvert.SerializeObject(chartData, jsonSettings),
-                chartData2 = JsonConvert.SerializeObject(chartData2, jsonSettings),
-                chartTitle = chartTitle,
-                minValue = (int)minValue,
-                maxValue = (int)(maxValue * (decimal)1.05),
-                interval = (int)interval,
-                timeTypeId = TimeTypeId,
-                selectedNodeId = OpcNodesId,
-                selectedNodeId2 = OpcNodesId2
-            });
         }
     }
 }

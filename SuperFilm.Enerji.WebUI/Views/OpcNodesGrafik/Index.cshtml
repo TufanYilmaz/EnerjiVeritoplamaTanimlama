@@ -34,7 +34,7 @@
                                {
                                     @foreach (var item in Model ?? Enumerable.Empty<SuperFilm.Enerji.Entites.SayacVeri>())
                                     {
-                                        <option value="@item.OpcNodesId"> @item.OpcNodesId-@item.Kod</option>
+                                        <option value="@item.OpcNodesId"> @item.OpcNodesId-@item.Kod </option>
                                     }
                                }
                                 else
@@ -43,7 +43,7 @@
                                 }
                             </select>
                         </div>
-
+@* 
                         <div class="form-group mb-3">
                             <label for="OpcNodesId2">İkinci OPC Node (Opsiyonel)</label>
                             <select class="form-control" name="OpcNodesId2" id="OpcNodesId2">
@@ -57,9 +57,24 @@
                                     }
                                 }
                             </select>
-                        </div>
+                        </div> *@
                         <button type="submit" class="btn btn-primary" onclick="loadGraphData()">Göster</button>
                     </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="selectedNodesContainer" class="row mb-4" style="display:none">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5>Seçili OPC Node'lar</h5>
+                </div>
+                <div class="card-body">
+                    <div id="selectedNodesList" class="d-flex flex-wrap gap-2">
+                        <!-- Selected nodes will be added here dynamically -->
+                    </div>
                 </div>
             </div>
         </div>
@@ -103,15 +118,211 @@
     <script src="https://cdn.syncfusion.com/ej2/dist/ej2.min.js" defer></script>
     <script>
         let currentChart = null;
+        let selectedNodes = new Map(); // Store selected nodes with their data
+
+        function addSelectedNode(nodeId, nodeCode, chartData) {
+            if (selectedNodes.has(nodeId)) return; // Skip if already selected
+
+            // Add to selected nodes map
+            selectedNodes.set(nodeId, {
+                code: nodeCode,
+                data: chartData
+            });
+
+            // Create node badge
+            const badge = document.createElement('div');
+            badge.className = 'badge bg-primary p-2 d-flex align-items-center';
+            badge.innerHTML = `
+                <span>${nodeId}-${nodeCode}</span>
+                <button type="button" class="btn-close btn-close-white ms-2" 
+                        onclick="removeNode(${nodeId})" aria-label="Close"></button>
+            `;
+            document.getElementById('selectedNodesList').appendChild(badge);
+
+            // Show container if hidden
+            document.getElementById('selectedNodesContainer').style.display = 'block';
+
+            // Update chart
+            updateChart();
+        }
+
+        function removeNode(nodeId) {
+            // Remove from map
+            selectedNodes.delete(nodeId);
+
+            // Remove badge
+            const badges = document.querySelectorAll('#selectedNodesList .badge');
+            badges.forEach(badge => {
+                if (badge.textContent.includes(`${nodeId}-`)) {
+                    badge.remove();
+                }
+            });
+
+            // Hide container if no nodes left
+            if (selectedNodes.size === 0) {
+                document.getElementById('selectedNodesContainer').style.display = 'none';
+            }
+
+            // Update chart
+            updateChart();
+        }
+
+        function updateChart() {
+            if (selectedNodes.size === 0) {
+                if (currentChart) {
+                    currentChart.destroy();
+                    currentChart = null;
+                }
+                document.getElementById('graphContainer').style.display = 'none';
+                return;
+            }
+
+            // Show graph container
+            document.getElementById('graphContainer').style.display = 'block';
+            
+            // Create series array
+            const series = [];
+            let maxValue = 0;
+            let chartTitle = 'OPC Node Karşılaştırma';
+
+            selectedNodes.forEach((nodeData, nodeId) => {
+                const chartData = JSON.parse(nodeData.data);
+                if (chartData && chartData.length > 0) {
+                    series.push({
+                        dataSource: chartData,
+                        xName: 'Zaman',
+                        yName: 'Deger',
+                        name: nodeData.code,
+                        type: 'Line',
+                        width: 3,
+                        dashArray: '',
+                        fill: getRandomColor(),
+                        marker: {
+                            visible: true,
+                            width: 10,
+                            height: 10,
+                            shape: 'Circle',
+                            isFilled: true,
+                            fill: getRandomColor(),
+                            border: { width: 2, color: '#ffffff' }
+                        }
+                    });
+
+                    // Update max value
+                    const nodeMax = Math.max(...chartData.map(d => d.Deger));
+                    maxValue = Math.max(maxValue, nodeMax);
+                }
+            });
+
+            // Destroy existing chart if it exists
+            if (currentChart) {
+                currentChart.destroy();
+            }
+
+            // Create new chart
+            currentChart = new ej.charts.Chart({
+                primaryXAxis: {
+                    valueType: 'Category',
+                    title: document.getElementById('TimeTypeId').value == 1 ? 'Saat' : 'Gün',
+                    labelIntersectAction: 'Rotate45',
+                    majorGridLines: { width: 0.5, color: '#e0e0e0' },
+                    labelStyle: {
+                        fontWeight: '600',
+                        size: '12px',
+                        color: '#333'
+                    },
+                    titleStyle: {
+                        size: '14px',
+                        fontWeight: '600',
+                        color: '#424242'
+                    }
+                },
+                primaryYAxis: {
+                    title: 'Değer',
+                    minimum: 0,
+                    maximum: maxValue * 1.05,
+                    interval: maxValue / 10,
+                    labelFormat: '#,##0.00',
+                    majorGridLines: { width: 0.5, color: '#e0e0e0' },
+                    majorTickLines: { width: 0 },
+                    minorTickLines: { width: 0 },
+                    labelStyle: {
+                        fontWeight: '500',
+                        size: '11px',
+                        color: '#424242'
+                    },
+                    titleStyle: {
+                        size: '14px',
+                        fontWeight: '600',
+                        color: '#424242'
+                    }
+                },
+                chartArea: { 
+                    border: { width: 0 },
+                    background: '#fff'
+                },
+                tooltip: {
+                    enable: true,
+                    shared: false,
+                    format: '${point.x}: <b>${point.y}</b>',
+                    textStyle: {
+                        fontWeight: 'bold',
+                        size: '14px',
+                        color: '#333333'
+                    },
+                    fill: '#ffffff',
+                    opacity: 0.9,
+                    border: { width: 1, color: '#009688' }
+                },
+                title: chartTitle,
+                titleStyle: {
+                    size: '16px',
+                    fontWeight: 'bold',
+                    color: '#212529',
+                    textAlignment: 'Center'
+                },
+                legendSettings: { 
+                    visible: true,
+                    position: 'Bottom',
+                    textStyle: {
+                        size: '13px',
+                        color: '#424242'
+                    },
+                    background: 'transparent',
+                    border: { width: 0 }
+                },
+                width: '100%',
+                height: '450px',
+                background: '#ffffff',
+                margin: { left: 15, right: 15, top: 20, bottom: 15 },
+                series: series,
+                loaded: function(args) {
+                    console.log("Grafik yükleme tamamlandı!");
+                },
+                load: function(args) {
+                    args.chart.theme = "Material";
+                }
+            });
+            
+            currentChart.appendTo('#chartContainer');
+        }
+
+        function getRandomColor() {
+            const colors = [
+                '#009688', '#2196f3', '#ff9800', '#e91e63', '#4caf50',
+                '#9c27b0', '#f44336', '#3f51b5', '#795548', '#607d8b'
+            ];
+            return colors[Math.floor(Math.random() * colors.length)];
+        }
 
         function loadGraphData() {
             const form = document.getElementById('graphForm');
             const formData = new FormData(form);
+            const selectedNode = document.getElementById('OpcNodesId');
+            const nodeCode = selectedNode.options[selectedNode.selectedIndex].text.split('-')[1].trim();
             
             // Show loading state
             document.getElementById('errorContainer').style.display = 'none';
-            document.getElementById('noDataContainer').style.display = 'none';
-            document.getElementById('graphContainer').style.display = 'none';
             
             fetch('/OpcNodesGrafik/GetGraphData', {
                 method: 'POST',
@@ -123,152 +334,11 @@
                     // Hide error container if visible
                     document.getElementById('errorContainer').style.display = 'none';
                     
-                    // Show graph container
-                    document.getElementById('graphContainer').style.display = 'block';
-                    document.getElementById('chartTitle').textContent = data.chartTitle;
+                    // Add the selected node to the list
+                    addSelectedNode(data.selectedNodeId, nodeCode, data.chartData);
                     
-                    // Parse the chart data
-                    const chartData = JSON.parse(data.chartData);
-                    const chartData2 = JSON.parse(data.chartData2);
-                    
-                    // Create series array
-                    const series = [];
-                    
-                    if (chartData && chartData.length > 0) {
-                        series.push({
-                            dataSource: chartData,
-                            xName: 'Zaman',
-                            yName: 'Deger',
-                            name: 'OPC Node ' + data.selectedNodeId,
-                            type: 'Line',
-                            width: 3,
-                            dashArray: '',
-                            fill: '#009688',
-                            marker: {
-                                visible: true,
-                                width: 10,
-                                height: 10,
-                                shape: 'Circle',
-                                isFilled: true,
-                                fill: '#009688',
-                                border: { width: 2, color: '#ffffff' }
-                            }
-                        });
-                    }
-                    
-                    if (chartData2 && chartData2.length > 0) {
-                        series.push({
-                            dataSource: chartData2,
-                            xName: 'Zaman',
-                            yName: 'Deger',
-                            name: 'OPC Node ' + data.selectedNodeId2,
-                            type: 'Line',
-                            width: 3,
-                            dashArray: '',
-                            fill: '#2196f3',
-                            marker: {
-                                visible: true,
-                                width: 10,
-                                height: 10,
-                                shape: 'Circle',
-                                isFilled: true,
-                                fill: '#2196f3',
-                                border: { width: 2, color: '#ffffff' }
-                            }
-                        });
-                    }
-                    
-                    // Destroy existing chart if it exists
-                    if (currentChart) {
-                        currentChart.destroy();
-                    }
-                    
-                    // Create new chart
-                    currentChart = new ej.charts.Chart({
-                        primaryXAxis: {
-                            valueType: 'Category',
-                            title: data.timeTypeId == 1 ? 'Saat' : 'Gün',
-                            labelIntersectAction: 'Rotate45',
-                            majorGridLines: { width: 0.5, color: '#e0e0e0' },
-                            labelStyle: {
-                                fontWeight: '600',
-                                size: '12px',
-                                color: '#333'
-                            },
-                            titleStyle: {
-                                size: '14px',
-                                fontWeight: '600',
-                                color: '#424242'
-                            }
-                        },
-                        primaryYAxis: {
-                            title: 'Değer',
-                            minimum: data.minValue,
-                            maximum: data.maxValue,
-                            interval: data.interval,
-                            labelFormat: '#,##0.00',
-                            majorGridLines: { width: 0.5, color: '#e0e0e0' },
-                            majorTickLines: { width: 0 },
-                            minorTickLines: { width: 0 },
-                            labelStyle: {
-                                fontWeight: '500',
-                                size: '11px',
-                                color: '#424242'
-                            },
-                            titleStyle: {
-                                size: '14px',
-                                fontWeight: '600',
-                                color: '#424242'
-                            }
-                        },
-                        chartArea: { 
-                            border: { width: 0 },
-                            background: '#fff'
-                        },
-                        tooltip: {
-                            enable: true,
-                            shared: false,
-                            format: '${point.x}: <b>${point.y}</b>',
-                            textStyle: {
-                                fontWeight: 'bold',
-                                size: '14px',
-                                color: '#333333'
-                            },
-                            fill: '#ffffff',
-                            opacity: 0.9,
-                            border: { width: 1, color: '#009688' }
-                        },
-                        title: data.chartTitle,
-                        titleStyle: {
-                            size: '16px',
-                            fontWeight: 'bold',
-                            color: '#212529',
-                            textAlignment: 'Center'
-                        },
-                        legendSettings: { 
-                            visible: true,
-                            position: 'Bottom',
-                            textStyle: {
-                                size: '13px',
-                                color: '#424242'
-                            },
-                            background: 'transparent',
-                            border: { width: 0 }
-                        },
-                        width: '100%',
-                        height: '450px',
-                        background: '#ffffff',
-                        margin: { left: 15, right: 15, top: 20, bottom: 15 },
-                        series: series,
-                        loaded: function(args) {
-                            console.log("Grafik yükleme tamamlandı!");
-                        },
-                        load: function(args) {
-                            args.chart.theme = "Material";
-                        }
-                    });
-                    
-                    currentChart.appendTo('#chartContainer');
+                    // Reset the form selection
+                    selectedNode.value = '';
                 } else {
                     // Show error message
                     document.getElementById('errorContainer').style.display = 'block';

@@ -365,9 +365,6 @@ namespace SuperFilm.Enerji.WebUI.Controllers
         {
             List<LineChartData> chartData = new List<LineChartData>();
             string chartTitle = "";
-            decimal minValue = 0;
-            decimal maxValue = 0;
-            decimal interval = 0;
             
             try
             {
@@ -448,35 +445,24 @@ namespace SuperFilm.Enerji.WebUI.Controllers
 
                 if (chartData.Any())
                 {
-                    var nonZeroValues = chartData.Where(c => c.Deger != 0).Select(c => c.Deger).ToList();
-                    if (nonZeroValues.Any())
+                    var jsonSettings = new JsonSerializerSettings
                     {
-                        minValue = nonZeroValues.Min();
-                        maxValue = nonZeroValues.Max();
-                    }
-                    else
-                    {
-                        minValue = chartData.Min(c => c.Deger);
-                        maxValue = chartData.Max(c => c.Deger);
-                    }
-                    
-                    var range = maxValue - minValue;
-                    
-                    if (range < 1)
-                    {
-                        minValue = minValue * 0.9m;
-                        maxValue = maxValue * 1.1m;
-                    }
-                    else
-                    {
-                        minValue = minValue - (range * 0.1m);
-                        maxValue = maxValue + (range * 0.1m);
-                    }
-                    
-                    if (minValue > 0)
-                        minValue = 0;
+                        Formatting = Formatting.None,
+                        Culture = CultureInfo.InvariantCulture
+                    };
 
-                    interval = CalculateYAxisInterval(minValue, maxValue);
+                    return Json(new
+                    {
+                        success = true,
+                        chartData = JsonConvert.SerializeObject(chartData, jsonSettings),
+                        chartTitle = chartTitle,
+                        sayacId = SayacId
+                    });
+                }
+                else
+                {
+                    _logger?.LogWarning($"SayacId {SayacId} için veri bulunamadı.");
+                    return Json(new { success = false, message = "Seçilen kriterlere uygun veri bulunamadı." });
                 }
             }
             catch (Exception ex)
@@ -484,23 +470,6 @@ namespace SuperFilm.Enerji.WebUI.Controllers
                 _logger?.LogError(ex, "Sayaç veri çekerken hata oluştu");
                 return Json(new { success = false, message = "Veri çekme işlemi sırasında bir hata oluştu: " + ex.Message });
             }
-
-            var jsonSettings = new JsonSerializerSettings
-            {
-                Formatting = Formatting.None,
-                Culture = CultureInfo.InvariantCulture
-            };
-
-            return Json(new
-            {
-                success = true,
-                chartData = JsonConvert.SerializeObject(chartData, jsonSettings),
-                chartTitle = chartTitle,
-                minValue = (int)minValue,
-                maxValue = (int)maxValue,
-                interval = (int)interval,
-                timeTypeId = TimeTypeId
-            });
         }
     }
 }
