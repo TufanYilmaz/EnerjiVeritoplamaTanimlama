@@ -1,0 +1,31 @@
+.select2-container--default .select2-selection--single {
+    height: 38px !important;
+    padding: 5px;
+}
+
+.select2-container--default .select2-selection--single .select2-selection__rendered {
+    line-height: 28px !important;
+}
+
+.select2-container--default .select2-selection--single .select2-selection__arrow {
+    height: 36px !important;
+}
+
+.select2-container--default .select2-results__option {
+    padding: 8px;
+    font-size: 14px;
+}
+
+.select2-dropdown {
+    min-width: 300px !important;
+}
+
+.select-label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 500;
+}
+
+.select2-container {
+    width: 100% !important;
+} 
