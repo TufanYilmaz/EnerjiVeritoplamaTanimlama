@@ -4,8 +4,9 @@
     <div class="row mb-4">
         <div class="col-md-6">
             <div class="card">
-                <div class="card-header">
-                    <h5>OPC Node Veri Seçimi</h5>
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">OpcNode Veri Seçimi</h5>
+                    <button type="button" class="btn btn-danger btn-sm" onclick="clearAllNodes()">Sıfırla</button>
                 </div>
                 <div class="card-body">
                     <form id="graphForm" onsubmit="return false;">
@@ -70,11 +71,12 @@
             <div class="card">
                 <div class="card-header">
                     <h5>Seçili OPC Node'lar</h5>
+                    <button type="button" class="btn btn-danger btn-sm" onclick="clearAllNodes()">Grafiği Temizle</button>
                 </div>
                 <div class="card-body">
-                    <div id="selectedNodesList" class="d-flex flex-wrap gap-2">
-                        <!-- Selected nodes will be added here dynamically -->
+                    <div id="selectedNodesList" class="d-flex flex-wrap gap-2 mb-2">
                     </div>
+                   
                 </div>
             </div>
         </div>
@@ -314,6 +316,25 @@
             ];
             return colors[Math.floor(Math.random() * colors.length)];
         }
+        function clearAllNodes() {
+            selectedNodes.clear();
+            document.getElementById('selectedNodesList').innerHTML = '';
+            document.getElementById('selectedNodesContainer').style.display = 'none';
+            if (currentChart) { currentChart.destroy(); currentChart = null; }
+            document.getElementById('graphContainer').style.display = 'none';
+
+            // Zaman Tipi alanını geri göster ve sıfırla
+            const timeTypeSelect = document.getElementById('TimeTypeId');
+            const timeTypeGroup = timeTypeSelect.closest('.form-group');
+            timeTypeSelect.value = '';
+            timeTypeGroup.style.display = 'block';
+
+            // Gün/Ay alanlarını gizle ve içeriği temizle
+            document.getElementById('Gun').style.display = 'none';
+            document.getElementById('Ay').style.display = 'none';
+            document.getElementById('dateEditGun').value = '';
+            document.getElementById('dateEditAy').value = '';
+        }
 
         function loadGraphData() {
             // $("#TimeTypeId").prop("disabled", true);
@@ -359,12 +380,28 @@
         }
 
         // Form yüklendiğinde çalışacak kod
-        document.addEventListener("DOMContentLoaded", function() {
-            // Trigger the change event to show/hide the appropriate date inputs
-            var timeTypeSelect = document.getElementById("TimeTypeId");
-            if (timeTypeSelect.value) {
-                timeTypeSelect.dispatchEvent(new Event('change'));
-            }
-        });
+        document.addEventListener("DOMContentLoaded", function () {
+              const timeTypeSelect = document.getElementById("TimeTypeId");
+              const gunDiv = document.getElementById("Gun");
+              const ayDiv = document.getElementById("Ay");
+              const timeTypeGroup = timeTypeSelect.closest('.form-group');
+
+              timeTypeSelect.addEventListener("change", function () {
+                  if (this.value === "1") {
+                      gunDiv.style.display = "block";
+                      ayDiv.style.display = "none";
+                  } else if (this.value === "2") {
+                      ayDiv.style.display = "block";
+                      gunDiv.style.display = "none";
+                  }
+
+                 
+                  timeTypeGroup.style.display = "none";
+              });
+
+              if (timeTypeSelect.value) {
+                  timeTypeSelect.dispatchEvent(new Event("change"));
+              }
+          });
     </script>
 } 

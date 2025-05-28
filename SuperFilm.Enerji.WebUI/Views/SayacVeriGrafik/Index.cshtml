@@ -4,8 +4,9 @@
     <div class="row mb-4">
         <div class="col-md-6">
             <div class="card">
-                <div class="card-header">
-                    <h5>Veri Seçimi</h5>
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">Sayaç Veri Seçimi</h5>
+                    <button type="button" class="btn btn-danger btn-sm" onclick="clearAllSayac()">Sıfırla</button>
                 </div>
                 <div class="card-body">
                     <form id="graphForm" onsubmit="return false;">
@@ -301,6 +302,23 @@
             ];
             return colors[Math.floor(Math.random() * colors.length)];
         }
+        function clearAllSayac() {
+            selectedMeters.clear();
+            document.getElementById('selectedMetersList').innerHTML = '';
+            document.getElementById('selectedMetersContainer').style.display = 'none';
+            if (currentChart) { currentChart.destroy(); currentChart = null; }
+            document.getElementById('graphContainer').style.display = 'none';
+
+            
+            const timeTypeSelect = document.getElementById('TimeTypeId');
+            const timeTypeGroup = timeTypeSelect.closest('.form-group');
+            timeTypeSelect.value = '';
+            timeTypeGroup.style.display = 'block';
+            document.getElementById('Gun').style.display = 'none';
+            document.getElementById('Ay').style.display = 'none';
+            document.querySelector('#Gun input').value = '';
+            document.querySelector('#Ay input').value = '';
+        }
 
         function loadGraphData() {
             const form = document.getElementById('graphForm');
@@ -340,12 +358,18 @@
         }
 
         // Form yüklendiğinde çalışacak kod
-        document.addEventListener("DOMContentLoaded", function() {
-            // Trigger the change event to show/hide the appropriate date inputs
-            var timeTypeSelect = document.getElementById("TimeTypeId");
-            if (timeTypeSelect.value) {
-                timeTypeSelect.dispatchEvent(new Event('change'));
-            }
-        });
+        document.addEventListener('DOMContentLoaded', () => {
+             const timeTypeSelect = document.getElementById('TimeTypeId');
+             const gunDiv = document.getElementById('Gun');
+             const ayDiv = document.getElementById('Ay');
+             const timeTypeGroup = timeTypeSelect.closest('.form-group');
+
+             timeTypeSelect.addEventListener('change', function() {
+                 if (this.value === '1') { gunDiv.style.display='block'; ayDiv.style.display='none'; }
+                 else if (this.value === '2') { ayDiv.style.display='block'; gunDiv.style.display='none'; }
+                 timeTypeGroup.style.display='none';
+             });
+             if (timeTypeSelect.value) timeTypeSelect.dispatchEvent(new Event('change'));
+         });
     </script>
 }
