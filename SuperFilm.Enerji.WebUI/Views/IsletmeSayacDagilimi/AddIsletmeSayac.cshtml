@@ -29,7 +29,7 @@
                 {
                     foreach (var item in Model.Isletme)
                     {
-                        <option value="@item.Id">@item.Ad</option>
+                        <option value="@item.Id">@item.Kod - @item.Ad</option>
                     }
                 }
                 else
@@ -45,7 +45,7 @@
                 {
                     foreach (var item in Model.SayacTanimlari)
                     {
-                        <option value="@item.Id">@item.SayacTanimi</option>
+                        <option value="@item.Id"> @item.SayacKodu - @item.SayacTanimi </option>
                     }
                 }
                 else
