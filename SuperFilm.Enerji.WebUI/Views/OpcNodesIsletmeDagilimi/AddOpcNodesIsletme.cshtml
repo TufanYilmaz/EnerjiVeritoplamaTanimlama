@@ -21,8 +21,8 @@
         <form asp-action="AddOpcNodesIsletme" method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="OpcNodesIsletmeDagilimi.Id" class="form-control" />
-            <label for="OpcNodesId">OpcNodes</label>
-            <select class="form-control" asp-for="OpcNodesIsletmeDagilimi.OpcNodesId">
+            <label for="OpcNodesId" class="select-label">OpcNodes</label>
+            <select class="form-control select2-search" asp-for="OpcNodesIsletmeDagilimi.OpcNodesId">
                 <option value="">Seçiniz</option>
                 @if (Model.OpcNodes != null && Model.OpcNodes.Any())
                 {
@@ -38,8 +38,8 @@
 
             </select>
 
-            <label for="IsletmeID">Isletme</label>
-            <select class="form-control" asp-for="OpcNodesIsletmeDagilimi.IsletmeId">
+            <label for="IsletmeID" class="select-label">Isletme</label>
+            <select class="form-control select2-search" asp-for="OpcNodesIsletmeDagilimi.IsletmeId">
                 <option value="">Seçiniz</option>
                 @if (Model.Isletme != null && Model.Isletme.Any())
                 {
@@ -90,3 +90,26 @@
         </form>
     </div>
 </div>
+
+@section Scripts {
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <link href="~/css/select2-custom.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('.select2-search').select2({
+                placeholder: "Ara...",
+                allowClear: true,
+                language: {
+                    noResults: function() {
+                        return "Sonuç bulunamadı";
+                    },
+                    searching: function() {
+                        return "Aranıyor...";
+                    }
+                }
+            });
+        });
+    </script>
+}
