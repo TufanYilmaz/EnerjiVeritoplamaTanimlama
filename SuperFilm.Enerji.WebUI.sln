@@ -22,9 +22,15 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Superfilm.Enerji.VeriToplama", "Superfilm.Enerji.VeriToplama\Superfilm.Enerji.VeriToplama.csproj", "{3CCE99FB-19CE-4ACB-B8A4-45B823F23F88}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SuperFilm.Enerji.OpcUAReader", "SuperFilm.Enerji.OpcUAReader\SuperFilm.Enerji.OpcUAReader.csproj", "{820489FD-970E-42F4-8202-E595CD5F465E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SuperFilm.Enerji.OpcUAReader", "SuperFilm.Enerji.OpcUAReader\SuperFilm.Enerji.OpcUAReader.csproj", "{820489FD-970E-42F4-8202-E595CD5F465E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SuperFilm.Enerji.VeriToplamaWService", "SuperFilm.Enerji.VeriToplamaWService\SuperFilm.Enerji.VeriToplamaWService.csproj", "{612FFFB0-896F-4FBC-9477-65CCD4F53047}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SuperFilm.Enerji.VeriToplamaWService", "SuperFilm.Enerji.VeriToplamaWService\SuperFilm.Enerji.VeriToplamaWService.csproj", "{612FFFB0-896F-4FBC-9477-65CCD4F53047}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SapWebService", "SapWebService", "{6AE26E3D-59DC-42A7-9675-515786BB7907}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SapWebServices", "SapWebServices\SapWebServices.csproj", "{FFB99339-16CE-4737-A359-D7BD8E59C6C1}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "As400ExecuterCore", "As400ExecuterCore\As400ExecuterCore.csproj", "{2A5FB9C9-89FB-4F66-BBEF-7274216A5305}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -106,9 +112,29 @@ Global
 		{612FFFB0-896F-4FBC-9477-65CCD4F53047}.Release|Any CPU.Build.0 = Release|Any CPU
 		{612FFFB0-896F-4FBC-9477-65CCD4F53047}.Release|x86.ActiveCfg = Release|Any CPU
 		{612FFFB0-896F-4FBC-9477-65CCD4F53047}.Release|x86.Build.0 = Release|Any CPU
+		{FFB99339-16CE-4737-A359-D7BD8E59C6C1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FFB99339-16CE-4737-A359-D7BD8E59C6C1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FFB99339-16CE-4737-A359-D7BD8E59C6C1}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{FFB99339-16CE-4737-A359-D7BD8E59C6C1}.Debug|x86.Build.0 = Debug|Any CPU
+		{FFB99339-16CE-4737-A359-D7BD8E59C6C1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FFB99339-16CE-4737-A359-D7BD8E59C6C1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FFB99339-16CE-4737-A359-D7BD8E59C6C1}.Release|x86.ActiveCfg = Release|Any CPU
+		{FFB99339-16CE-4737-A359-D7BD8E59C6C1}.Release|x86.Build.0 = Release|Any CPU
+		{2A5FB9C9-89FB-4F66-BBEF-7274216A5305}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2A5FB9C9-89FB-4F66-BBEF-7274216A5305}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2A5FB9C9-89FB-4F66-BBEF-7274216A5305}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{2A5FB9C9-89FB-4F66-BBEF-7274216A5305}.Debug|x86.Build.0 = Debug|Any CPU
+		{2A5FB9C9-89FB-4F66-BBEF-7274216A5305}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2A5FB9C9-89FB-4F66-BBEF-7274216A5305}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2A5FB9C9-89FB-4F66-BBEF-7274216A5305}.Release|x86.ActiveCfg = Release|Any CPU
+		{2A5FB9C9-89FB-4F66-BBEF-7274216A5305}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{FFB99339-16CE-4737-A359-D7BD8E59C6C1} = {6AE26E3D-59DC-42A7-9675-515786BB7907}
+		{2A5FB9C9-89FB-4F66-BBEF-7274216A5305} = {6AE26E3D-59DC-42A7-9675-515786BB7907}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {362153E8-9F73-4BED-9FEC-4BFD6872824B}
