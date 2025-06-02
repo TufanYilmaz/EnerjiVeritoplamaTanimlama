@@ -1,0 +1,100 @@
+﻿namespace SapWebServices.Helpers
+{
+    public static class As400SQL
+    {
+        public static readonly string INFO= @"
+--gzo110ex01
+--qwerty";
+        public static readonly string EnerjiForUretimYeriBetweenDates = @"
+SELECT A.*,B.DEGER AS SONDEGER FROM
+(
+SELECT
+IFNULL(ei.ISIKOD, '') AS ISIKOD
+,IFNULL(ei.ISSKOD, '') AS ISSKOD
+,IFNULL(es.SDYIL,'') AS SDYIL
+,IFNULL(es.SDAY, '') AS SDAY
+,IFNULL(es.SDGUN, '') AS SDGUN
+,MAX(ei.ISISLM) YON
+,MAX(ei.ISCRPN) CARPAN
+,MIN(es.SDZAM) ZAMAN
+,MIN(es.SDDEG) DEGER
+FROM SMRPDATA.EX_ISX70 ei 
+LEFT JOIN SMRPDATA.EN_SDX70 es ON ei.ISSKOD  = es.SDSKOD
+WHERE 
+ei.ISIKOD IN (P1) AND 
+es.SDYIL =startyear AND 
+es.SDAY = startmonth AND 
+es.SDGUN =startday AND
+es.SDZAM  BETWEEN starttime AND starttolerance
+GROUP BY ei.ISIKOD,ei.ISSKOD ,es.SDYIL ,es.SDAY ,es.SDGUN  ) AS A
+LEFT JOIN
+(SELECT
+IFNULL(ei.ISIKOD, '') AS ISIKOD
+,IFNULL(ei.ISSKOD, '') AS ISSKOD
+,IFNULL(es.SDYIL,'') AS SDYIL
+,IFNULL(es.SDAY, '') AS SDAY
+,IFNULL(es.SDGUN, '') AS SDGUN
+,MAX(ei.ISISLM) YON
+,MAX(ei.ISCRPN) CARPAN
+,MIN(es.SDZAM) ZAMAN
+,MIN(es.SDDEG) DEGER
+FROM SMRPDATA.EX_ISX70 ei 
+LEFT JOIN SMRPDATA.EN_SDX70 es ON ei.ISSKOD  = es.SDSKOD
+WHERE 
+ei.ISIKOD IN (P2) AND 
+es.SDYIL =endyear AND 
+es.SDAY = endmonth AND 
+es.SDGUN =endday AND
+es.SDZAM  BETWEEN endtime AND endtolerance
+GROUP BY ei.ISIKOD,ei.ISSKOD ,es.SDYIL ,es.SDAY ,es.SDGUN
+) AS B ON A.ISSKOD=B.ISSKOD
+";
+        public static readonly string EnerjiForUretimYeriBetweenDatesTest = @"
+SELECT
+IFNULL(ei.ISIKOD, '') AS ISIKOD
+,IFNULL(ei.ISSKOD, '') AS ISSKOD
+,IFNULL(es.SDYIL,'') AS SDYIL
+,IFNULL(es.SDAY, '') AS SDAY
+,IFNULL(es.SDGUN, '') AS SDGUN
+,MAX(ei.ISISLM) YON
+,MAX(ei.ISCRPN) CARPAN
+,MIN(es.SDZAM) ZAMAN
+,MIN(es.SDDEG) DEGER
+FROM SMRPDATA.EX_ISX70 ei 
+LEFT JOIN SMRPDATA.EN_SDX70 es ON ei.ISSKOD  = es.SDSKOD
+WHERE 
+ei.ISIKOD ='001' AND 
+es.SDYIL ='2023' AND 
+es.SDAY ='02' AND 
+es.SDGUN ='01' AND
+es.SDZAM  BETWEEN '070000' AND '070200'
+GROUP BY ei.ISIKOD,ei.ISSKOD ,es.SDYIL ,es.SDAY ,es.SDGUN";
+        public static readonly string GetActivePlatnts = @"
+SELECT MSISKD,MSORAN FROM SMRPDATA.EX_MSX70 em  
+WHERE 
+MSW01 =pW01 AND
+MSW02 =pW02 AND
+MSW03 =pW03 AND
+MSC01 =pC01 AND
+MSBW1 =pBW1 AND
+MSBW2 =pBW2 AND
+MSM01 =pM01 AND 
+MSM02 =pM02 AND 
+MSM03 =pM03 AND 
+MSM04 =pM04 AND 
+MSM05 =pM05 AND 
+MSM06 =pM06 AND 
+MSK01 =pK01 AND 
+MSTE1 =pTE1 AND 
+MSTE2 =pTE2 AND 
+MSYIS =pYIS AND
+MSMKOD=pMKOD AND
+MSDE <> 'D' AND
+MSISKD <> '999' 
+";
+        public static readonly string GetPlantMeters = @"
+SELECT ISSKOD  FROM SMRPDATA.EX_ISX70 
+WHERE ISIKOD =IKOD
+";
+    }
+}
