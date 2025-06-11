@@ -531,6 +531,7 @@ namespace SuperFilm.Enerji.Repository
 
         public async Task<List<SayacVeri>> OpcGetDailyDiffAsync(DateTime gun, int? OpcNodesId)
         {
+            List<SayacVeri> result = new List<SayacVeri>();
             var daily = await _dbContext.Set<SayacVeri>().Where(x => x.NormalizeDate.Date == gun.Date && x.OpcNodesId == OpcNodesId)
                .GroupBy(x => x.NormalizeDate.Hour)
                .Select(r => r.OrderBy(r => r.NormalizeDate).FirstOrDefault())
@@ -548,18 +549,18 @@ namespace SuperFilm.Enerji.Repository
             }
             for (int i = 0; i < daily.Count - 1; i++)
             {
-                daily[i].Deger = daily[i + 1].Deger - daily[i].Deger;
-                daily[i].Zaman = daily[i].Zaman.Substring(0, 2);
+                result.Add(new SayacVeri()
+                {
+                    Deger = daily[i + 1].Deger - daily[i].Deger,
+                    Zaman = daily[i].Zaman.Substring(0, 2) + "-" + daily[i + 1].Zaman.Substring(0, 2)
+                });
             }
-            if (!sonDegerVar && daily.Count>0)
-            {
-                daily.RemoveAt(daily.Count - 1);
-            }
-            return daily;
+            return result;
         }
 
         public async Task<List<SayacVeri>> OpcGetMonthlyDiffAsync(DateTime ay, int? OpcNodesId)
         {
+            List<SayacVeri> result = new List<SayacVeri>();
             var monthly = await _dbContext.Set<SayacVeri>()
                 .Where(x => x.Ay == ay.ToString("MM") && x.Yil == ay.ToString("yyyy") && x.OpcNodesId == OpcNodesId)
              .GroupBy(x => x.NormalizeDate.Day)
@@ -578,13 +579,14 @@ namespace SuperFilm.Enerji.Repository
             }
             for (int i = 0; i < monthly.Count - 1; i++)
             {
-                monthly[i].Deger = monthly[i + 1].Deger - monthly[i].Deger;
+                result.Add(new SayacVeri()
+                {
+                    Deger = monthly[i + 1].Deger - monthly[i].Deger,
+                    Gun= monthly[i].Gun,
+                    Ay= monthly[i].Ay,
+                });
             }
-            if (!sonDegerVar)
-            {
-                monthly.RemoveAt(monthly.Count - 1);
-            }
-            return monthly;
+            return result;
         }
     }
 }

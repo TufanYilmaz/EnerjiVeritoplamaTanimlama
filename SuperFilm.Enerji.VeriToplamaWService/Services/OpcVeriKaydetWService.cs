@@ -15,7 +15,7 @@ namespace SuperFilm.Enerji.VeriToplamaWService.Services
         private readonly ILogger<OpcVeriKaydetWService> _logger;
         private readonly IServiceScopeFactory _serviceScopeFactory;
         private readonly IConfiguration _configuration;
-        private readonly UAReaderClient _client;
+        private UAReaderClient _client;
         public OpcVeriKaydetWService(ILogger<OpcVeriKaydetWService> logger,
             IServiceScopeFactory serviceScopeFactory, 
             IConfiguration configuration)
@@ -45,10 +45,17 @@ namespace SuperFilm.Enerji.VeriToplamaWService.Services
         {
             while (!stoppingToken.IsCancellationRequested)
             {
-                List<OpcNodes> opcNodes = await GetOpcNodesAsync();
-                var data = await VeriCekAsync(opcNodes, stoppingToken);
-                await Kaydet(data, opcNodes);
-                await Task.Delay(120_000);
+                try
+                {
+                    List<OpcNodes> opcNodes = await GetOpcNodesAsync();
+                    var data = await VeriCekAsync(opcNodes, stoppingToken);
+                    await Kaydet(data, opcNodes);
+                    await Task.Delay(120_000);
+                }
+                catch (Exception ex)
+                {
+                    await Task.Delay(120_000);
+                }
             }
         }
         public async Task<List<OpcNodes>> GetOpcNodesAsync()
@@ -91,6 +98,14 @@ namespace SuperFilm.Enerji.VeriToplamaWService.Services
                     break;
                 }
                 i++;
+                if (i > 100)
+                {
+                    using var scope = _serviceScopeFactory.CreateScope();
+                    var configuration = scope.ServiceProvider.GetRequiredService<IConfiguration>();
+                    _client = new UAReaderClient(configuration.GetValue<string>("opcUrl") ?? "");
+                    i = 0;
+
+                }
                 await Task.Delay(1000);
             }
             _logger.LogInformation("VeriCekAsync End");
@@ -114,7 +129,7 @@ namespace SuperFilm.Enerji.VeriToplamaWService.Services
                     NormalizeDate = now,
                     OpcNodesId = opcNodes[i].Id,
                     Yil = now.ToString("yyyy"),
-                    Zaman = now.ToString("hhmmss"),
+                    Zaman = now.ToString("HHmmss"),
                 });
             }
             using (var scope = _serviceScopeFactory.CreateScope())
