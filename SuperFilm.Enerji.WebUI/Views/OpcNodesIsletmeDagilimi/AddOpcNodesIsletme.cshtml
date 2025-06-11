@@ -21,23 +21,6 @@
         <form asp-action="AddOpcNodesIsletme" method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="OpcNodesIsletmeDagilimi.Id" class="form-control" />
-            <label for="OpcNodesId" class="select-label">OpcNodes</label>
-            <select class="form-control select2-search" asp-for="OpcNodesIsletmeDagilimi.OpcNodesId">
-                <option value="">Seçiniz</option>
-                @if (Model.OpcNodes != null && Model.OpcNodes.Any())
-                {
-                    foreach (var item in Model.OpcNodes)
-                    {
-                        <option value="@item.Id">@item.NodeId   [  @item.Code  ]</option>
-                    }
-                }
-                else
-                {
-                    <option value="">Mevcut OpcNodes Yok</option>
-                }
-
-            </select>
-
             <label for="IsletmeID" class="select-label">Isletme</label>
             <select class="form-control select2-search" asp-for="OpcNodesIsletmeDagilimi.IsletmeId">
                 <option value="">Seçiniz</option>
@@ -47,10 +30,10 @@
                     {
                         foreach (var isyeri in Model.IsYeri)
                         {
-							if (isyeri.Id == isletme.IsyeriId)
-							{
-								<option value="@isletme.Id">[ @isyeri.Kodu ] @isletme.Ad [ @isletme.Kod ]</option>
-							}
+                            if (isyeri.Id == isletme.IsyeriId)
+                            {
+                                <option value="@isletme.Id">[ @isyeri.Kodu ] @isletme.Ad [ @isletme.Kod ]</option>
+                            }
                         }
                     }
                 }
@@ -60,6 +43,24 @@
                 }
 
             </select>
+            <label for="OpcNodesId" class="select-label">OpcNodes</label>
+            <select class="form-control select2-search" asp-for="OpcNodesIsletmeDagilimi.OpcNodesId">
+                <option value="">Seçiniz</option>
+                @if (Model.OpcNodes != null && Model.OpcNodes.Any())
+                {
+                    foreach (var item in Model.OpcNodes)
+                    {
+                        <option value="@item.Id">@item.Description - [  @item.Code  ]</option>
+                    }
+                }
+                else
+                {
+                    <option value="">Mevcut OpcNodes Yok</option>
+                }
+
+            </select>
+
+       
             
             <div class="mb-3">
                 <label asp-for="OpcNodesIsletmeDagilimi.Carpan" class="form-label"></label>

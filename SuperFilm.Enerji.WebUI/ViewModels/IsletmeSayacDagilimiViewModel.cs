@@ -7,5 +7,6 @@ namespace SuperFilm.Enerji.WebUI.ViewModels
         public required IsletmeSayacDagilimi IsletmeSayacDagilimi { get; set; }
         public required List<Isletme> Isletme { get; set; }
         public required List<SayacTanimlari> SayacTanimlari { get; set; }
+        public required List<IsYeri> IsYeri { get; set; } = new();
     }
 }
