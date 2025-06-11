@@ -28,8 +28,8 @@
                         </div>
 
                         <div class="form-group mb-3">
-                            <label for="OpcNodesId">OPC Node</label>
-                            <select class="form-control" name="OpcNodesId" id="OpcNodesId" required>
+                            <label for="OpcNodesId" class="select-label">OPC Node</label>
+                            <select class="form-control select2-search" name="OpcNodesId" id="OpcNodesId" required>
                                 <option value="">Seçiniz</option>
                                @if (Model != null && Model.Any())
                                {
@@ -115,10 +115,28 @@
 </div>
 
 @section Scripts {
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <link href="~/css/select2-custom.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script src="~/js/setdate.js"></script>
     <script src="~/js/chartHelper.js"></script>
     <script src="https://cdn.syncfusion.com/ej2/dist/ej2.min.js" defer></script>
     <script>
+        $(document).ready(function () {
+            $('.select2-search').select2({
+                placeholder: "Ara...",
+                allowClear: true,
+                language: {
+                    noResults: function() {
+                        return "Sonuç bulunamadı";
+                    },
+                    searching: function() {
+                        return "Aranıyor...";
+                    }
+                }
+            });
+        });
+
         let currentChart = null;
         let selectedNodes = new Map(); // Store selected nodes with their data
 

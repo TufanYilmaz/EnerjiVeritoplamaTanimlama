@@ -35,6 +35,7 @@ namespace SuperFilm.Enerji.WebUI.Controllers
         }
         public async Task<IActionResult> AddIsletmeSayac(int? id)
         {
+            var isyeri = await _queryRepository.GetQueryable<IsYeri>().ToListAsync();
             var isletmeler = await _queryRepository.GetQueryable<Isletme>().ToListAsync();
             var sayactanimlari = await _queryRepository.GetQueryable<SayacTanimlari>().ToListAsync();
             IsletmeSayacDagilimi isletmesayacmodel = new IsletmeSayacDagilimi();
@@ -55,7 +56,8 @@ namespace SuperFilm.Enerji.WebUI.Controllers
             {
                 Isletme = isletmeler,
                 SayacTanimlari = sayactanimlari,
-                IsletmeSayacDagilimi = isletmesayacmodel
+                IsletmeSayacDagilimi = isletmesayacmodel,
+                IsYeri=isyeri
 
             };
             return View(model);
