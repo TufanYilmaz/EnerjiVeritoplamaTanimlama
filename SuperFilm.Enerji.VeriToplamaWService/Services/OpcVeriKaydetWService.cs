@@ -129,7 +129,7 @@ namespace SuperFilm.Enerji.VeriToplamaWService.Services
                     NormalizeDate = now,
                     OpcNodesId = opcNodes[i].Id,
                     Yil = now.ToString("yyyy"),
-                    Zaman = now.ToString("hhmmss"),
+                    Zaman = now.ToString("HHmmss"),
                 });
             }
             using (var scope = _serviceScopeFactory.CreateScope())
