@@ -11,74 +11,115 @@
         @* Her kartın içine style ve onmouseover/onmouseout eklendi *@
 
         <!-- İş Yerleri -->
-        <div class="col">
-            <div class="card shadow-sm h-100"
-                 style="border: 1px solid transparent; transition: all 0.3s ease;"
-                 onmouseover="this.style.borderColor='#343a40'; this.style.boxShadow='0 0.5rem 1rem rgba(0,0,0,0.15)';"
-                 onmouseout="this.style.borderColor='transparent'; this.style.boxShadow='';">
-                <div class="card-body">
-                    <h5 class="card-title"><i class="bi bi-building me-2"></i>İş Yerleri</h5>
-                    <div class="dropdown">
-                        <button class="btn btn-outline-primary dropdown-toggle" type="button" data-bs-toggle="dropdown">
-                            Menü
-                        </button>
-                        <ul class="dropdown-menu" style="z-index: 1050;">
-                            <li><a class="dropdown-item" asp-controller="IsYeri" asp-action="Index">İş Yerleri</a></li>
-                            <li><a class="dropdown-item" asp-controller="Isletme" asp-action="Index">İşletme Tanımları</a></li>
-                        </ul>
+        @if (User.IsInRole("SuperAdmin") || User.IsInRole("Admin") || User.IsInRole("Manager"))
+        {
+            <div class="col">
+                <div class="card shadow-sm h-100"
+                style="border: 1px solid transparent; transition: all 0.3s ease;"
+                onmouseover="this.style.borderColor='#343a40'; this.style.boxShadow='0 0.5rem 1rem rgba(0,0,0,0.15)';"
+                onmouseout="this.style.borderColor='transparent'; this.style.boxShadow='';">
+                    <div class="card-body">
+                        <h5 class="card-title"><i class="bi bi-building me-2"></i>İş Yerleri</h5>
+                        <div class="dropdown">
+                            <button class="btn btn-outline-primary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                                Menü
+                            </button>
+                            <ul class="dropdown-menu" style="z-index: 1050;">
+                                @if (User.IsInRole("SuperAdmin") || User.IsInRole("Admin"))
+                                {
+                                    <li><a class="dropdown-item" asp-controller="IsYeri" asp-action="Index">İş Yerleri</a></li>
+                                }
+
+                                <li><a class="dropdown-item" asp-controller="Isletme" asp-action="Index">İşletme Tanımları</a></li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+
+        }
+
 
         <!-- Sayaçlar -->
-        <div class="col">
-            <div class="card shadow-sm h-100"
-                 style="border: 1px solid transparent; transition: all 0.3s ease;"
-                 onmouseover="this.style.borderColor='#343a40'; this.style.boxShadow='0 0.5rem 1rem rgba(0,0,0,0.15)';"
-                 onmouseout="this.style.borderColor='transparent'; this.style.boxShadow='';">
-                <div class="card-body">
-                    <h5 class="card-title"><i class="bi bi-speedometer2 me-2"></i>Sayaçlar</h5>
-                    <div class="dropdown">
-                        <button class="btn btn-outline-primary dropdown-toggle" type="button" data-bs-toggle="dropdown">
-                            Menü
-                        </button>
-                        <ul class="dropdown-menu" style="z-index: 1050;">
-                            <li><a class="dropdown-item" asp-controller="Sayac" asp-action="Index">Sayaç Tanımları</a></li>
-                            <li><a class="dropdown-item" asp-controller="IsletmeSayacDagilimi" asp-action="Index">İşletme Sayaç Dağılımı</a></li>
-                        </ul>
+        @if (User.IsInRole("SuperAdmin") || User.IsInRole("Admin") || User.IsInRole("Manager"))
+        {
+            <div class="col">
+                <div class="card shadow-sm h-100"
+                style="border: 1px solid transparent; transition: all 0.3s ease;"
+                onmouseover="this.style.borderColor='#343a40'; this.style.boxShadow='0 0.5rem 1rem rgba(0,0,0,0.15)';"
+                onmouseout="this.style.borderColor='transparent'; this.style.boxShadow='';">
+                    <div class="card-body">
+                        <h5 class="card-title"><i class="bi bi-speedometer2 me-2"></i>Sayaçlar</h5>
+                        <div class="dropdown">
+                            <button class="btn btn-outline-primary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                                Menü
+                            </button>
+                            <ul class="dropdown-menu" style="z-index: 1050;">
+                                <li><a class="dropdown-item" asp-controller="Sayac" asp-action="Index">Sayaç Tanımları</a></li>
+                                <li><a class="dropdown-item" asp-controller="IsletmeSayacDagilimi" asp-action="Index">İşletme Sayaç Dağılımı</a></li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <!-- OpcNodes -->
-        <div class="col">
-            <div class="card shadow-sm h-100"
-                 style="border: 1px solid transparent; transition: all 0.3s ease;"
-                 onmouseover="this.style.borderColor='#343a40'; this.style.boxShadow='0 0.5rem 1rem rgba(0,0,0,0.15)';"
-                 onmouseout="this.style.borderColor='transparent'; this.style.boxShadow='';">
-                <div class="card-body">
-                    <h5 class="card-title"><i class="bi bi-diagram-3 me-2"></i>OpcNodes</h5>
-                    <div class="dropdown">
-                        <button class="btn btn-outline-primary dropdown-toggle" type="button" data-bs-toggle="dropdown">
-                            Menü
-                        </button>
-                        <ul class="dropdown-menu" style="z-index: 1050;">
-                            <li><a class="dropdown-item" asp-controller="OpcNodes" asp-action="Index">OpcNodes</a></li>
-                            <li><a class="dropdown-item" asp-controller="OpcNodesIsletmeDagilimi" asp-action="Index">OpcNodes İşletme Dağılımı</a></li>
-                        </ul>
+        }
+
+        @if (User.IsInRole("SuperAdmin") || User.IsInRole("Admin") || User.IsInRole("Manager"))
+        {
+            <!-- OpcNodes -->
+            <div class="col">
+                <div class="card shadow-sm h-100"
+                style="border: 1px solid transparent; transition: all 0.3s ease;"
+                onmouseover="this.style.borderColor='#343a40'; this.style.boxShadow='0 0.5rem 1rem rgba(0,0,0,0.15)';"
+                onmouseout="this.style.borderColor='transparent'; this.style.boxShadow='';">
+                    <div class="card-body">
+                        <h5 class="card-title"><i class="bi bi-diagram-3 me-2"></i>OpcNodes</h5>
+                        <div class="dropdown">
+                            <button class="btn btn-outline-primary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                                Menü
+                            </button>
+                            <ul class="dropdown-menu" style="z-index: 1050;">
+                                <li><a class="dropdown-item" asp-controller="OpcNodes" asp-action="Index">OpcNodes</a></li>
+                                <li><a class="dropdown-item" asp-controller="OpcNodesIsletmeDagilimi" asp-action="Index">OpcNodes İşletme Dağılımı</a></li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+
+        }
+        @if (User.IsInRole("SuperAdmin"))
+        {
+            <!-- Kullanıcılar -->
+            <div class="col">
+                <div class="card shadow-sm h-100"
+                     style="border: 1px solid transparent; transition: all 0.3s ease;"
+                     onmouseover="this.style.borderColor='#343a40'; this.style.boxShadow='0 0.5rem 1rem rgba(0,0,0,0.15)';"
+                     onmouseout="this.style.borderColor='transparent'; this.style.boxShadow='';">
+                    <div class="card-body">
+                        <h5 class="card-title"><i class="bi bi-people me-2"></i>Kullanıcılar</h5>
+                        <div class="dropdown">
+                            <button class="btn btn-outline-primary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                                Menü
+                            </button>
+                            <ul class="dropdown-menu" style="z-index: 1050;">
+                                <li><a class="dropdown-item" asp-controller="Users" asp-action="Index">Kullanıcı Listele-İşlemler</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        }
+
 
         <!-- Sayaç Verileri -->
         <div class="col">
             <div class="card shadow-sm h-100"
-                 style="border: 1px solid transparent; transition: all 0.3s ease;"
-                 onmouseover="this.style.borderColor='#343a40'; this.style.boxShadow='0 0.5rem 1rem rgba(0,0,0,0.15)';"
-                 onmouseout="this.style.borderColor='transparent'; this.style.boxShadow='';">
+            style="border: 1px solid transparent; transition: all 0.3s ease;"
+            onmouseover="this.style.borderColor='#343a40'; this.style.boxShadow='0 0.5rem 1rem rgba(0,0,0,0.15)';"
+            onmouseout="this.style.borderColor='transparent'; this.style.boxShadow='';">
                 <div class="card-body">
                     <h5 class="card-title"><i class="bi bi-bar-chart-line me-2"></i>Sayaç Verileri</h5>
                     <div class="dropdown">
@@ -93,26 +134,8 @@
                 </div>
             </div>
         </div>
-
-        <!-- Kullanıcılar -->
-        <div class="col">
-            <div class="card shadow-sm h-100"
-                 style="border: 1px solid transparent; transition: all 0.3s ease;"
-                 onmouseover="this.style.borderColor='#343a40'; this.style.boxShadow='0 0.5rem 1rem rgba(0,0,0,0.15)';"
-                 onmouseout="this.style.borderColor='transparent'; this.style.boxShadow='';">
-                <div class="card-body">
-                    <h5 class="card-title"><i class="bi bi-people me-2"></i>Kullanıcılar</h5>
-                    <div class="dropdown">
-                        <button class="btn btn-outline-primary dropdown-toggle" type="button" data-bs-toggle="dropdown">
-                            Menü
-                        </button>
-                        <ul class="dropdown-menu" style="z-index: 1050;">
-                            <li><a class="dropdown-item" asp-controller="Users" asp-action="Index">Kullanıcı Listele-İşlemler</a></li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
+  
+       
 
         <!-- Grafik -->
         <div class="col">

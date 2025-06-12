@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace SuperFilm.Enerji.WebUI.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "SuperAdmin")]
     public class UsersController : Controller
     {
         private readonly UserManager<User> _userManager;

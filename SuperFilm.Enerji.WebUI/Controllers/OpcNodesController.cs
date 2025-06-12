@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace SuperFilm.Enerji.WebUI.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "SuperAdmin,Admin,Manager")]
     public class OpcNodesController : Controller
     {
         private readonly ILogger<HomeController> _logger;

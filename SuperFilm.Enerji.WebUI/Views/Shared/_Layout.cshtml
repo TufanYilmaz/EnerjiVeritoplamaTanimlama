@@ -18,40 +18,69 @@
             <div class="container-fluid">
                 <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">SuperFilm Enerji</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
+                aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
-                                <i class="bi bi-building me-1"></i> İş Yerleri
-                            </a>
-                            <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" asp-controller="IsYeri" asp-action="Index">İş Yerleri</a></li>
-                                <li><a class="dropdown-item" asp-controller="Isletme" asp-action="Index">İşletme Tanımları</a></li>
-                            </ul>
-                        </li>
+                        @if(User.IsInRole("SuperAdmin") || User.IsInRole("Admin") || User.IsInRole("Manager"))
+                        {
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                                    <i class="bi bi-building me-1"></i> İş Yerleri
+                                </a>
+                                <ul class="dropdown-menu">
+                                    @if (User.IsInRole("SuperAdmin") || User.IsInRole("Admin"))
+                                    {
+                                        <li><a class="dropdown-item" asp-controller="IsYeri" asp-action="Index">İş Yerleri</a></li>
 
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
-                                <i class="bi bi-speedometer2 me-1"></i> Sayaçlar
-                            </a>
-                            <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" asp-controller="Sayac" asp-action="Index">Sayaç Tanımları</a></li>
-                                <li><a class="dropdown-item" asp-controller="IsletmeSayacDagilimi" asp-action="Index">İşletme Sayaç Dağılımı</a></li>
-                            </ul>
-                        </li>
+                                    }
+                                    <li><a class="dropdown-item" asp-controller="Isletme" asp-action="Index">İşletme Tanımları</a></li>
+                                </ul>
+                            </li>
 
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
-                                <i class="bi bi-diagram-3 me-1"></i> OpcNodes
-                            </a>
-                            <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" asp-controller="OpcNodes" asp-action="Index">OpcNodes</a></li>
-                                <li><a class="dropdown-item" asp-controller="OpcNodesIsletmeDagilimi" asp-action="Index">OpcNodes İşletme Dağılımı</a></li>
-                            </ul>
-                        </li>
+                        }
+
+                        @if (User.IsInRole("SuperAdmin") || User.IsInRole("Admin") || User.IsInRole("Manager"))
+                        {
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                                    <i class="bi bi-speedometer2 me-1"></i> Sayaçlar
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" asp-controller="Sayac" asp-action="Index">Sayaç Tanımları</a></li>
+                                    <li><a class="dropdown-item" asp-controller="IsletmeSayacDagilimi" asp-action="Index">İşletme Sayaç Dağılımı</a></li>
+                                </ul>
+                            </li>
+
+                        }
+
+                        @if (User.IsInRole("SuperAdmin") || User.IsInRole("Admin") || User.IsInRole("Manager"))
+                        {
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                                    <i class="bi bi-diagram-3 me-1"></i> OpcNodes
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" asp-controller="OpcNodes" asp-action="Index">OpcNodes</a></li>
+                                    <li><a class="dropdown-item" asp-controller="OpcNodesIsletmeDagilimi" asp-action="Index">OpcNodes İşletme Dağılımı</a></li>
+                                </ul>
+                            </li>
+                            
+                        }
+                        @if (User.IsInRole("SuperAdmin"))
+                        {
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                                    <i class="bi bi-people me-1"></i> Kullanıcılar
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" asp-controller="Users" asp-action="Index">Kullanıcı Listele-İşlemler</a></li>
+                                </ul>
+                            </li>
+
+                        }
+                     
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
                                 <i class="bi bi-bar-chart-line me-1"></i> Sayac Verileri
@@ -61,14 +90,8 @@
                                 <li><a class="dropdown-item" asp-controller="SayacVeri" asp-action="FilterSayacVeri">Verileri Filtrele</a></li>
                             </ul>
                         </li>
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
-                                <i class="bi bi-people me-1"></i> Kullanıcılar
-                            </a>
-                            <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" asp-controller="Users" asp-action="Index">Kullanıcı Listele-İşlemler</a></li>
-                            </ul>
-                        </li>
+                    
+                       
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
                                 <i class="bi bi-graph-up-arrow me-1"></i> Grafik
