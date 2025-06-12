@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace SuperFilm.Enerji.WebUI.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "SuperAdmin,Admin,Manager")]
     public class IsletmeSayacDagilimiController : Controller
     {
         private readonly ILogger<HomeController> _logger;
