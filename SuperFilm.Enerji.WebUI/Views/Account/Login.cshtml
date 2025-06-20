@@ -34,11 +34,12 @@
             <input type="submit" value="Giriş" class="btn btn-success w-100 p-2" />
         </form>
         <p class="text-center mt-2">
-            Hesabın yok mu? <a asp-controller="Account" asp-action="Register" class="text-decoration-none">Oluştur</a>
+            @* Hesabın yok mu? <a asp-controller="Account" asp-action="Register" class="text-decoration-none">Oluştur</a> *@
+            Hesabın yok mu? <a asp-controller="Account" asp-action="RequestUser" class="text-decoration-none">Kullanıcı İste</a>
         </p>
-        <div class="text-center">
+@*         <div class="text-center">
             <a asp-controller="Home" asp-action="Index" class="text-decoration-none mt-3">Geri Dön</a>
-        </div>
+        </div> *@
     </div>
 </div>
 @section Scripts{

@@ -2,9 +2,6 @@
 {
     public static class As400SQL
     {
-        public static readonly string INFO= @"
---gzo110ex01
---qwerty";
         public static readonly string EnerjiForUretimYeriBetweenDates = @"
 SELECT A.*,B.DEGER AS SONDEGER FROM
 (
