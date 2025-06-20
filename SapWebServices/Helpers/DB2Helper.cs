@@ -30,9 +30,7 @@ namespace SapWebServices.Helpers
             try
             {
                 result.DDeger = GetTuketim(startDateTime, endDateTime, UretimYeri);
-
-
-
+                
                 string commandSqlEndirek = As400SQL.GetActivePlatnts
                     .Replace("pMKOD", "'" + UretimYeri + "'")
                     .Replace("pW01", "'" + helperPlants.MSW01 + "'")

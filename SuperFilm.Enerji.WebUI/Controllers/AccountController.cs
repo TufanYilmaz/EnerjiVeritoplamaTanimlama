@@ -189,5 +189,9 @@ namespace SuperFilm.Enerji.WebUI.Controllers
             var res = await _queryRepository.GetAsync<User>(specification: null, cancellationToken);
             return View();
         }
+        public IActionResult RequestUser()
+        {
+            return View();
+        }
     }
 }
