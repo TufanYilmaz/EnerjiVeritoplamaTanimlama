@@ -16,7 +16,8 @@ namespace SuperFilm.Enerji.Entites
         public DbSet<SayacVeri> SayacVeri { get; set; }
         public DbSet<OpcNodes> OpcNode { get; set; }
         public DbSet<OpcNodesIsletmeDagilimi> OpcNodesIsletmeDagilimi { get; set; }
-
+        public DbSet<EnerjiRequestAdvance> EnerjiRequestAdvance { get; set; }
+        public DbSet<EnerjiRequest> EnerjiRequest { get; set; }
         public EnerjiDbContext(DbContextOptions<EnerjiDbContext> options) : base(options) { }
        
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

@@ -8,14 +8,17 @@
 
   <ItemGroup>
     <PackageReference Include="Dapper" Version="2.1.35" />
+    <PackageReference Include="Microsoft.Data.SqlClient" Version="6.0.2" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="8.0.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
     <PackageReference Include="System.Data.SqlClient" Version="4.8.6" />
     <PackageReference Include="System.Data.SQLite.Core" Version="1.0.119" />
+    <PackageReference Include="TanvirArjel.EFCore.GenericRepository" Version="6.0.4" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\As400ExecuterCore\As400ExecuterCore.csproj" />
+    <ProjectReference Include="..\SuperFilm.Enerji.Entites\SuperFilm.Enerji.Entites.csproj" />
   </ItemGroup>
 
   <ItemGroup>

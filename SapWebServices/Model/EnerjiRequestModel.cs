@@ -17,6 +17,9 @@
         public string? ProductionLine { get; set; }
         public DateTime StartDateTime { get; set; }
         public DateTime EndDateTime { get; set; }
+        public decimal StartValue { get; set; }
+        public decimal EndValue { get; set; }
+        public decimal Value { get; set; }
     }
     public class EnerjiRequestAdvaceModelList
     {
