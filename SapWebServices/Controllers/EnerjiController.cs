@@ -111,7 +111,7 @@ namespace SapWebServices.Controllers
             if (isletme != null && isletme.Isyeri!.Kodu == "AS02")
             {
 
-                var sayaclar = await _queryRepository.GetListAsync<OpcNodesIsletmeDagilimi>(r => r.IsletmeId == isletme.Id);
+                var OpcNodes = await _queryRepository.GetListAsync<OpcNodesIsletmeDagilimi>(r => r.IsletmeId == isletme.Id);
                 var simpleRequest = enerjiRequest.EnerjiModel
                     .Select(r =>
                     new EnerjiRequestSimpleModel()
@@ -121,7 +121,7 @@ namespace SapWebServices.Controllers
                     })
                     .ToList();
                 decimal deger = 0;
-                List<int> sayacIds = sayaclar.Select(id => id.Id).ToList();
+                List<int> sayacIds = OpcNodes.Select(id => id.Id).ToList();
                 DateTime globalMin = simpleRequest.Min(x => x.StartDateTime.AddMinutes(TOLERANCE_AS02));
                 DateTime globalMax = simpleRequest.Max(x => x.EndDateTime.AddMinutes(TOLERANCE_AS02));
                 var sayacVerileri = await _queryRepository
@@ -131,17 +131,17 @@ namespace SapWebServices.Controllers
                     && sayacIds.Contains(r.OpcNodesId.Value)
                     );
                 List<TargetResult> targetResults = new List<TargetResult>();
-                foreach (var sayac in sayaclar)
+                foreach (var opdNode in OpcNodes)
                 {
                     var targetResultFromRequest = simpleRequest
                     .Select(target => new TargetResult()
                     {
                         Target = target,
-                        StartMatch = sayacVerileri.Where(r => r.OpcNodesId == sayac.Id)
+                        StartMatch = sayacVerileri.Where(r => r.OpcNodesId == opdNode.Id)
                             .Where(p => Math.Abs((p.NormalizeDate - target.StartDateTime).TotalMinutes) <= TOLERANCE_AS02)
                             .OrderBy(p => Math.Abs((p.NormalizeDate - target.StartDateTime).TotalMinutes))
                             .FirstOrDefault(),
-                        EndMatch = sayacVerileri.Where(r => r.OpcNodesId == sayac.Id)
+                        EndMatch = sayacVerileri.Where(r => r.OpcNodesId == opdNode.Id)
                             .Where(p => Math.Abs((p.NormalizeDate - target.EndDateTime).TotalMinutes) <= TOLERANCE_AS02)
                             .OrderBy(p => Math.Abs((p.NormalizeDate - target.EndDateTime).TotalMinutes))
                             .FirstOrDefault(),
