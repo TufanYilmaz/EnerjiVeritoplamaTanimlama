@@ -1,5 +1,128 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model IsletmeEnerjiTuketimViewModel
+@using SuperFilm.Enerji.Entites
+@using SuperFilm.Enerji.WebUI.ViewModels
 @{
+    ViewData["Title"] = "Sayaç Verileri";
+}
+
+
+<div>
+    <div class="container">
+        <form asp-action="FilterSayacVeri" id="myform" method="post" style="display:flex;flex-direction:column;gap:1rem">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="row">
+                <div class="col-md-4" id="IsletmeSelect" >
+                    <label asp-for="RequestModel.IsletmeId" class="select-label">Isletmeler</label>
+                    <select class="form-control select2-search" asp-for="RequestModel.IsletmeId" id="isletmeId">
+                        <option value="">Seçiniz</option>
+
+                        @if (Model.Isletmeler != null && Model.Isletmeler.Any())
+                        {
+                            foreach (var item in Model.Isletmeler)
+                            {
+                                <option value="@item.Id">@item.Isyeri.Kodu - @item.Kod - @item.Aciklama</option>
+                            }
+                        }
+                        else
+                        {
+                            <option value="">Isletme Yok</option>
+                        }
+                    </select>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-4" style="display:flex;flex-direction:row;gap:1rem">
+                    <label for="startDate">Başlangıç Tarihi</label>
+                    <input type="datetime-local" asp-for="RequestModel.StartDate">
+                </div>
+
+                <div class="col-md-4" style="display:flex;flex-direction:row;gap:1rem">
+                    <label for="endDate">Bitiş Tarihi</label>
+                    <input type="datetime-local" asp-for="RequestModel.EndDate">
+                </div>
+            </div>
+
+            <div class="row mb-5">
+
+                <div class="col-md-4" style="display:flex;flex-direction:row;gap:1rem">
+                    @* <input type="submit" id="Getir" value="Getir" class="btn btn-success w-100 p-1"> *@
+                    <input type="button" id="Getir" value="Getir" class="btn btn-success w-100 p-1">
+
+                </div>
+
+            </div>
+
+        </form>
+    </div>
+
+    <table class="table pageTable text-center" id="Tablo">
+        <thead class="bg-dark text-light">
+            <tr>
+                <th>Kod</th>
+                <th>Aciklama</th>
+                <th>Başlangıç Tarihi</th>
+                <th>Bitiş Tarihi</th>
+                <th>Değer</th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+</div>
+@section Scripts {
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <link href="~/css/select2-custom.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script src="~/js/selectdatatype.js"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            // Initialize Select2 only on Sayac and OpcNodes selects
+            $('.select2-search').select2({
+                placeholder: "Ara...",
+                allowClear: true,
+                language: {
+                    noResults: function () {
+                        return "Sonuç bulunamadı";
+                    },
+                    searching: function () {
+                        return "Aranıyor...";
+                    }
+                }
+            });
+
+            $("#Getir").on("click", function () {
+                var formData = $("#myform").serialize();
+
+                $.ajax({
+                    type: "POST",
+                    url: "@Url.Action("FilterSayacVeri", "SayacVeri")",
+                    data: formData,
+                    success: function (response) {
+                        var tbl = $('#Tablo').DataTable();
+
+                        tbl.clear().draw();
+
+                        // Her bir veri satırını tek tek DataTable'a ekle
+                        $.each(response.data, function (i, item) {
+                            tbl.row.add([
+                                item.kod,
+                                item.sayacTanimi,
+                                item.description,
+                                item.deger,
+                                item.normalizeDate
+                            ]);
+                        });
+                        tbl.draw();
+                    },
+                    error: function (xhr, status, error) {
+                        console.error(error);
+                    }
+                });
+            });
+        });
+    </script>
+
 }

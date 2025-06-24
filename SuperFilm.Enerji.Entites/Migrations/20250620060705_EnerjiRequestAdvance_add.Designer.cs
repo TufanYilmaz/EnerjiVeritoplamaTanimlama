@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SuperFilm.Enerji.Entites;
 
@@ -11,9 +12,11 @@ using SuperFilm.Enerji.Entites;
 namespace SuperFilm.Enerji.Entites.Migrations
 {
     [DbContext(typeof(EnerjiDbContext))]
-    partial class EnerjiDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250620060705_EnerjiRequestAdvance_add")]
+    partial class EnerjiRequestAdvance_add
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,22 +24,6 @@ namespace SuperFilm.Enerji.Entites.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
-
-            modelBuilder.Entity("SuperFilm.Enerji.Entites.EnerjiRequest", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("CreateDate")
-                        .HasColumnType("smalldatetime");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("EnerjiRequest");
-                });
 
             modelBuilder.Entity("SuperFilm.Enerji.Entites.EnerjiRequestAdvance", b =>
                 {
@@ -52,9 +39,6 @@ namespace SuperFilm.Enerji.Entites.Migrations
                     b.Property<string>("EndTime")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("EnerjiRequestId")
-                        .HasColumnType("int");
-
                     b.Property<string>("ProductionLine")
                         .HasColumnType("nvarchar(max)");
 
@@ -65,8 +49,6 @@ namespace SuperFilm.Enerji.Entites.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("EnerjiRequestId");
 
                     b.ToTable("EnerjiRequestAdvance");
                 });
@@ -313,13 +295,6 @@ namespace SuperFilm.Enerji.Entites.Migrations
                     b.ToTable("SAYAC_VERI");
                 });
 
-            modelBuilder.Entity("SuperFilm.Enerji.Entites.EnerjiRequestAdvance", b =>
-                {
-                    b.HasOne("SuperFilm.Enerji.Entites.EnerjiRequest", null)
-                        .WithMany("EnerjiRequestAdvanceBody")
-                        .HasForeignKey("EnerjiRequestId");
-                });
-
             modelBuilder.Entity("SuperFilm.Enerji.Entites.Isletme", b =>
                 {
                     b.HasOne("SuperFilm.Enerji.Entites.IsYeri", "Isyeri")
@@ -367,11 +342,6 @@ namespace SuperFilm.Enerji.Entites.Migrations
                     b.Navigation("Isletme");
 
                     b.Navigation("OpcNodes");
-                });
-
-            modelBuilder.Entity("SuperFilm.Enerji.Entites.EnerjiRequest", b =>
-                {
-                    b.Navigation("EnerjiRequestAdvanceBody");
                 });
 
             modelBuilder.Entity("SuperFilm.Enerji.Entites.IsYeri", b =>

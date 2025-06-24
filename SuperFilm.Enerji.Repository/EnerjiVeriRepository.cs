@@ -532,10 +532,11 @@ namespace SuperFilm.Enerji.Repository
         public async Task<List<SayacVeri>> OpcGetDailyDiffAsync(DateTime gun, int? OpcNodesId)
         {
             List<SayacVeri> result = new List<SayacVeri>();
-            var daily = await _dbContext.Set<SayacVeri>().Where(x => x.NormalizeDate.Date == gun.Date && x.OpcNodesId == OpcNodesId)
+            var dailyS = _dbContext.Set<SayacVeri>().Where(x => x.NormalizeDate.Date == gun.Date && x.OpcNodesId == OpcNodesId)
                .GroupBy(x => x.NormalizeDate.Hour)
-               .Select(r => r.OrderBy(r => r.NormalizeDate).FirstOrDefault())
-               .ToListAsync();
+               .Select(r => r.OrderBy(r => r.NormalizeDate).FirstOrDefault()).ToList();
+            var daily = dailyS.OrderBy(r => r.NormalizeDate).ToList();
+              
             var nextFirstValue = await _dbContext.Set<SayacVeri>()
                 .Where(x => x.NormalizeDate.Date == gun.Date.AddDays(1) && x.OpcNodesId == OpcNodesId)
                 .OrderBy(r => r.NormalizeDate)
@@ -561,11 +562,11 @@ namespace SuperFilm.Enerji.Repository
         public async Task<List<SayacVeri>> OpcGetMonthlyDiffAsync(DateTime ay, int? OpcNodesId)
         {
             List<SayacVeri> result = new List<SayacVeri>();
-            var monthly = await _dbContext.Set<SayacVeri>()
+            var monthlyS = _dbContext.Set<SayacVeri>()
                 .Where(x => x.Ay == ay.ToString("MM") && x.Yil == ay.ToString("yyyy") && x.OpcNodesId == OpcNodesId)
              .GroupBy(x => x.NormalizeDate.Day)
-             .Select(r => r.OrderBy(r => r.NormalizeDate).FirstOrDefault())
-             .ToListAsync();
+             .Select(r => r.OrderBy(r => r.NormalizeDate).FirstOrDefault()).ToList();
+             var monthly = monthlyS.OrderBy(r=>r.NormalizeDate).ToList();
             var nextFirstValue = await _dbContext.Set<SayacVeri>()
                 .Where(x => x.NormalizeDate.Date == ay.Date.AddMonths(1) && x.OpcNodesId == OpcNodesId)
                 .OrderBy(r => r.NormalizeDate)
