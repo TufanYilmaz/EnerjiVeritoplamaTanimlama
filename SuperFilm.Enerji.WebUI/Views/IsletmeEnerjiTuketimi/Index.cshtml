@@ -56,14 +56,16 @@
 
         </form>
     </div>
-
+    <div id="total">0</div>
+    <div id="totalH">0</div>
     <table class="table pageTable text-center" id="Tablo">
         <thead class="bg-dark text-light">
             <tr>
-                <th>Kod</th>
                 <th>Aciklama</th>
                 <th>Başlangıç Tarihi</th>
+                <th>Başlangıç Ham Değer</th>
                 <th>Bitiş Tarihi</th>
+                <th>Bitiş Ham Değer</th>
                 <th>Değer</th>
             </tr>
         </thead>
@@ -75,7 +77,7 @@
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <link href="~/css/select2-custom.css" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-    <script src="~/js/selectdatatype.js"></script>
+    @* <script src="~/js/selectdatatype.js"></script> *@
 
     <script type="text/javascript">
         $(document).ready(function () {
@@ -98,21 +100,30 @@
 
                 $.ajax({
                     type: "POST",
-                    url: "@Url.Action("FilterSayacVeri", "SayacVeri")",
+                    url: "@Url.Action("IsletmeSayacVerileri", "IsletmeEnerjiTuketimi")",
                     data: formData,
                     success: function (response) {
+                        console.log(response);
                         var tbl = $('#Tablo').DataTable();
-
                         tbl.clear().draw();
+                        if (response.length > 0) {
+                            $('#total').html("Tolam Değer: " + response[0].TotalValue);
+                            $('#totalH').html("Tolam Değer(KwH): " + response[0].TotalValue/1000);
+                        }else{
+                            $('#total').html("Tolam Değer: 0" );
+                            $('#totalH').html("Tolam Değer(KwH): 0");
+                        }
 
                         // Her bir veri satırını tek tek DataTable'a ekle
-                        $.each(response.data, function (i, item) {
+                        $.each(response, function (i, item) {
                             tbl.row.add([
-                                item.kod,
-                                item.sayacTanimi,
-                                item.description,
-                                item.deger,
-                                item.normalizeDate
+                                item.Aciklama,
+                                item.StartDate,
+                                item.StartValue,
+                                item.EndDate,
+                                item.EndValue,
+                                item.Value
+
                             ]);
                         });
                         tbl.draw();
