@@ -121,7 +121,7 @@ namespace SapWebServices.Controllers
                     })
                     .ToList();
                 decimal deger = 0;
-                List<int> sayacIds = OpcNodes.Select(id => id.Id).ToList();
+                List<int> sayacIds = OpcNodes.Select(id => id.OpcNodesId).ToList();
                 DateTime globalMin = simpleRequest.Min(x => x.StartDateTime.AddMinutes(TOLERANCE_AS02));
                 DateTime globalMax = simpleRequest.Max(x => x.EndDateTime.AddMinutes(TOLERANCE_AS02));
                 var sayacVerileri = await _queryRepository
