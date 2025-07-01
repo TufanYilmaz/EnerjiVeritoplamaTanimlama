@@ -6,6 +6,7 @@ using SapWebServices.Model;
 using SuperFilm.Enerji.Entites;
 using SuperFilm.Enerji.Entites.Migrations;
 using System.Globalization;
+using System.Runtime.CompilerServices;
 using TanvirArjel.EFCore.GenericRepository;
 
 namespace SapWebServices.Controllers
@@ -111,8 +112,69 @@ namespace SapWebServices.Controllers
             if (isletme != null && isletme.Isyeri!.Kodu == "AS02")
             {
 
-                var OpcNodes = await _queryRepository.GetListAsync<OpcNodesIsletmeDagilimi>(r => r.IsletmeId == isletme.Id);
-                var simpleRequest = enerjiRequest.EnerjiModel
+                var OpcNodesIsletmeDagilimi = await _queryRepository
+                    .GetListAsync<OpcNodesIsletmeDagilimi>(r => r.IsletmeId == isletme.Id,includes:r=>r.Include(x=>x.OpcNodes));
+                var notAcceptedRequest = enerjiRequest.EnerjiModel.Where(r =>
+                        r.StartDate == null
+                        || r.StartTime == null
+                        || r.EndDate == null
+                        || r.EndTime == null
+                        || r.StartDate == "NULL"
+                        || r.StartTime == "NULL"
+                        || r.EndDate == "NULL"
+                        || r.EndTime == "NULL"
+                        ).ToList();
+                foreach (var item in notAcceptedRequest)
+                {
+                    string startTime = string.Empty, endTime = string.Empty;
+                    if (
+                        (item.StartTime==null && item.EndTime==null) 
+                        //|| (item.StartTime.ToString().ToLower()=="null" && item.EndTime.ToString().ToLower() == "null")
+                        )
+                    {
+                        startTime = "000000";
+                        endTime = "000000";
+                    }
+                    else if (item.StartTime==null 
+                        //|| item.StartTime.ToString().ToLower() == "null"
+                        )
+                    {
+                        DateTime saat = DateTime.ParseExact(item.EndTime, "HHmmss", System.Globalization.CultureInfo.InvariantCulture);
+                        startTime = saat.AddMinutes(-5).ToString("HHmmss");
+                        endTime = item.EndTime;
+
+                    }
+                    else if (item.EndTime==null 
+                        //|| item.EndTime.ToString().ToLower() == "null"
+                        )
+                    {
+                        DateTime saat = DateTime.ParseExact(item.StartTime, "HHmmss", System.Globalization.CultureInfo.InvariantCulture);
+                        endTime = saat.AddMinutes(5).ToString("HHmmss");
+                        startTime = item.StartTime;
+                    }
+                    res.Add(new EnerjiModelAdvanceDetail()
+                    {
+                        StartDate = item.StartDate,
+                        StartTime = startTime,
+                        EndDate = item.EndDate,
+                        EndTime = endTime,
+                        DDeger = 0,
+                        EDeger = 0,
+                        UretimYeri = item.ProductionLine
+                    });
+                }
+                var acceptedRequest = enerjiRequest.EnerjiModel
+                    .Where(r =>
+                        r.StartDate != null
+                        && r.StartTime != null
+                        && r.EndDate != null
+                        && r.EndTime != null
+                        && r.StartDate != "NULL"
+                        && r.StartTime != "NULL"
+                        && r.EndDate != "NULL"
+                        && r.EndTime != "NULL"
+                        ).ToList();
+                var simpleRequest = acceptedRequest
                     .Select(r =>
                     new EnerjiRequestSimpleModel()
                     {
@@ -121,7 +183,7 @@ namespace SapWebServices.Controllers
                     })
                     .ToList();
                 decimal deger = 0;
-                List<int> sayacIds = OpcNodes.Select(id => id.OpcNodesId).ToList();
+                List<int> sayacIds = OpcNodesIsletmeDagilimi.Select(id => id.OpcNodesId).ToList();
                 DateTime globalMin = simpleRequest.Min(x => x.StartDateTime.AddMinutes(TOLERANCE_AS02));
                 DateTime globalMax = simpleRequest.Max(x => x.EndDateTime.AddMinutes(TOLERANCE_AS02));
                 var sayacVerileri = await _queryRepository
@@ -131,20 +193,21 @@ namespace SapWebServices.Controllers
                     && sayacIds.Contains(r.OpcNodesId.Value)
                     );
                 List<TargetResult> targetResults = new List<TargetResult>();
-                foreach (var opdNode in OpcNodes)
+                foreach (var opdNodeIsletme in OpcNodesIsletmeDagilimi)
                 {
                     var targetResultFromRequest = simpleRequest
                     .Select(target => new TargetResult()
                     {
                         Target = target,
-                        StartMatch = sayacVerileri.Where(r => r.OpcNodesId == opdNode.Id)
+                        StartMatch = sayacVerileri.Where(r => r.OpcNodesId == opdNodeIsletme.OpcNodesId)
                             .Where(p => Math.Abs((p.NormalizeDate - target.StartDateTime).TotalMinutes) <= TOLERANCE_AS02)
                             .OrderBy(p => Math.Abs((p.NormalizeDate - target.StartDateTime).TotalMinutes))
                             .FirstOrDefault(),
-                        EndMatch = sayacVerileri.Where(r => r.OpcNodesId == opdNode.Id)
+                        EndMatch = sayacVerileri.Where(r => r.OpcNodesId == opdNodeIsletme.OpcNodesId)
                             .Where(p => Math.Abs((p.NormalizeDate - target.EndDateTime).TotalMinutes) <= TOLERANCE_AS02)
                             .OrderBy(p => Math.Abs((p.NormalizeDate - target.EndDateTime).TotalMinutes))
                             .FirstOrDefault(),
+                        OpcNodesIsletmeD = opdNodeIsletme,
                     })
                     .Where(x => x.StartMatch != null && x.EndMatch != null)
                     .ToList();
@@ -162,9 +225,36 @@ namespace SapWebServices.Controllers
                         EndDate = g.First().Target.EndDateTime.ToString("yyyyMMdd"),
                         EndTime = g.First().Target.EndDateTime.ToString("HHmmss"),
                         DDeger= (double)g.Sum(r=>(r.EndMatch.Deger-r.StartMatch.Deger)/1000),
-                        //EDeger= (double)g.Sum(r=>(r.EndMatch.Deger-r.StartMatch.Deger)/1000),
+                        EDeger =(double)g.Where(r=>r.OpcNodesIsletmeD.Carpan<1)
+                            .Sum(r=> r.EndMatch.Deger*r.OpcNodesIsletmeD.Carpan -
+                            r.StartMatch.Deger*r.OpcNodesIsletmeD.Carpan)/1000,
+                            //0,//g.First().OpcNodesIsletmeD. // (double)g.Sum(r => (r.EndMatch.Deger - r.StartMatch.Deger) / 1000),
+                        UretimYeri= enerjiRequest.EnerjiModel.First().ProductionLine,
                     });
                 res.AddRange(toaddResults);
+                try
+                {
+                    var responseModel = new List<EnerjiResponseAdvance>();
+                    foreach (var item in res)
+                    {
+                        responseModel.Add(new EnerjiResponseAdvance()
+                        {
+                            DDeger=item.DDeger,
+                            EDeger=item.EDeger,
+                            EndDate=item.EndDate,
+                            EndTime=item.EndTime,
+                            StartDate=item.StartDate,
+                            StartTime=item.StartTime,
+                            UretimYeri= enerjiRequest.EnerjiModel.First().ProductionLine,
+                            EnerjiRequestId= enerjiRequestEntity.Id
+                        });
+                    }
+                    await _enerjiRepository.AddAsync<EnerjiResponseAdvance>(responseModel);
+                    await _enerjiRepository.SaveChangesAsync();
+                }
+                catch (Exception ex)
+                {
+                }
             }
             else
             {
@@ -237,5 +327,6 @@ namespace SapWebServices.Controllers
         public EnerjiRequestSimpleModel Target { get; set; }
         public SayacVeri StartMatch { get; set; }
         public SayacVeri EndMatch { get; set; }
+        public OpcNodesIsletmeDagilimi OpcNodesIsletmeD { get; set; }
     }
 }

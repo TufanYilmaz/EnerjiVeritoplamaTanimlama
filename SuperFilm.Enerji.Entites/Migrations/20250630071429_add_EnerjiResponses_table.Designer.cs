@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SuperFilm.Enerji.Entites;
 
@@ -11,9 +12,11 @@ using SuperFilm.Enerji.Entites;
 namespace SuperFilm.Enerji.Entites.Migrations
 {
     [DbContext(typeof(EnerjiDbContext))]
-    partial class EnerjiDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250630071429_add_EnerjiResponses_table")]
+    partial class add_EnerjiResponses_table
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -95,9 +98,6 @@ namespace SuperFilm.Enerji.Entites.Migrations
                         .HasColumnType("varchar(10)")
                         .HasAnnotation("Relational:JsonPropertyName", "BitisZaman");
 
-                    b.Property<int>("EnerjiRequestId")
-                        .HasColumnType("int");
-
                     b.Property<string>("StartDate")
                         .HasColumnType("varchar(10)")
                         .HasAnnotation("Relational:JsonPropertyName", "BaslamaTarih");
@@ -111,8 +111,6 @@ namespace SuperFilm.Enerji.Entites.Migrations
                         .HasAnnotation("Relational:JsonPropertyName", "UretimYeri");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("EnerjiRequestId");
 
                     b.ToTable("EnerjiResponses");
                 });
@@ -364,17 +362,6 @@ namespace SuperFilm.Enerji.Entites.Migrations
                     b.HasOne("SuperFilm.Enerji.Entites.EnerjiRequest", null)
                         .WithMany("EnerjiRequestAdvanceBody")
                         .HasForeignKey("EnerjiRequestId");
-                });
-
-            modelBuilder.Entity("SuperFilm.Enerji.Entites.EnerjiResponseAdvance", b =>
-                {
-                    b.HasOne("SuperFilm.Enerji.Entites.EnerjiRequest", "EnerjiRequest")
-                        .WithMany()
-                        .HasForeignKey("EnerjiRequestId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("EnerjiRequest");
                 });
 
             modelBuilder.Entity("SuperFilm.Enerji.Entites.Isletme", b =>
