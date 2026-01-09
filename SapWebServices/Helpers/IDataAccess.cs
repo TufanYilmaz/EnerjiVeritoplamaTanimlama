@@ -10,5 +10,7 @@ namespace SapWebServices.Helpers
 
 		public  Task<int> AddAsync(EnerjiRequestAdvanceModelDb model);
 		public  int Add(EnerjiRequestAdvanceModelDb model);
-	}
+        public List<EnerjiRequestAdvanceModelDb> GetWithMonth(string yearMonth, string productionLine);
+
+    }
 }

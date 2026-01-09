@@ -6,7 +6,7 @@ using System.Data.SQLite;
 
 namespace SapWebServices.Helpers
 {
-	public class DataAccess : IDataAccess
+    public class DataAccess : IDataAccess
 	{
 		private readonly IConfiguration _config;
 		private readonly string _connString;
@@ -122,5 +122,26 @@ values (@ProductionLine ,@StartDate,@StartTime ,@EndDate, @EndTime,@DDeger,@EDeg
 			}
 			return null;
 		}
-	}
+
+        public List<EnerjiRequestAdvanceModelDb> GetWithMonth(string yearMonth, string productionLine)
+        {
+            using SqlConnection connection = GetMsSqlConnection();
+            try
+            {
+                if (connection.State != ConnectionState.Open)
+                    connection.Open();
+                string sql = @$"Select * from EnerjiRequestAdvanceModelDb where
+                    ProductionLine='{productionLine}' and 
+                    StartDate like '{yearMonth}%'
+and ReqRes='res'";
+                var res = connection.Query<EnerjiRequestAdvanceModelDb>(sql);
+                return res.ToList();
+            }
+            finally
+            {
+                connection.Close();
+            }
+            return null;
+        }
+    }
 }
