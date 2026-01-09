@@ -79,30 +79,43 @@ namespace SapWebServices.Controllers
             //var dbRes =_dataAccess.GetAsycn();
             EnerjiRequest enerjiRequestEntity = new EnerjiRequest();
             enerjiRequestEntity.EnerjiRequestAdvanceBody = new List<EnerjiRequestAdvance>();
-            foreach (var enerji in enerjiRequest.EnerjiModel)
-            {
-                enerjiRequestEntity.EnerjiRequestAdvanceBody.Add(new EnerjiRequestAdvance()
-                {
-                    ProductionLine = enerji.ProductionLine,
-                    StartDate = enerji.StartDate,
-                    StartTime = enerji.StartTime,
-                    EndDate = enerji.EndDate,
-                    EndTime = enerji.EndTime,
-                });
+            List<EnerjiModelAdvanceDetail> res = new List<EnerjiModelAdvanceDetail>();
+            List<EnerjiRequestAdvanceModel> exept = new List<EnerjiRequestAdvanceModel>();
 
-            }
-            try
+
+            if (enerjiRequest !=null && enerjiRequest.EnerjiModel!=null)
             {
-                await _enerjiRepository.AddAsync<EnerjiRequest>(enerjiRequestEntity);
-                await _enerjiRepository.SaveChangesAsync();
+                foreach (var enerji in enerjiRequest.EnerjiModel)
+                {
+                    enerjiRequestEntity.EnerjiRequestAdvanceBody.Add(new EnerjiRequestAdvance()
+                    {
+                        ProductionLine = enerji.ProductionLine,
+                        StartDate = enerji.StartDate,
+                        StartTime = enerji.StartTime,
+                        EndDate = enerji.EndDate,
+                        EndTime = enerji.EndTime,
+                    });
+
+                }
+                try
+                {
+                    await _enerjiRepository.AddAsync<EnerjiRequest>(enerjiRequestEntity);
+                    await _enerjiRepository.SaveChangesAsync();
+                }
+                catch (Exception ex)
+                {
+                }  
             }
-            catch (Exception ex)
+            else
             {
-            } 
+                return res;
+            }
             #endregion
 
-            List<EnerjiModelAdvanceDetail> res = new List<EnerjiModelAdvanceDetail>();
-
+            if (enerjiRequest.EnerjiModel == null)
+            {
+                return res;
+            }
             if (enerjiRequest.EnerjiModel.Count == 0)
             {
                 return res;
@@ -112,9 +125,59 @@ namespace SapWebServices.Controllers
             if (isletme != null && isletme.Isyeri!.Kodu == "AS02")
             {
 
+                var maxRequestId = _enerjiRepository
+                .GetQueryable<EnerjiResponseAdvance>()
+                    .Where(x => x.UretimYeri == isletmeKod)
+                    .Max(x => (int?)x.EnerjiRequestId) ?? 0;
+                if (maxRequestId > 0)
+                {
+                    var existResponses = await _enerjiRepository
+                        .GetListAsync<EnerjiResponseAdvance>(
+                            condition: r => r.EnerjiRequestId == maxRequestId
+                            , asNoTracking: true);
+                    exept = enerjiRequest.EnerjiModel
+                         .Where(r => !existResponses
+                         .Any(x =>
+                         x.EndDate == r.EndDate
+                         && x.EndTime == r.EndTime
+                         && x.StartTime == r.StartTime
+                         && x.StartDate == r.StartDate
+                     )).ToList();
+                    var include = enerjiRequest.EnerjiModel
+                        .Where(r => existResponses
+                        .Any(x =>
+                        x.EndDate == r.EndDate
+                        && x.EndTime == r.EndTime
+                        && x.StartTime == r.StartTime
+                        && x.StartDate == r.StartDate
+                    )).ToList();
+                    foreach (var item in include)
+                    {
+                        var current = existResponses.Where(r =>
+                            r.EndDate == item.EndDate
+                            && r.EndTime == item.EndTime
+                            && r.StartTime == item.StartTime
+                            && r.StartDate == item.StartDate
+                        ).FirstOrDefault();
+
+                        res.Add(new EnerjiModelAdvanceDetail()
+                        {
+                            StartDate = current.StartDate,
+                            DDeger = current.DDeger,
+                            StartTime = current.StartTime,
+                            EDeger = current.EDeger,
+                            EndDate = current.EndDate,
+                            EndTime = current.EndTime,
+                            UretimYeri = isletmeKod
+                        });
+
+                    }
+                }
+
+
                 var OpcNodesIsletmeDagilimi = await _queryRepository
                     .GetListAsync<OpcNodesIsletmeDagilimi>(r => r.IsletmeId == isletme.Id,includes:r=>r.Include(x=>x.OpcNodes));
-                var notAcceptedRequest = enerjiRequest.EnerjiModel.Where(r =>
+                var notAcceptedRequest = exept.Where(r =>
                         r.StartDate == null
                         || r.StartTime == null
                         || r.EndDate == null
@@ -163,7 +226,7 @@ namespace SapWebServices.Controllers
                         UretimYeri = item.ProductionLine
                     });
                 }
-                var acceptedRequest = enerjiRequest.EnerjiModel
+                var acceptedRequest = exept
                     .Where(r =>
                         r.StartDate != null
                         && r.StartTime != null
@@ -174,6 +237,10 @@ namespace SapWebServices.Controllers
                         && r.EndDate != "NULL"
                         && r.EndTime != "NULL"
                         ).ToList();
+               
+                
+
+
                 var simpleRequest = acceptedRequest
                     .Select(r =>
                     new EnerjiRequestSimpleModel()
@@ -183,55 +250,58 @@ namespace SapWebServices.Controllers
                     })
                     .ToList();
                 decimal deger = 0;
-                List<int> sayacIds = OpcNodesIsletmeDagilimi.Select(id => id.OpcNodesId).ToList();
-                DateTime globalMin = simpleRequest.Min(x => x.StartDateTime.AddMinutes(TOLERANCE_AS02));
-                DateTime globalMax = simpleRequest.Max(x => x.EndDateTime.AddMinutes(TOLERANCE_AS02));
-                var sayacVerileri = await _queryRepository
-                    .GetListAsync<SayacVeri>(r => r.NormalizeDate > globalMin
-                    && r.NormalizeDate < globalMax
-                    && r.OpcNodesId != null
-                    && sayacIds.Contains(r.OpcNodesId.Value)
-                    );
-                List<TargetResult> targetResults = new List<TargetResult>();
-                foreach (var opdNodeIsletme in OpcNodesIsletmeDagilimi)
+                if (simpleRequest.Count>0)
                 {
-                    var targetResultFromRequest = simpleRequest
-                    .Select(target => new TargetResult()
+                    List<int> sayacIds = OpcNodesIsletmeDagilimi.Select(id => id.OpcNodesId).ToList();
+                    DateTime globalMin = simpleRequest.Min(x => x.StartDateTime.AddMinutes(-TOLERANCE_AS02));
+                    DateTime globalMax = simpleRequest.Max(x => x.EndDateTime.AddMinutes(TOLERANCE_AS02));
+                    var sayacVerileri = await _queryRepository
+                        .GetListAsync<SayacVeri>(r => r.NormalizeDate > globalMin
+                        && r.NormalizeDate < globalMax
+                        && r.OpcNodesId != null
+                        && sayacIds.Contains(r.OpcNodesId.Value)
+                        );
+                    List<TargetResult> targetResults = new List<TargetResult>();
+                    foreach (var opdNodeIsletme in OpcNodesIsletmeDagilimi)
                     {
-                        Target = target,
-                        StartMatch = sayacVerileri.Where(r => r.OpcNodesId == opdNodeIsletme.OpcNodesId)
-                            .Where(p => Math.Abs((p.NormalizeDate - target.StartDateTime).TotalMinutes) <= TOLERANCE_AS02)
-                            .OrderBy(p => Math.Abs((p.NormalizeDate - target.StartDateTime).TotalMinutes))
-                            .FirstOrDefault(),
-                        EndMatch = sayacVerileri.Where(r => r.OpcNodesId == opdNodeIsletme.OpcNodesId)
-                            .Where(p => Math.Abs((p.NormalizeDate - target.EndDateTime).TotalMinutes) <= TOLERANCE_AS02)
-                            .OrderBy(p => Math.Abs((p.NormalizeDate - target.EndDateTime).TotalMinutes))
-                            .FirstOrDefault(),
-                        OpcNodesIsletmeD = opdNodeIsletme,
-                    })
-                    .Where(x => x.StartMatch != null && x.EndMatch != null)
-                    .ToList();
-                    targetResults.AddRange(targetResultFromRequest);
-                }
-                var toaddResults = targetResults
-                    .Where(r=>
-                    r.StartMatch!=null 
-                    && r.EndMatch!=null)
-                    .GroupBy(r => r.Target)
-                    .Select(g => new EnerjiModelAdvanceDetail()
-                    {
-                        StartDate = g.First().Target.StartDateTime.ToString("yyyyMMdd"),
-                        StartTime = g.First().Target.StartDateTime.ToString("HHmmss"),
-                        EndDate = g.First().Target.EndDateTime.ToString("yyyyMMdd"),
-                        EndTime = g.First().Target.EndDateTime.ToString("HHmmss"),
-                        DDeger= (double)g.Sum(r=>(r.EndMatch.Deger-r.StartMatch.Deger)/1000),
-                        EDeger =(double)g.Where(r=>r.OpcNodesIsletmeD.Carpan<1)
-                            .Sum(r=> r.EndMatch.Deger*r.OpcNodesIsletmeD.Carpan -
-                            r.StartMatch.Deger*r.OpcNodesIsletmeD.Carpan)/1000,
+                        var targetResultFromRequest = simpleRequest
+                        .Select(target => new TargetResult()
+                        {
+                            Target = target,
+                            StartMatch = sayacVerileri.Where(r => r.OpcNodesId == opdNodeIsletme.OpcNodesId)
+                                .Where(p => Math.Abs((p.NormalizeDate - target.StartDateTime).TotalMinutes) <= TOLERANCE_AS02)
+                                .OrderBy(p => Math.Abs((p.NormalizeDate - target.StartDateTime).TotalMinutes))
+                                .FirstOrDefault(),
+                            EndMatch = sayacVerileri.Where(r => r.OpcNodesId == opdNodeIsletme.OpcNodesId)
+                                .Where(p => Math.Abs((p.NormalizeDate - target.EndDateTime).TotalMinutes) <= TOLERANCE_AS02)
+                                .OrderBy(p => Math.Abs((p.NormalizeDate - target.EndDateTime).TotalMinutes))
+                                .FirstOrDefault(),
+                            OpcNodesIsletmeD = opdNodeIsletme,
+                        })
+                        .Where(x => x.StartMatch != null && x.EndMatch != null)
+                        .ToList();
+                        targetResults.AddRange(targetResultFromRequest);
+                    }
+                    var toaddResults = targetResults
+                        .Where(r =>
+                        r.StartMatch != null
+                        && r.EndMatch != null)
+                        .GroupBy(r => r.Target)
+                        .Select(g => new EnerjiModelAdvanceDetail()
+                        {
+                            StartDate = g.First().Target.StartDateTime.ToString("yyyyMMdd"),
+                            StartTime = g.First().Target.StartDateTime.ToString("HHmmss"),
+                            EndDate = g.First().Target.EndDateTime.ToString("yyyyMMdd"),
+                            EndTime = g.First().Target.EndDateTime.ToString("HHmmss"),
+                            DDeger = (double)g.Where(r => r.OpcNodesIsletmeD.Carpan == 1).Sum(r => (r.EndMatch.Deger - r.StartMatch.Deger) / 1000),
+                            EDeger = (double)g.Where(r => r.OpcNodesIsletmeD.Carpan < 1)
+                                .Sum(r => r.EndMatch.Deger * r.OpcNodesIsletmeD.Carpan -
+                                r.StartMatch.Deger * r.OpcNodesIsletmeD.Carpan) / 1000,
                             //0,//g.First().OpcNodesIsletmeD. // (double)g.Sum(r => (r.EndMatch.Deger - r.StartMatch.Deger) / 1000),
-                        UretimYeri= enerjiRequest.EnerjiModel.First().ProductionLine,
-                    });
-                res.AddRange(toaddResults);
+                            UretimYeri = enerjiRequest.EnerjiModel.First().ProductionLine,
+                        });
+                    res.AddRange(toaddResults); 
+                }
                 try
                 {
                     var responseModel = new List<EnerjiResponseAdvance>();
@@ -261,17 +331,86 @@ namespace SapWebServices.Controllers
 
 
                 #region AS01
-                foreach (var enerji in enerjiRequest.EnerjiModel ?? new List<EnerjiRequestAdvanceModel>())
+                var existAll = _dataAccess
+                 .GetWithMonth(
+                 enerjiRequest.EnerjiModel!.First().StartDate!.Substring(0, 6),
+                 enerjiRequest.EnerjiModel!.First().ProductionLine!);
+
+                var tempRequest = new List<EnerjiRequestAdvanceModel>();
+                foreach (var item in existAll)
+                {
+                    tempRequest.Add(new EnerjiRequestAdvanceModel()
+                    {
+                        ProductionLine = item.ProductionLine,
+                        EndDate = item.EndDate,
+                        EndTime = item.EndTime,
+                        StartTime = item.StartTime,
+                        StartDate = item.StartDate,
+                    });
+                }
+                exept = enerjiRequest.EnerjiModel
+                    .Where(r => !tempRequest
+                    .Any(x =>
+                        x.EndDate == r.EndDate
+                        && x.EndTime == r.EndTime
+                        && x.StartTime == r.StartTime
+                        && x.StartDate == r.StartDate
+                        )).ToList();
+                var include = enerjiRequest.EnerjiModel
+                    .Where(r => tempRequest
+                    .Any(x =>
+                        x.EndDate == r.EndDate
+                        && x.EndTime == r.EndTime
+                        && x.StartTime == r.StartTime
+                        && x.StartDate == r.StartDate
+                        )).ToList();
+
+                //include = enerjiRequest.EnerjiModel
+                //    .Join(tempRequest,
+                //        r => new { r.StartDate, r.EndDate, r.StartTime, r.EndTime },
+                //        x => new { x.StartDate, x.EndDate, x.StartTime, x.EndTime },
+                //        (r, x) => r)
+                //    .ToList();
+
+                //exept = enerjiRequest.EnerjiModel
+                //    .GroupJoin(tempRequest,
+                //        r => new { r.StartDate, r.EndDate, r.StartTime, r.EndTime },
+                //        x => new { x.StartDate, x.EndDate, x.StartTime, x.EndTime },
+                //        (r, gj) => new { r, gj })
+                //    .Where(y => !y.gj.Any())
+                //    .Select(y => y.r)
+                //    .ToList();
+                foreach (var item in include)
+                {
+                    var current = existAll.Where(r =>
+                        r.EndDate == item.EndDate
+                        && r.EndTime == item.EndTime
+                        && r.StartTime == item.StartTime
+                        && r.StartDate == item.StartDate
+                    ).FirstOrDefault();
+
+                    res.Add(new EnerjiModelAdvanceDetail()
+                    {
+                        StartDate = current.StartDate,
+                        DDeger = current.DDeger,
+                        StartTime = current.StartTime,
+                        EDeger = current.EDeger,
+                        EndDate = current.EndDate,
+                        EndTime = current.EndTime,
+                        UretimYeri = current.ProductionLine
+                    });
+                }
+                foreach (var enerji in exept)
                 {
                     try
                     {
-                        var exist = _dataAccess.GetAsycn(enerji);
+                        //var exist = _dataAccess.GetAsycn(enerji);
 
-                        if (exist.Result != null)
-                        {
-                            res.Add(new EnerjiModelAdvanceDetail(exist.Result));
-                            continue;
-                        }
+                        //if (exist.Result != null)
+                        //{
+                        //    res.Add(new EnerjiModelAdvanceDetail(exist.Result));
+                        //    continue;
+                        //}
                         DateTime startDate;
                         DateTime endDate;
                         if (DateTime.TryParseExact(enerji.StartDate + enerji.StartTime, "yyyyMMddHHmmss", CultureInfo.InvariantCulture,
@@ -295,11 +434,9 @@ namespace SapWebServices.Controllers
                             tobeAdded.StartTime = startDate.ToString("HHmmss");
                             tobeAdded.EndDate = endDate.ToString("yyyyMMdd");
                             tobeAdded.EndTime = endDate.ToString("HHmmss");
+
                             res.Add(tobeAdded);
-                            if (tobeAdded.EDeger > 0 || tobeAdded.DDeger > 0)
-                            {
-                                var r = _dataAccess.Add(new EnerjiRequestAdvanceModelDb(tobeAdded));
-                            }
+                            var r = _dataAccess.Add(new EnerjiRequestAdvanceModelDb(tobeAdded));
                         }
                         else
                         {
@@ -312,6 +449,7 @@ namespace SapWebServices.Controllers
                     }
                 }
             }
+            
             #endregion
             return res;
         }
