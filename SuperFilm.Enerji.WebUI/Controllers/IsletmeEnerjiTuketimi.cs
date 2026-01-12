@@ -14,6 +14,7 @@ namespace SuperFilm.Enerji.WebUI.Controllers
             IQueryRepository<EnerjiDbContext> _queryRepository,
             IRepository<EnerjiDbContext> _enerjiRepository) : Controller
     {
+        //Tyr push
         public async Task<IActionResult> Index()
         {
             var isletmeler = await _queryRepository.GetListAsync<Isletme>(includes:r=>r.Include(x=>x.Isyeri));
